@@ -1,0 +1,100 @@
+{
+    "nom": "Yosr MERCHAOUI",
+    "poste": "Senior – AI & Data",
+    "email": "Yosr.Merchaoui1@fr.ey.com",
+    "telephone": "+33 6 59 71 86 97",
+    "profil": {
+        "description": "Yosr a intégré l’équipe Data & IA du département FSO du cabinet EY en 2024. Elle a 4 ans d’expérience dans le secteur bancaire / assurance avec une expertise en analyse des données, en analyse et modélisation de process et en pilotage de projet.",
+        "formation": "Diplôme d’ingénieur en Génie Logiciel",
+        "certifications": [
+            "Professional Scrum Product Owner (PSPO)",
+            "ITIL v4"
+        ]
+    },
+    "competences": {
+        "outils": [
+            "Tableau",
+            "PowerBI",
+            "MS Office 365"
+        ],
+        "langages": [
+            "Python"
+        ],
+        "ia_ml": [
+            "NLP",
+            "LLM",
+            "IA générative"
+        ],
+        "bases_de_donnees": [
+            "PostgreSQL",
+            "MySQL",
+            "NoSQL"
+        ],
+        "methodologies": [
+            "Agile (Scrum)",
+            "Gestion du changement",
+            "Gestion de projet"
+        ],
+        "langues": [
+            "Français",
+            "Anglais",
+            "Arabe"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Banque – Cadrage du besoin métier dans un environnement SAFe",
+            "description": "Animation des ateliers et compréhension des objectifs business et des besoins fonctionnels. Conception fonctionnelle du produit (élaboration des diagrammes de séquences fonctionnels). Rédaction des spécifications fonctionnelles. Suivi des développements (JIRA) et animation des daily meetings. Rédaction des cahiers de recette."
+        },
+        {
+            "titre": "Banque - Amélioration du process de Regroupement de Crédits",
+            "description": "Modélisation du process actuel de regroupement de crédits et identification des irritants. Proposition de solutions répondant aux irritants identifiés et modélisation de la cible. Mise en place d’un plan d’action de mise en œuvre des solutions proposées."
+        },
+        {
+            "titre": "Assurance - Cadrage du besoin métier, construction du backlog produit et élaboration de la feuille de route IA/Data",
+            "description": "Formalisation des cas d’usage Data/IA listant tous les besoins métiers recensés lors des ateliers d’idéation. Construction du backlog produit à partir des cas d’usage formalisés. Priorisation du backlog sur la base du besoin métier VS complexité IT. Élaboration des fiches produit détaillées et cadencement de la feuille de route. Définition de l’organisation cible et du plan de montée en charge. Évaluation des compétences réelles par rapport à une matrice cible élaborée en amont et définition des plans d’actions à mener pour combler les écarts."
+        },
+        {
+            "titre": "Gestionnaire d’actifs - Gestion du projet d’automatisation des process",
+            "description": "Animation des ateliers métiers et collecte des besoins des différentes équipes. Étude d’éligibilité des processus à développer et chiffrage des gains. Rédaction des spécifications fonctionnelles et identification des prérequis infrastructure. Suivi de l’avancement des développements par rapport au planning mis en place. Rédaction des cahiers de recette et animation des sessions de tests. Préparation et animation des COPIL et des CODIR."
+        },
+        {
+            "titre": "Assurance - Pilotage de l'activité opérationnelle du Service Client Vie (SCV)",
+            "description": "Compréhension approfondie des processus métiers et des enjeux de la direction. Mise en place de KPI de suivi opérationnel permettant d’évaluer la performance du SCV en utilisant un outil de Data Visualisation. Préparation de reportings, mettant en avant l'analyse de données."
+        },
+        {
+            "titre": "Secteur public - Accompagnement du gouvernement tunisien et de la Banque Mondiale dans la digitalisation des services publics",
+            "description": "Benchmark des solutions existantes relatives à l’inscription et au décrochage scolaire. Cartographie du parcours utilisateurs. Identification des pain points et proposition des leviers d’amélioration."
+        },
+        {
+            "titre": "Opérateur de téléphonie mobile - Accompagnement dans la formulation d'un plan stratégique 2020-2025",
+            "description": "Analyse externe : Analyse des tendances technologiques et estimation des évolutions du marché Télécommunication. Identification des principaux concurrents et réalisation d’une analyse de positionnement."
+        }
+    ],
+    "projets_internes": [
+        {
+            "titre": "PoC : Analyse des commentaires d’un établissement médical",
+            "description": "Élaboration d’un script python permettant de faire une analyse sentimentale des commentaires d’un établissement médical et de les classifier. L’output du script a ensuite été intégré à un dashboard PowerBI pour permettre d’avoir des graphiques."
+        },
+        {
+            "titre": "Newsletter",
+            "description": "Cocréation d’une Newsletter interne à l’équipe présentant les dernières technologies/outils et actualités en IA et en IA Générative."
+        },
+        {
+            "titre": "Offre : Gouvernance des données",
+            "description": "Création d’un support commercial pour le développement d’une offre de Gouvernance des données pour les différents secteurs d’activité."
+        }
+    ],
+    "formations_certifications": {
+        "certifications": [
+            "Professional Scrum Product Owner I – Juillet 2021",
+            "ITIL v4 – Mars 2021"
+        ],
+        "formations": [
+            "PowerApps - 2022",
+            "Data Analysis with Python – 2019",
+            "Data Visualization with Python – 2019",
+            "Python for Data Science and AI - 2019"
+        ]
+    }
+}

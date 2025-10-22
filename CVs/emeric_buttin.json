@@ -1,0 +1,80 @@
+{
+    "nom": "Emeric Buttin",
+    "poste": "Staff/Assistant – AI & Data",
+    "email": "emeric.buttin@fr.ey.com",
+    "telephone": "+33 1 55 61 36 09",
+    "profil": {
+        "description": "Emeric a intégré le département Data & Analytics du département FSO du cabinet EY en 2023. Avant de rejoindre EY, il a travaillé en tant que Data Scientist pour une grande banque française puis pour une Startup. Il est titulaire d’un master d’ingénieur de Data et Intelligence Artificielle de l’Ecole Supérieure d’Ingénieurs Léonard De Vinci (ESILV).",
+        "formation": "ESILV"
+    },
+    "competences": {
+        "themes": [
+            "Analyse et traitement de données",
+            "Machine Learning",
+            "Data quality",
+            "Data Gouvernance",
+            "Data Lineage",
+            "Data visualisation"
+        ],
+        "langages": [
+            "Python",
+            "C#",
+            "SQL"
+        ],
+        "outils": [
+            "Power Platform",
+            "Qualitadd",
+            "Power apps",
+            "Power automate"
+        ],
+        "langues": [
+            "Français",
+            "Anglais"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Mise en conformité Solvabilité 2 volet Data pour une assurance française",
+            "description": "En charge de la centralisation des travaux de lignage des métiers, développement d’un tableau de bord de suivi de l’avancement, développement d’outils automatisés de mise en qualité/vérification des données, de mise au format d’import, de visualisation des arbres de parentalité des données. Définition d’une procédure de remplissage des dictionnaires et animation de formations auprès des métiers. Travail en coordination avec les métiers et le Data Office pour la cohérence des lignages. Mise à jour de la cartographie des flux.\nLangages/Outils : Python, VBA, PowerQuery\nPlateforme/OS : Visual Studio Code, Excel, Qualitadd\nCompétences : Data Quality, Data Gouvernance, Data lignage"
+        },
+        {
+            "titre": "Étude QoS quantitative du parc applicatif d’un grand groupe bancaire français",
+            "description": "Sur la base d’une extraction des tickets d’incidents et sur une fenêtre de plusieurs années, analyse statistique temporelle, sémantique et lexicographique (NLP) de l’incidentologie, mise en évidence de périodes critiques, des applications/entités impliquées, et synthétisation des résultats pour restitution finale.\nLangages/Outils : Python\nPlateforme/OS : Visual Studio Code\nCompétences : Data analyse, Data visualisation, NLP, interprétation statistique"
+        },
+        {
+            "titre": "Conception d’un prévisionnel budgétaire et rédaction d’un rapport vendeur IT pour une société de réassurance",
+            "description": "Conception du modèle de prévision budgétaire, production d’un databook, analyse des politiques de data gouvernance, rédaction d’un rapport vendeur.\nLangages/Outils : Excel\nPlateforme/OS : MSOffice\nCompétences : Connaissances comptables, gouvernance des données"
+        },
+        {
+            "titre": "Développement de pipeline d’autonomisation pour une startup",
+            "description": "Scrapping et classification selon différents degrés de sensibilités de publications de réseaux sociaux de clients. Gestion des différentes bases de données, des APIs et des modèles NLP d’analyse de sentiments type Bert.\nLangages/Outils : Python\nPlateforme/OS : PyCharm\nCompétences : NLP, gestion des environnements Python, versionning de code, bases de données"
+        },
+        {
+            "titre": "Développement d’une application de Suivi pour un groupe bancaire",
+            "description": "Immersion dans une équipe de développement d’une application de suivi de production des outils de Finance. Développement de fonctionnalités d’estimations de temps de chargement de certaines données de reporting.\nLangages/Outils : Python\nPlateforme/OS : Visual Studio Code\nCompétences : Fonctionnement Agile, développement applicatif, machine learning, data visualisation"
+        }
+    ],
+    "projets_internes": [
+        {
+            "titre": "ACPR TechSprint",
+            "description": "Participation à l’ACPR TechSprint en collaboration avec Sarus et Microsoft au sujet de la mutualisation des données dans le cadre de la surveillance des transactions​. Implémentation d’un modèle machine learning : mutualisation et préprocessing des données, feature engineering, construction test de modèles ML de détection. \nLangages/Outils : Python\nCompétences :  Data preparation, Data visualization, Data engineering, versionning git"
+        },
+        {
+            "titre": "PoC GenAI Synthetic Data",
+            "description": "Développement de deux PoC utilisant GPT : l’un pour générer des datasets de qualité à partir de mots-clés, l’autre pour générer une ontologie à partir d’un texte d’entrée. Développement backend et interfaces avec organisation en modules orientés objet. \nLangages/Outils : Python, html, flask\nPlateforme/OS : VS Code\nCompétences : développement applicatif, POO, API, Scrapping​"
+        },
+        {
+            "titre": "Développement de l’application Suivi de Formation",
+            "description": "Développement de la plateforme sur l’outil power apps​\nParticipation aux ateliers de conception du produit​\nDéveloppement de l’interface front sur l’outil power apps​\nDéveloppement de la partie back end et gestion des données avec les outils Dataverse et Power Apps et Power Automate. \nLangages/Outils : Power apps, Power automate​ \n Plateforme/OS : Power Plateform​ \nCompétences : Agile, Gestion de projet, développement applicatif, low code"
+        }
+    ],
+    "formations_certifications": {
+        "formations_terminees": [
+            "PowerApps – Complete Guide to Microsoft PowerApps (Mars 2023)",
+            "Python Data Science with Pandas: Master 12 Advanced Projects (Mai 2024)"
+        ],
+        "formations_en_cours": [
+            "DCAM Framework - Data Management Capability Assessment Model"
+        ]
+    }
+}

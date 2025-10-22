@@ -1,0 +1,165 @@
+{
+    "nom": "Daniel Blundell",
+    "poste": "Manager – Data & Analytics",
+    "email": "daniel.blundell@fr.ey.com",
+    "telephone": "+33 7 64 37 11 72",
+    "profil": {
+        "description": "Daniel Blundell est diplômé de l’école Centrale de Marseille où il s’est spécialisé en Data Science et en finance​. Il a 4 ans d’expérience et fait partie des équipes Data & Analytics  d’EY depuis septembre 2017 à l’occasion d’un stage de césure.​ Il a également travaillé dans une startup spécialisée en data science pour l’évènementiel",
+        "formation": "École Centrale de Marseille, spécialisation Data Science & finance"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "Flask",
+            "R",
+            "Java",
+            "SQL",
+            "SAS"
+        ],
+        "ia_ml": [
+            "Machine Learning",
+            "Deep Learning",
+            "NLP"
+        ],
+        "outils": [
+            "PowerBI",
+            "Dash",
+            "Tableau",
+            "Neo4j",
+            "Celonis",
+            "Azure",
+            "Databricks"
+        ],
+        "langues": [
+            "Anglais (C2)",
+            "Espagnol (C2)",
+            "Allemand (B1)",
+            "Français"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Analyse d’impact d’un changement de système de sécurité sociale – Grande Banque Marocaine",
+            "description": "Développement sous R de l’ensemble du code effectuant une projection démographique détaillée : application de modèles avancés de probabilité statistique, optimisation de la vitesse de calcul en parallélisant les opérations. Aide à l’analyse des impacts et rédaction du bilan des projections sur le plan de sécurité sociale de la banque.Plateforme/OS : R Studio"
+        },
+        {
+            "titre": "Projet transverse de Data Science sur les données client– Grand acteur de l’évènementiel",
+            "description": "Analyse des données recueillies par un client et acteur majeur de l’évènementiel à Paris. Déblayage & Gestion de Projet, Analyses de la qualité, préparation et mise en œuvre d’un protocole de nettoyage des données, Prédiction de comportement et segmentation des clients par catégories de priorité à l’aide d’algorithmes d’IA. Mise en place et gestion de bases de données orientées sous Neo4j, use case des algorithmes de graphes : détection de communauté, Dijkstra, PageRank Langages/Outils : Python, Neo4j, SpotfirePlateforme/OS : VSTS, MS Office, Hue DatabasesCompétences : Machine Learning, graphes, gestion de projet agile"
+        },
+        {
+            "titre": "Étude transverse sur le poids économique du secteur bancaire français – Fédération Bancaire Française",
+            "description": "Agrégation d’indicateurs de poids économique et d’innovation pour le secteur bancaire. Calcul des consommations intermédiaires par un modèle de Léontief, pour mesurer l’impact du secteur bancaire sur l’emploi.Langages/Outils : Données INSEEPlateforme/OS : MS OfficeCompétences : Macro-économie, modélisation"
+        },
+        {
+            "titre": "Analyse de données, définition des axes stratégiques – Grande Banque Française",
+            "description": "Aide à la conception d’une feuille de route aux ramifications stratégiques pour le client sur la base d’analyses Big Data :​ Conception et réalisation d’un data model pour l’environnement de travail​, Extraction / Analyse de larges volumes de données (5 ans d’historique, photos mensuelles)​, Réalisation d’un état des lieux pour le client , Préparation des données pour l’étude​, Analyses statistiques, Machine Learning et fondements d’une analyse NLP sur les données NPS.​"
+        },
+        {
+            "titre": "Aide à la consolidation des résultats d'analyses pour présentation au client",
+            "description": "Langages/Outils : SAS, Python, PowerBICompétences : Database Management, Analyse statistique, machine learning"
+        },
+        {
+            "titre": "Aide à la modélisation de scénarios économiques dans le cadre d’un Audit – Banque Française",
+            "description": "Revue et synthétisation des projections macro-économiques de grandes institutions financières internationales et françaises pour répondre aux besoins réglementaires du client, notamment dans le cadre d’IFRS9. Comparaison des estimations et benchmarks pour situer les prévisions du client. Constructions d’analyses graphiques comparatives.Langages/Outils : Oxford Economics Plateforme/OS : MS Office Compétences: Macro-économie, Modélisation"
+        },
+        {
+            "titre": "Webapps Flask/Dash – EY Data & Analytics",
+            "description": "Développement de plateformes sur python (Flask) pour différents usages au sein des équipes EY : Plateforme de comparaison de produits d’épargne pour aider les clients à répondre aux nouvelles réglementations, Plateforme de suivi des données épidémiologiques COVID19 pour aider les clients à suivre la sortie de crise. Scrapping & intégration de données publiques et privées. Plateforme de stockage d’articles avec index et moteur de recherche Langages/Outils : Azure, Python, Flask, Dash, BeautifulSoup, Selenium Compétences: Développement"
+        },
+        {
+            "titre": "Mission de Process Mining dans les processus de crédit – Grande Banque Française",
+            "description": "Analyse détaillée des processus de la vie des prêts (goulots d’étranglement, inefficiences). Préparation et enrichissement des logs pour faciliter l’analyse suivie d’une analyse grâce à Celonis : Préparation & Intégration des données, Création de tableaux de bord interactifs sur Celonis, Analyses des causes des inefficiences détectées Pérennisation de l’utilisation de Celonis :Accompagnement au niveau du cadrage, de la gestion du projet et du passage des instances de sécurité et formation des équipes, Gestion des enjeux d’anonymisation des données requises par la RGPD, Aide à l’intégration de Celonis dans l’écosystème informatique de la banque pour pérenniser l’utilisation de Celonis Langages/Outils : SQL, PQL, Python Compétences: Database Management, Analyse Statistique, Machine Learning"
+        },
+        {
+            "titre": "Développement de trois plateformes cognitives pour les filières juridiques et réglementaires d’une grande banque française",
+            "description": "Développement en équipe full stack, d’outils transverses, hébergés dans le cloud, permettant d’extraire des données publiques et internes, de les classifier et de les caractériser à l’aide d’algorithmes IA (NLP, ML) avant de les mettre à disposition des équipes par un moteur de recherche sur une WebApp déployée. Gestion des projets et coordination des travaux, Extraction des données sur python avec les modules Scrapy, Selenium et par API, Stockage sur Azure SQL, Modules de Machine Learning et de Deep Learning sur une VM Azure, Indexation des données sur Azure Search (équivalent Elastic Search), Analyse des performances des segmentations NLP avec des clmétriques de cohérence et de cannibalisation, Gestion du suivi des performance en mode AgilePassage en production des applications en collaboration avec la DSI et dans un contexte compliqué de transition sur les outils cloud. Langages/Outils : Python, SQL, Angular, PowerBI /nPlateforme/OS : Azure Compétences: Deep Learning, NLP, Data Mining, Indexing, Azure Cloud Services"
+        },
+        {
+            "titre": "Optimisation des revenus pour une grande banque française",
+            "description": "Analyse générale des flux de la banque et de la tarification en vigueur : Recherche de fuites de revenus par des simulations sur python et en recettant sur SQL, Analyse ciblée d’une multitude de produits et analyse d’impact des modifications de tarification récentes, Rédaction de pistes d’optimisation des flux de revenus de la banque et échanges avec le client sur les possibilités d’implémentation.Langages/Outils : SQL, R, ExcelPlateforme/OS : MS OfficeCompétences : Analyse financière, simulation, optimisation"
+        },
+        {
+            "titre": "Analyse des données d’incidentologie des plateformes et services d’une banque française ",
+            "description": "Nettoyage / Exploration et diagnostics sur les données d’incidentologie. Analyse des causes et recherche de solutions.Statistiques de test pour identifier les signaux : Analyse des évolutions macro, Zooms sur les socles applicatifs, Analyses NLP sur les verbatims, Restitutions des analyses au client Langages/Outils : Python, SQL Compétences : NLP, Statistiques & ML"
+        },
+        {
+            "titre": "Développement de tableau de bord de pilotage pour des indicateurs financiers et commerciaux – Banque Privée",
+            "description": "Développement d’un ensemble d’application de suivi d’indicateurs financiers avec des outils transverses de la suite Microsoft allant de PowerBI à PowerApps. Gestion des projets en mode Agile, Transformation des données avec SQL et coordination des travaux avec la DSI sur l’ETL Informatica Powercenter, Ateliers de Design Thinking pour la spécification des besoins, Développement des tableaux de bord et itération avec les utilisateurs finaux, Passage en production des livrables finaux, Passage en production des applications en collaboration avec la DSI"
+        },
+        {
+            "titre": "Identification de cas d’usages et d’opportunités pour améliorer et faciliter la collaboration entre plusieurs entités – Grande Banque Française",
+            "description": "Création d’une suite d’outils : Organisation de la comitologie projet (COPRO, COPIL), Organisation et animations d’ateliers et d’entretiens avec les différentes parties prenantes, Cadrage du projet au travers d’une analyse du contexte et des besoins, une identification des cas d’usages, leur qualification en termes d’impacts et de faisabilité (business cases) et la définition des solutions"
+        },
+        {
+            "titre": "Manager sur le POC de migration accélérée de scripts SAS à l’aide de la suite EY d’accélérateurs de migration SAS – Grande Banque Française",
+            "description": "Création d’une suite d’outils GenAI pour accélérer les migrations des clients décommissionnant SAS partiellement ou complètement : Gestion de projet et suivi détaillé des KPIs d’efficacité, Supervision des travaux de traduction de scripts SAS de divers niveaux de complexité vers Python, Dataiku et SQL, Product Manager pour le développement et l’adaptation de l’accélérateur de génération de données synthétiques à partir du seul script SAS pour évaluer la qualité d’une traduction de script quand les données client sont inaccessibles Langages/Outils : Python, Azure x OpenAI, Compétences: Generative AI, Prompt Engineering, Développement"
+        },
+        {
+            "titre": "Analyse de données pour une société spécialisée dans la compensation financière",
+            "description": "Analyse générale des flux journaliers des différents clients de la société : Gestion du projet, Data Preparation, analyses statistiques avancées, clustering.Rédaction de rapport final pour le client avec des explications concrètes des phénomènes observés Langages/Outils : SQL, Python, PowerBI Compétences: Statistiques, Connaissances Bancaires, Paiement "
+        },
+        {
+            "titre": "Revue des données sur les charges budgétaires pour l’IT – Grande Banque Française",
+            "description": " "
+        },
+        {
+            "titre": "Simulations d’effets de bord à des fins actuarielles pour une entreprise de l’industrie",
+            "description": " "
+        },
+        {
+            "titre": "Pilotage du Programme Data – Grande Banque Française",
+            "description": "Pilotage du Programme Data d’une institution financière dans un contexte de changement de socle data : Organisation et animation d'ateliers avec les métiers pour identifier et prioriser les cas d’usage pertinents et éligibles, Élaboration de la trajectoire Data au cœur du programme, accompagnée d'une feuille de route définie à l’aide des priorités métier et des possibilités techniques, Réalisation d'études de faisabilité pour les cas d’usage embarqués, préparation de business cases et rédaction des expressions de besoin, Identification et analyse des risques liés aux programme, tant du point de vue projet que groupe, et mise en place de plans de mitigation, Collaboration étroite avec la DSI pour la réalisation des travaux techniques et l’implémentation de la trajectoire Gestion de la PMO projet, organisation et animation des comités de suivi (COSUI, COPIL, etc.) pour assurer un suivi rigoureux et une communication efficace avec les parties prenantes Langages/Outils : Collibra Compétences : PMO, Architecture"
+        }
+    ],
+    "projets_internes": [
+        {
+            "titre": "Product Owner sur un ensemble de projets low code et Python internes – EY",
+            "description": "Gestion en méthode agile de projets powerapps pour économiser du temps sur les processus internes : Application de gestion des pipelines de recrutement, Application de suivi et de relances semi-automatiques sur les pipelines d’opportunités, de missions (+détections des opportunités en anomalie), Application de suivi et de partage des compétences et des expériences de l ’équipe, Projets Data Fabric / NLP de classification de textes et de construction d’ontologies Langages/Outils : PowerApps, Python Compétences : Gestion de projet agile, développement CI/CD"
+        },
+        {
+            "titre": "Plateforme de suivi épidémique Data visualisation - EYSight (",
+            "description": "Mise en place d’un pipeline python d’extraction, de traitement et de restitution d’open data et de données privatives. Mise en ligne d’une solution python-dash dockerisée sur Azure WebApps. Scraping automatisé, Chargement en temps quasi-réel des données sur des bases Azure SQL, Développement d’une plateforme de tableau de bord avec Dash, Connection de bases SQL à une plateforme web déployée sur un site, Visualisation de données  Langages/Outils : Python, Dash, SQL Plateforme/OS : Azure Compétences : Data Engineering, Data Mining, Services Cloud"
+        },
+        {
+            "titre": "Projet de recherche - EY/École Polytechnique",
+            "description": "NLP – Créer un algorithme capable de résumer des documents légaux par une méthode extractive : Construction d’un word embedding spécialisé dans la documentation légale, Clustering et extraction des phrases clés d’un texte avec des algorithmes de MS, Synthétisation des résultats. Langages/Outils : Python Plateforme/OS : MS Office Compétences : Natural Language Processing, Unsupervised learning, Data Visulaisation"
+        },
+        {
+            "titre": "Animation de la communauté Data Science – EY Data & Analytics",
+            "description": "Dans l’équipe d’animation de la communauté data science de l’équipe Data & Analytics au sein de FSO : Aide au choix des sujets abordés et des projets entrepris. Accompagnement d’autres collaborateurs dans le cadre d’une montée en compétences fondée sur le partage des connaissances Langages/Outils : Python, R Plateforme/OS : MS Teams Compétences : Data Science, Programmation"
+        },
+        {
+            "titre": "Détection d’anomalies transactionnelles – Data Visualisation",
+            "description": "Détection d’outliers pour un prototype de détection/classification d’anomalies dans les bases de données : Machine Learning, Active learning, Visualisation de données sous tableau et Spotfire, Langages/Outils : Python, Tableau, Spotfire Plateforme/OS : MS OfficeCompétences : Unsupervised learning, Active learning, Data Visulaisation"
+        },
+        {
+            "titre": "Projet de recherche – NCU Taiwan",
+            "description": "Projet de recherche en Deep Learning pour la reconnaissance d’iris en basse résolution (photos de téléphone portable) : Création/consolidation d’une base de données à partir d’open data et de données propriétaires, Choix et fine tuning des algorithmes de reconnaissance. Application de diverses méthodes d’optimisation de la vitesse de calcul. Le projet a été primé (1ère place) par National Central University (NCU Taiwan) à la suite des soutenances Langages/Outils : Python, R  Plateforme/OS : MS Teams Compétences : Data Science, Programmation"
+        },
+        {
+            "titre": "PowerApps",
+            "description": "Recrutement, Base CV, Formation "
+        },
+        {
+            "titre": "GenAI",
+            "description": "RAG - Semantic Search - Synthetic Data - Veille Reglementaire "
+        }
+    ],
+    "formations_certifications": {
+        "certifications": [
+            "SAS (2019)",
+            "Neo4j - Advanced (2019)",
+            "Flask Mega Tutorial (2019)",
+            "PowerBI (2019)",
+            "Celonis Data Engineer (2019)",
+            "Celonis Business User (2019)",
+            "Data Excellence Certificate (2020)",
+            "Advanced NLP (2020)",
+            "Microsoft Azure Data Science DP-100 (2021)",
+            "PowerApps Guide (2022)",
+            "Agile Safe PO/PM (2022)",
+            "Databricks Platform Architect (2025)",
+            "Databricks Generative AI Engineer (2025)"
+        ]
+    }
+}
