@@ -1,0 +1,65 @@
+{
+    "nom": "Marion Dupuis",
+    "poste": "Manager – Data Transformation & PMO",
+    "email": "marion.dupuis@fr.ey.com",
+    "telephone": "+33 6 01 23 45 90",
+    "profil": {
+        "description": "Marion Dupuis est diplômée de l'ESCP avec un master en Management de Projet. Elle possède 12 ans d'expérience en pilotage de programmes de transformation data avec une expertise en PMO et gestion de projets complexes.",
+        "formation": "ESCP Business School, Master Management de Projet"
+    },
+    "competences": {
+        "themes": [
+            "Program Management",
+            "PMO",
+            "Data Transformation",
+            "Agile/SAFe",
+            "Risk Management",
+            "Stakeholder Management",
+            "Budget Management"
+        ],
+        "outils": [
+            "Jira",
+            "Confluence",
+            "MS Project",
+            "Excel",
+            "PowerPoint"
+        ],
+        "frameworks": [
+            "SAFe",
+            "Scrum",
+            "Prince2"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C2)",
+            "Italien (B1)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "PMO Programme Data – CAC 40 Banque",
+            "description": "Pilotage d'un programme de transformation data sur 4 ans avec budget de 40M€. Coordination de 15 projets, 200 ressources. Reporting COMEX, gestion des risques, suivi budgétaire. Livraison à 95% on-time. Compétences : PMO, Program Management, Risk Management"
+        },
+        {
+            "titre": "Transformation Data Platform – Assurance",
+            "description": "Management de la migration vers une nouvelle plateforme data. Planification, coordination de 8 workstreams, gestion des dépendances. 18 mois, 20M€. Compétences : Project Management, Coordination, Planning"
+        },
+        {
+            "titre": "Déploiement SAFe – Industrie",
+            "description": "Mise en place du framework SAFe pour 5 ARTs data. Formation des équipes, cérémonies SAFe, PI Planning. Vélocité +40%. Compétences : SAFe, Agile Coaching, Transformation"
+        },
+        {
+            "titre": "Data Governance Programme – Retail",
+            "description": "Pilotage du programme de data governance. Création du Data Office, déploiement de Collibra, formation de 150 personnes. 24 mois, 8M€. Compétences : Program Management, Data Governance, Change"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "PMP - Project Management Professional (2018)",
+            "SAFe Program Consultant - SPC (2020)",
+            "Prince2 Practitioner (2019)",
+            "Certified Scrum Master - CSM (2017)"
+        ]
+    }
+}

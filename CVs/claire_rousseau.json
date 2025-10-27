@@ -1,0 +1,60 @@
+{
+    "nom": "Claire Rousseau",
+    "poste": "Senior Consultant – Data Analytics",
+    "email": "claire.rousseau@fr.ey.com",
+    "telephone": "+33 6 56 78 90 12",
+    "profil": {
+        "description": "Claire Rousseau est diplômée de l'ESSEC avec un master en Business Analytics. Elle possède 6 ans d'expérience en conseil data analytics avec une expertise en data visualisation, self-service BI et data democratization.",
+        "formation": "ESSEC Business School, Master Business Analytics"
+    },
+    "competences": {
+        "langages": [
+            "SQL",
+            "Python",
+            "DAX",
+            "M"
+        ],
+        "outils": [
+            "Power BI",
+            "Tableau",
+            "Looker",
+            "Qlik Sense",
+            "Alteryx",
+            "dbt"
+        ],
+        "themes": [
+            "Data Visualization",
+            "Self-Service BI",
+            "Data Analytics",
+            "Data Storytelling",
+            "Dashboard Design"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C1)",
+            "Espagnol (B1)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Plateforme Self-Service BI – Industrie Pharmaceutique",
+            "description": "Déploiement d'une plateforme Power BI pour 500 utilisateurs. Création de 60 rapports et dashboards, mise en place des best practices de data viz, formation des key users. Adoption de 85% en 6 mois. Langages/Outils : Power BI, DAX, Power Query, Azure"
+        },
+        {
+            "titre": "Data Democratization – Groupe Retail",
+            "description": "Programme de démocratisation de la data avec création d'un data catalog Alation, mise en place d'un portail self-service, formation de 200 utilisateurs métiers. Réduction de 40% des demandes IT. Langages/Outils : Tableau, Alation, Snowflake, SQL"
+        },
+        {
+            "titre": "Dashboards Stratégiques – Banque d'investissement",
+            "description": "Création de dashboards exécutifs pour le COMEX avec focus sur KPIs financiers et opérationnels. Data storytelling, design thinking workshops. Langages/Outils : Tableau, SQL, Python"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Microsoft Certified: Power BI Data Analyst Associate (2022)",
+            "Tableau Desktop Specialist (2021)",
+            "Data Visualization and Communication with Tableau - Duke University (2023)"
+        ]
+    }
+}

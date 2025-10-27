@@ -1,0 +1,57 @@
+{
+    "nom": "Alice Morel",
+    "poste": "Senior Consultant – Data Science",
+    "email": "alice.morel@fr.ey.com",
+    "telephone": "+33 6 12 34 56 90",
+    "profil": {
+        "description": "Alice Morel est diplômée de l'École Polytechnique avec un master en Applied Mathematics. Elle possède 6 ans d'expérience en data science avec une expertise en optimization et operations research.",
+        "formation": "École Polytechnique, Master Applied Mathematics"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "R",
+            "SQL",
+            "Julia"
+        ],
+        "ia_ml": [
+            "Optimization",
+            "Operations Research",
+            "Linear Programming",
+            "Machine Learning",
+            "Prescriptive Analytics"
+        ],
+        "outils": [
+            "Gurobi",
+            "CPLEX",
+            "OR-Tools",
+            "PuLP",
+            "scikit-learn"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C2)",
+            "Chinois (B1)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Optimisation supply chain – Industrie Agroalimentaire",
+            "description": "Développement de modèles d'optimisation pour la planification de production et distribution. Programmation linéaire avec Gurobi, réduction de 20% des coûts logistiques. Langages/Outils : Python, Gurobi, PuLP"
+        },
+        {
+            "titre": "Optimisation de tournées – Logistique",
+            "description": "Résolution de problèmes de tournées de véhicules (VRP) avec algorithmes d'optimisation. Métaheuristiques, OR-Tools. Économie de 15% sur les coûts de transport. Langages/Outils : Python, OR-Tools, Google Maps API"
+        },
+        {
+            "titre": "Price optimization – Retail",
+            "description": "Modèles de price optimization avec élasticité-prix et ML. Maximisation de la marge sous contraintes. A/B testing des stratégies. +8% de marge. Langages/Outils : Python, scikit-learn, statsmodels"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Operations Research and Optimization - MIT (2021)"
+        ]
+    }
+}

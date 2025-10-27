@@ -1,0 +1,55 @@
+{
+    "nom": "Quentin Lemoine",
+    "poste": "Consultant – Data Catalog & Metadata",
+    "email": "quentin.lemoine@fr.ey.com",
+    "telephone": "+33 6 90 12 34 78",
+    "profil": {
+        "description": "Quentin Lemoine est diplômé de l'Université Paris-Sud avec un master en Informatique. Il possède 4 ans d'expérience en data catalog et metadata management avec une expertise en Collibra et Alation.",
+        "formation": "Université Paris-Sud, Master Informatique"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "SQL"
+        ],
+        "themes": [
+            "Data Catalog",
+            "Metadata Management",
+            "Data Lineage",
+            "Data Discovery",
+            "Data Governance"
+        ],
+        "outils": [
+            "Collibra",
+            "Alation",
+            "Apache Atlas",
+            "Atlan",
+            "OpenMetadata"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (B2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Implémentation Collibra – Groupe Bancaire",
+            "description": "Déploiement de Collibra pour cataloguer 5000 assets data. Configuration des workflows, intégration avec Snowflake et Tableau. Formation de 100 data stewards. Compétences : Collibra, Data Catalog, Integration"
+        },
+        {
+            "titre": "Data Lineage – Assurance",
+            "description": "Mise en place du data lineage avec Collibra Lineage. Intégration avec outils ETL (Informatica, Talend), visualisation end-to-end. 500 lineages documentés. Compétences : Data Lineage, Collibra, ETL"
+        },
+        {
+            "titre": "Data Discovery – Retail",
+            "description": "Programme de data discovery avec Alation. Crawling automatique de sources, ML pour recommandations. Adoption de 200 utilisateurs. Compétences : Data Discovery, Alation, Python"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Collibra Data Intelligence Platform Administrator (2023)",
+            "Alation Data Catalog Fundamentals (2024)"
+        ]
+    }
+}

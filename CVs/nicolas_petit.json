@@ -1,0 +1,61 @@
+{
+    "nom": "Nicolas Petit",
+    "poste": "DevOps Data Engineer",
+    "email": "nicolas.petit@fr.ey.com",
+    "telephone": "+33 6 89 01 23 45",
+    "profil": {
+        "description": "Nicolas Petit est diplômé de l'ESIEE Paris avec une double compétence en Data Engineering et DevOps. Il possède 6 ans d'expérience dans l'automatisation et la gestion d'infrastructures data sur le cloud.",
+        "formation": "ESIEE Paris, spécialisation Systèmes d'Information"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "Bash",
+            "Go",
+            "SQL"
+        ],
+        "outils": [
+            "Kubernetes",
+            "Docker",
+            "Terraform",
+            "Ansible",
+            "GitLab CI/CD",
+            "Jenkins",
+            "Airflow",
+            "Kafka"
+        ],
+        "themes": [
+            "DevOps",
+            "CI/CD",
+            "Infrastructure as Code",
+            "Cloud Engineering",
+            "Container Orchestration"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C1)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Infrastructure Data Platform – E-commerce",
+            "description": "Mise en place de l'infrastructure data sur AWS avec Terraform. Architecture Kubernetes pour orchestration des pipelines Spark et Airflow. Monitoring avec Prometheus et Grafana. Réduction de 50% des incidents. Langages/Outils : Terraform, Kubernetes, AWS, Airflow, Python"
+        },
+        {
+            "titre": "Pipelines CI/CD pour Data Pipelines – Banque",
+            "description": "Création de pipelines CI/CD pour automatiser le déploiement de jobs Spark et dbt. Tests automatisés, validation data quality, déploiement multi-environnements. Langages/Outils : GitLab CI, Docker, dbt, Great Expectations"
+        },
+        {
+            "titre": "Migration Kafka vers Confluent Cloud – Retail",
+            "description": "Migration d'une infrastructure Kafka on-premise vers Confluent Cloud. Architecture haute disponibilité, monitoring, alerting. Zero downtime migration. Langages/Outils : Kafka, Confluent, Terraform, Python"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Certified Kubernetes Administrator - CKA (2022)",
+            "HashiCorp Certified: Terraform Associate (2023)",
+            "AWS Certified Solutions Architect (2024)"
+        ]
+    }
+}

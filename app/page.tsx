@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Switch } from "@/components/ui/switch"
 import {
   Dialog,
   DialogContent,
@@ -59,6 +60,15 @@ import {
   Calendar,
   Zap,
   X,
+  Sparkles,
+  Target,
+  Layers,
+  HelpCircle,
+  Code,
+  GraduationCap,
+  Building,
+  Lightbulb,
+  Settings,
 } from "lucide-react"
 import { 
   RadarChart, 
@@ -112,6 +122,29 @@ interface Resume {
   interviewTopics?: string[]
 }
 
+interface SearchHistoryEntry {
+  id: string
+  timestamp: number
+  searchMode: "simple" | "multi"
+  tenderText: string
+  selectedTemplate: string | null
+  resultsCount: number
+  topMatches: Array<{
+    name: string
+    score: number
+    title: string
+  }>
+  filters: {
+    location: string
+    availability: string
+    minExperience: string
+    sectors: string[]
+    skills: string[]
+    certifications: string[]
+  }
+  profilesCount?: number
+}
+
 export default function ResumeMatchmaker() {
   const [tenderText, setTenderText] = useState("")
   const [enrichedText, setEnrichedText] = useState<string>("")
@@ -136,7 +169,7 @@ export default function ResumeMatchmaker() {
   const [matchedResumes, setMatchedResumes] = useState<Resume[]>([])
   const [matchingSummary, setMatchingSummary] = useState<string>("")
   const [showInformation, setShowInformation] = useState(false)
-  const [expandedSection, setExpandedSection] = useState<"tender" | "filters" | null>(null)
+  const [expandedSection, setExpandedSection] = useState<"tender" | "filters" | null>("tender")
   const [compareMode, setCompareMode] = useState(false)
   const [selectedForCompare, setSelectedForCompare] = useState<Set<string>>(new Set())
   const [showCompareModal, setShowCompareModal] = useState(false)
@@ -145,6 +178,32 @@ export default function ResumeMatchmaker() {
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
   const [showMultiProfileWarning, setShowMultiProfileWarning] = useState(false)
   const [viewMode, setViewMode] = useState<"dashboard" | "matching" | "overview">("dashboard")
+  const [searchMode, setSearchMode] = useState<"simple" | "multi">("simple")
+  const [showModeChangeDialog, setShowModeChangeDialog] = useState(false)
+  const [pendingMode, setPendingMode] = useState<"simple" | "multi" | null>(null)
+  const [showHistoryPanel, setShowHistoryPanel] = useState(false)
+  const [searchHistory, setSearchHistory] = useState<SearchHistoryEntry[]>([])
+  const [showMatchingInfoDialog, setShowMatchingInfoDialog] = useState(false)
+  const [showInfoButtonAnimation, setShowInfoButtonAnimation] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage] = useState(10)
+  const [currentPageMulti, setCurrentPageMulti] = useState<{[key: string]: number}>({})
+  const [showWeightsDialog, setShowWeightsDialog] = useState(false)
+  const [matchingWeights, setMatchingWeights] = useState({
+    technicalSkills: 40,
+    experience: 30,
+    training: 20,
+    context: 10
+  })
+  
+  // Désactiver l'animation du bouton info après 10 secondes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowInfoButtonAnimation(false)
+    }, 10000) // 10 secondes
+    
+    return () => clearTimeout(timer)
+  }, [])
   
   // Liste des templates multi-profils
   const multiProfileTemplates = [
@@ -192,10 +251,79 @@ export default function ResumeMatchmaker() {
     }
   }, [])
 
+  // Load search history from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('resume-matchmaker-history')
+    if (saved) {
+      try {
+        const history = JSON.parse(saved)
+        setSearchHistory(history)
+      } catch (e) {
+        console.error('Error loading history:', e)
+      }
+    }
+  }, [])
+
   // Save favorites to localStorage
   const saveFavorites = (newFavorites: string[]) => {
     setFavorites(newFavorites)
     localStorage.setItem('resume-matchmaker-favorites', JSON.stringify(newFavorites))
+  }
+
+  // Save search to history
+  const saveSearchToHistory = () => {
+    const historyEntry: SearchHistoryEntry = {
+      id: `search-${Date.now()}`,
+      timestamp: Date.now(),
+      searchMode: searchMode,
+      tenderText: tenderText,
+      selectedTemplate: selectedTemplate,
+      resultsCount: matchedResumes.length,
+      topMatches: matchedResumes.slice(0, 3).map(r => ({
+        name: r.name,
+        score: r.matchScore,
+        title: r.title
+      })),
+      filters: filters,
+      profilesCount: searchMode === "multi" ? detectedProfiles.length : undefined
+    }
+
+    const updatedHistory = [historyEntry, ...searchHistory].slice(0, 20) // Keep last 20 searches
+    setSearchHistory(updatedHistory)
+    localStorage.setItem('resume-matchmaker-history', JSON.stringify(updatedHistory))
+  }
+
+  // Restore search from history
+  const restoreSearchFromHistory = (entry: SearchHistoryEntry) => {
+    setTenderText(entry.tenderText)
+    setSelectedTemplate(entry.selectedTemplate)
+    setSearchMode(entry.searchMode)
+    setFilters(entry.filters)
+    
+    // Reset multi-profile state as we don't store complete profile data
+    setDetectedProfiles([])
+    setIsMultiProfile(false)
+    setShowProfileValidation(false)
+    
+    setShowHistoryPanel(false)
+    toast.success("Recherche restaurée", {
+      description: "Cliquez sur 'Démarrer le Matching' pour relancer la recherche"
+    })
+  }
+
+  // Delete history entry
+  const deleteHistoryEntry = (entryId: string) => {
+    const updatedHistory = searchHistory.filter(h => h.id !== entryId)
+    setSearchHistory(updatedHistory)
+    localStorage.setItem('resume-matchmaker-history', JSON.stringify(updatedHistory))
+    toast.success("Entrée supprimée de l'historique")
+  }
+
+  // Clear all history
+  const clearAllHistory = () => {
+    setSearchHistory([])
+    localStorage.removeItem('resume-matchmaker-history')
+    toast.success("Historique effacé")
   }
 
   // Toggle favorite with animation
@@ -436,6 +564,23 @@ Pour les graphiques, consultez l'interface web.
   const [sortBy, setSortBy] = useState<"score" | "experience" | "name">("score")
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
 
+  // Réinitialiser la page lors du changement de résultats ou de filtres
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [matchedResumes.length, resultFilters, sortBy, sortOrder, showFavoritesOnly])
+  
+  // Scroll vers le haut quand on change de page
+  useEffect(() => {
+    if (currentPage > 1) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }, [currentPage])
+  
+  // Réinitialiser la page lors du changement de profil actif
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [activeProfileTab])
+
   // Check if any filters are active
   const hasActiveFilters = () => {
     return (
@@ -446,6 +591,37 @@ Pour les graphiques, consultez l'interface web.
       filters.skills.length > 0 ||
       filters.certifications.length > 0
     )
+  }
+
+  // Handle search mode change with confirmation if needed
+  const handleSearchModeChange = (newMode: "simple" | "multi") => {
+    // If there's already text entered and user is changing mode, show confirmation dialog
+    if (tenderText.trim() && searchMode !== newMode) {
+      setPendingMode(newMode)
+      setShowModeChangeDialog(true)
+    } else {
+      // No text or same mode, just change directly
+      setSearchMode(newMode)
+    }
+  }
+
+  // Confirm mode change and optionally clear text
+  const confirmModeChange = (clearText: boolean) => {
+    if (pendingMode) {
+      setSearchMode(pendingMode)
+      if (clearText) {
+        setTenderText("")
+        setSelectedTemplate(null)
+      }
+      setPendingMode(null)
+      setShowModeChangeDialog(false)
+    }
+  }
+
+  // Cancel mode change
+  const cancelModeChange = () => {
+    setPendingMode(null)
+    setShowModeChangeDialog(false)
   }
 
   // Reset all states to start fresh
@@ -459,6 +635,7 @@ Pour les graphiques, consultez l'interface web.
     setMatchingProgress(0)
     setMatchingStep("")
     setSelectedTemplate(null)
+    setSearchMode("simple")
     
     // Reset filters
     setFilters({
@@ -683,7 +860,7 @@ Pour les graphiques, consultez l'interface web.
       if (!data.is_multiple || data.profiles.length === 1) {
         toast.success("1 profil détecté !", {
           id: "analyze-toast",
-          description: "💡 Conseil : Utilisez le bouton 'Matching Simple' pour un seul profil",
+          description: "💡 Conseil : Passez en 'Recrutement Individuel' pour un matching plus rapide",
           duration: 5000
         })
         
@@ -694,7 +871,7 @@ Pour les graphiques, consultez l'interface web.
         
         toast.success("Analyse terminée !", {
           id: "analyze-toast",
-          description: `${data.profiles.length} profils détectés - Mode multi-profils activé`
+          description: `${data.profiles.length} profils détectés dans l'appel d'offres`
         })
       }
     } catch (error) {
@@ -753,7 +930,8 @@ Pour les graphiques, consultez l'interface web.
               skills: cv.skills,
               years_experience: cv.years_experience,
               sectors: cv.sectors || []
-            }))
+            })),
+            weights: matchingWeights
           })
         })
 
@@ -808,6 +986,9 @@ Pour les graphiques, consultez l'interface web.
       setProfileSummaries(summaries)
       setHasResults(true)
       setIsMatching(false)
+      
+      // Save search to history after successful multi-profile matching
+      saveSearchToHistory()
       
       // Set first profile as active tab
       if (selectedProfilesList.length > 0) {
@@ -904,10 +1085,11 @@ Pour les graphiques, consultez l'interface web.
       await new Promise(resolve => setTimeout(resolve, 500))
 
       // Prepare job offer from tender text
+      // L'IA analysera directement le texte brut pour extraire TOUTES les compétences et exigences
       const jobOffer: JobOffer = {
         title: extractJobTitle(tenderText),
         description: tenderText,
-        required_skills: extractSkills(tenderText),
+        required_skills: [], // L'IA extraira les compétences elle-même du texte
         min_experience: filters.minExperience ? parseInt(filters.minExperience) : 0
       }
 
@@ -980,13 +1162,33 @@ Pour les graphiques, consultez l'interface web.
       }))
 
       // Step 3: Scanning database
+      console.log(`📊 Filtrage: ${resumes.length} CVs total → ${cvList.length} CVs après filtres`)
+      console.log(`📋 Filtres actifs:`, {
+        sectors: filters.sectors,
+        skills: filters.skills,
+        certifications: filters.certifications,
+        location: filters.location,
+        availability: filters.availability,
+        minExperience: filters.minExperience
+      })
+      
+      // Vérifier qu'il reste des CVs à analyser
+      if (cvList.length === 0) {
+        setIsMatching(false)
+        toast.error("Aucun candidat à analyser", {
+          description: "Les filtres appliqués ont éliminé tous les candidats. Veuillez ajuster vos critères de filtrage."
+        })
+        return
+      }
+      
       setMatchingStep(`Scan de la base de données (${cvList.length} CVs)...`)
       setMatchingProgress(40)
       await new Promise(resolve => setTimeout(resolve, 500))
 
       const requestBody: MatchingRequest = {
         job_offer: jobOffer,
-        cv_list: cvList
+        cv_list: cvList,
+        weights: matchingWeights
       }
 
       // Step 4: AI Matching
@@ -1098,6 +1300,9 @@ Pour les graphiques, consultez l'interface web.
       setIsMatching(false)
       setHasResults(true)
       
+      // Save search to history after successful matching
+      saveSearchToHistory()
+      
       toast.success("Matching terminé !", {
         description: `${updatedResumes.length} candidats analysés et classés`
       })
@@ -1131,15 +1336,83 @@ Pour les graphiques, consultez l'interface web.
 
   // Helper function to extract skills from tender text
   const extractSkills = (text: string): string[] => {
+    // Liste étendue de compétences techniques (développement, data, cloud, DevOps)
     const commonSkills = [
-      "JavaScript", "TypeScript", "React", "Node.js", "Python", "Java",
-      "AWS", "Docker", "Kubernetes", "SQL", "MongoDB", "GraphQL",
-      "Vue.js", "Angular", "CSS", "HTML", "Git", "CI/CD"
+      // Langages de programmation
+      "JavaScript", "TypeScript", "Python", "Java", "Scala", "Go", "Rust", "C++", "C#", "R", "Julia",
+      
+      // Frontend
+      "React", "Vue.js", "Angular", "Svelte", "Next.js", "Nuxt.js", "CSS", "HTML", "Tailwind",
+      
+      // Backend
+      "Node.js", "Express", "Django", "Flask", "FastAPI", "Spring Boot", "ASP.NET",
+      
+      // Data Engineering & Analytics
+      "Spark", "Kafka", "Airflow", "dbt", "Databricks", "Snowflake", "BigQuery", "Redshift",
+      "Pandas", "NumPy", "PySpark", "Hadoop", "Hive", "Presto", "Flink",
+      
+      // Machine Learning & AI
+      "TensorFlow", "PyTorch", "Scikit-learn", "Keras", "MLflow", "Kubeflow",
+      
+      // Bases de données
+      "SQL", "PostgreSQL", "MySQL", "Oracle", "MongoDB", "Cassandra", "Redis", "Elasticsearch",
+      "DynamoDB", "CosmosDB", "Neo4j",
+      
+      // Cloud & Infrastructure
+      "AWS", "Azure", "GCP", "Docker", "Kubernetes", "Terraform", "CloudFormation", "Helm",
+      "Lambda", "EC2", "S3", "RDS", "EKS", "ECS", "Azure Functions", "Cloud Functions",
+      
+      // DevOps & CI/CD
+      "Git", "GitHub", "GitLab", "Jenkins", "CircleCI", "GitHub Actions", "ArgoCD", "Ansible",
+      "CI/CD", "Prometheus", "Grafana", "DataDog",
+      
+      // API & Messaging
+      "REST", "GraphQL", "gRPC", "RabbitMQ", "SQS", "Pub/Sub", "Event Hubs",
+      
+      // Concepts & Patterns
+      "Microservices", "Serverless", "Data Mesh", "Domain-Driven Design", "ETL", "ELT",
+      "Data Pipeline", "Stream Processing", "Batch Processing"
     ]
     
-    return commonSkills.filter(skill => 
+    // Extraire les compétences mentionnées dans le texte
+    const foundSkills = commonSkills.filter(skill => 
       text.toLowerCase().includes(skill.toLowerCase())
     )
+    
+    // Si aucune compétence n'est trouvée explicitement, inférer selon le titre
+    if (foundSkills.length === 0) {
+      const lowerText = text.toLowerCase()
+      
+      // Data Engineer - compétences par défaut
+      if (lowerText.includes("data engineer") || lowerText.includes("ingénieur data")) {
+        return ["Python", "SQL", "Spark", "Kafka", "Airflow", "AWS", "Docker", "dbt"]
+      }
+      
+      // Data Scientist - compétences par défaut
+      if (lowerText.includes("data scientist") || lowerText.includes("scientist")) {
+        return ["Python", "R", "SQL", "TensorFlow", "PyTorch", "Pandas", "Scikit-learn"]
+      }
+      
+      // DevOps - compétences par défaut
+      if (lowerText.includes("devops") || lowerText.includes("sre")) {
+        return ["Docker", "Kubernetes", "Terraform", "AWS", "CI/CD", "Git", "Ansible"]
+      }
+      
+      // Full Stack - compétences par défaut
+      if (lowerText.includes("full stack") || lowerText.includes("fullstack")) {
+        return ["JavaScript", "TypeScript", "React", "Node.js", "SQL", "Docker", "Git"]
+      }
+      
+      // Cloud Engineer - compétences par défaut
+      if (lowerText.includes("cloud engineer") || lowerText.includes("cloud architect")) {
+        return ["AWS", "Azure", "GCP", "Kubernetes", "Terraform", "Docker", "Python"]
+      }
+      
+      // Par défaut, retourner une liste générique
+      return ["Python", "SQL", "JavaScript", "Git", "Docker"]
+    }
+    
+    return foundSkills
   }
 
   // Compare mode functions
@@ -1385,25 +1658,31 @@ Pour les graphiques, consultez l'interface web.
             </div>
 
             {/* Actions et statut */}
-            <div className="flex items-center gap-4">
-              {/* Statut de la base de données */}
+            <div className="flex items-center gap-2">
+              {/* Statut de la base de données - Version compacte */}
               {isLoadingCVs ? (
-                <div className="flex items-center space-x-2 px-4 py-2 bg-gray-800/50 rounded-lg border border-gray-700">
+                <div className="flex items-center space-x-2 px-3 py-2 bg-gray-800/50 rounded-lg border border-gray-700">
                   <Loader2 className="w-4 h-4 animate-spin text-blue-400" />
-                  <span className="text-sm text-gray-300">Chargement...</span>
+                  <span className="text-xs text-gray-300">Chargement...</span>
                 </div>
               ) : (
-                <div className="flex items-center space-x-2 px-4 py-2 bg-gray-800/50 rounded-lg border border-green-500/30">
-                  <div className="relative">
-                    <Database className="w-5 h-5 text-green-400" />
-                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-xs font-semibold text-green-400">Base de données active</span>
-                    <span className="text-xs text-gray-400">{resumes.length} profils disponibles</span>
-                  </div>
-                  <CheckCircle className="w-4 h-4 text-green-500" />
-                </div>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center space-x-2 px-3 py-2 bg-gray-800/50 rounded-lg border border-green-500/30 cursor-pointer">
+                        <div className="relative">
+                          <Database className="w-4 h-4 text-green-400" />
+                          <div className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                        </div>
+                        <span className="text-xs font-semibold text-green-400">{resumes.length} profils</span>
+                        <CheckCircle className="w-3 h-3 text-green-500" />
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Base de données active - {resumes.length} profils disponibles</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
 
               {/* Toggle Dashboard/Overview/Matching */}
@@ -1457,14 +1736,37 @@ Pour les graphiques, consultez l'interface web.
                       variant="outline"
                       size="sm"
                       onClick={() => setShowInformation(!showInformation)}
-                      className="bg-blue-600/20 text-blue-300 border-blue-500/50 hover:bg-blue-600/30 hover:text-blue-200 hover:border-blue-400"
+                      className="bg-blue-600/20 text-blue-300 border-blue-500/50 hover:bg-blue-600/30 hover:text-blue-200 hover:border-blue-400 px-3"
                     >
-                      <Info className="w-4 h-4 mr-2" />
-                      Guide
+                      <Info className="w-4 h-4" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Afficher le guide d'utilisation</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
+              {/* Bouton Historique */}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowHistoryPanel(!showHistoryPanel)}
+                      className="bg-purple-600/20 text-purple-300 border-purple-500/50 hover:bg-purple-600/30 hover:text-purple-200 hover:border-purple-400 relative px-3"
+                    >
+                      <Clock className="w-4 h-4" />
+                      {searchHistory.length > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-purple-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold">
+                          {searchHistory.length}
+                        </span>
+                      )}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Historique des recherches ({searchHistory.length})</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -2539,43 +2841,11 @@ Pour les graphiques, consultez l'interface web.
       {/* MATCHING VIEW */}
       {viewMode === "matching" && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Horizontal Banner */}
+          {/* Horizontal Banner - Masqué pendant et après matching */}
+          {!isMatching && !hasResults && Object.keys(profileResults).length === 0 && (
         <div className="mb-6">
           <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
             <div className="flex gap-4 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
-              {/* Tender Section */}
-              <div className="flex-shrink-0">
-                <Button
-                  variant="outline"
-                  onClick={() => setExpandedSection(expandedSection === "tender" ? null : "tender")}
-                  className={
-                    tenderText && isMultiProfile
-                      ? "bg-purple-600 border-purple-500 text-white hover:bg-purple-700 whitespace-nowrap"
-                      : tenderText && !isMultiProfile
-                      ? "bg-blue-600 border-blue-500 text-white hover:bg-blue-700 whitespace-nowrap"
-                      : "bg-gray-800 border-gray-600 text-white hover:bg-gray-700 whitespace-nowrap"
-                  }
-                >
-                  <FileText className="w-4 h-4 mr-2" />
-                  Appel d'Offres
-                  {tenderText && isMultiProfile && (
-                    <Badge className="ml-2 bg-white text-purple-600 text-xs px-1.5 py-0">
-                      Multi
-                    </Badge>
-                  )}
-                  {tenderText && !isMultiProfile && (
-                    <Badge className="ml-2 bg-white text-blue-600 text-xs px-1.5 py-0">
-                      Simple
-                    </Badge>
-                  )}
-                  {expandedSection === "tender" ? (
-                    <ChevronUp className="w-4 h-4 ml-2" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 ml-2" />
-                  )}
-                </Button>
-              </div>
-
               {/* Filters Section */}
               <div className="flex-shrink-0">
                 <Button
@@ -2605,6 +2875,21 @@ Pour les graphiques, consultez l'interface web.
                   ) : (
                     <ChevronDown className="w-4 h-4 ml-2" />
                   )}
+                </Button>
+              </div>
+
+              {/* Bouton Pondération */}
+              <div className="flex-shrink-0">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowWeightsDialog(true)}
+                  className="bg-gray-800 border-gray-600 text-white hover:bg-gray-700 whitespace-nowrap"
+                >
+                  <Settings className="w-4 h-4 mr-2" />
+                  Pondération
+                  <Badge className="ml-2 bg-yellow-600 text-white text-xs px-1.5 py-0">
+                    Personnalisé
+                  </Badge>
                 </Button>
               </div>
 
@@ -2638,8 +2923,8 @@ Pour les graphiques, consultez l'interface web.
                     <TooltipTrigger asChild>
                       <Button
                         onClick={handleStartMatching}
-                        disabled={isMatching}
-                        className="bg-yellow-400 hover:bg-yellow-500 text-black whitespace-nowrap font-semibold"
+                        disabled={isMatching || (searchMode === "multi" && detectedProfiles.length === 0)}
+                        className="bg-yellow-400 hover:bg-yellow-500 text-black whitespace-nowrap font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {isMatching ? (
                           <>
@@ -2649,23 +2934,29 @@ Pour les graphiques, consultez l'interface web.
                         ) : (
                           <>
                             <Search className="w-4 h-4 mr-2" />
-                            {isMultiProfile && detectedProfiles.length > 1 ? 'Matching Multi-Profils' : 'Démarrer le Matching'}
+                            Démarrer le Matching
                           </>
                         )}
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent className="bg-gray-800 text-white border-yellow-500 max-w-xs">
-                      {isMultiProfile && detectedProfiles.length > 1 ? (
+                      {searchMode === "multi" && detectedProfiles.length === 0 ? (
                         <>
-                          <p className="font-semibold mb-1">Mode Multi-Profils Détecté</p>
-                          <p className="text-sm">Utilisez le bouton "Détecter les profils" pour lancer le matching multi-profils.</p>
-                          <p className="text-xs text-yellow-300 mt-2">💡 Ce bouton lance un matching simple standard</p>
+                          <p className="font-semibold mb-1">⚠️ Appel d'Offres Complexe</p>
+                          <p className="text-sm">En mode appel d'offres, vous devez d'abord cliquer sur "Détecter les profils" pour identifier les profils avant de lancer le matching.</p>
+                          <p className="text-xs text-yellow-300 mt-2">💡 Ou passez en Recrutement Individuel pour un matching direct</p>
+                        </>
+                      ) : searchMode === "simple" ? (
+                        <>
+                          <p className="font-semibold mb-1">Recrutement Individuel</p>
+                          <p className="text-sm">Lance directement le matching pour UN SEUL profil avec tous les candidats de la base.</p>
+                          <p className="text-xs text-yellow-300 mt-2">💡 Idéal pour : recherche d'un profil spécifique (Data Engineer, Dev, etc.)</p>
                         </>
                       ) : (
                         <>
-                          <p className="font-semibold mb-1">Mode Matching Simple</p>
-                          <p className="text-sm">Lance directement le matching pour UN SEUL profil avec tous les candidats de la base.</p>
-                          <p className="text-xs text-yellow-300 mt-2">💡 Idéal pour : recherche d'un profil spécifique (Data Engineer, Dev, etc.)</p>
+                          <p className="font-semibold mb-1">Appel d'Offres Complexe Actif</p>
+                          <p className="text-sm">Lance un matching pour tous les profils détectés dans l'appel d'offres.</p>
+                          <p className="text-xs text-yellow-300 mt-2">💡 {detectedProfiles.length} profil(s) détecté(s)</p>
                         </>
                       )}
                     </TooltipContent>
@@ -2674,282 +2965,9 @@ Pour les graphiques, consultez l'interface web.
               </div>
             </div>
 
-            {/* Expanded Content */}
-            {expandedSection && (
-              <div className="mt-4 border-t border-gray-700 pt-4">
-                {expandedSection === "tender" && (
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <Label className="text-white" htmlFor="tender-text">
-                          Description du Poste
-                        </Label>
-                        <div className="flex gap-2">
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  onClick={handleAnalyzeTender}
-                                  disabled={isAnalyzingTender || !tenderText}
-                                  size="sm"
-                                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                                  type="button"
-                                >
-                                  {isAnalyzingTender ? (
-                                    <>
-                                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2" />
-                                      Détection...
-                                    </>
-                                  ) : (
-                                    <>
-                                      Détecter les profils (Multi)
-                                    </>
-                                  )}
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent className="bg-gray-800 text-white border-blue-500 max-w-xs">
-                                <p className="font-semibold mb-1">Mode Multi-Profils</p>
-                                <p className="text-sm">Détecte automatiquement plusieurs profils dans l'appel d'offres et effectue un matching séparé pour chacun.</p>
-                                <p className="text-xs text-blue-300 mt-2">💡 Idéal pour : appels d'offres complexes, équipes multiples</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                          
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  onClick={handleImproveJobOffer}
-                                  disabled={isImproving || !tenderText}
-                                  size="sm"
-                                  className="bg-purple-600 hover:bg-purple-700 text-white"
-                                  type="button"
-                                >
-                                  {isImproving ? (
-                                    <>
-                                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2" />
-                                      Enrichissement...
-                                    </>
-                                  ) : (
-                                    <>
-                                      Enrichir la description
-                                    </>
-                                  )}
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent className="bg-gray-800 text-white border-purple-500 max-w-xs">
-                                <p className="font-semibold mb-1">Enrichissement IA</p>
-                                <p className="text-sm">Structure et complète votre description avec des détails techniques, compétences et responsabilités.</p>
-                                <p className="text-xs text-purple-300 mt-2">💡 Idéal pour : descriptions basiques à étoffer</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
-                      </div>
-
-                      {/* Quick Templates - Appels d'offres */}
-                      <div className="space-y-2 mb-4">
-                        <div className="flex items-center gap-2">
-                          <Label className="text-gray-300 text-sm font-semibold">
-                            Appels d'offres (multi-profils) :
-                          </Label>
-                          <Badge className="bg-blue-600 text-white text-xs">
-                            Utilisez "Détecter les profils"
-                          </Badge>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {[
-                            { 
-                              title: "Migration Cloud Data", 
-                              template: "Appel d'offres : Migration Data Platform vers le Cloud\n\nContexte : Migration de notre plateforme data on-premise (100To) vers Azure Cloud\n\nProfils recherchés :\n\n1. Architecte Data Cloud (Lead)\n- Azure Synapse, Data Factory, Databricks\n- Architecture data lake/lakehouse\n- Migration de workloads complexes\n- Data governance et sécurité\n- Expérience : 8+ ans\n\n2. Data Engineer Senior (x2)\n- Python, Spark, SQL avancé\n- ETL/ELT migration et optimisation\n- Azure Data Services\n- Data quality et monitoring\n- Expérience : 5+ ans\n\n3. DevOps Data\n- CI/CD pour pipelines data\n- Infrastructure as Code (Terraform)\n- Monitoring et observabilité\n- Expérience : 4+ ans" 
-                            },
-                            { 
-                              title: "Plateforme IA Générative", 
-                              template: "Appel d'offres : Plateforme IA Générative Enterprise\n\nContexte : Construction d'une plateforme IA générative interne pour automatiser documentation, support et analyses\n\nProfils recherchés :\n\n1. Architecte IA Générative (Lead)\n- LLM (GPT-4, Claude, Llama 2/3)\n- Architecture RAG et vector databases\n- Fine-tuning et prompt engineering\n- Sécurité et gouvernance IA\n- Expérience : 3+ ans en GenAI\n\n2. ML Engineer GenAI (x2)\n- Python, PyTorch/TensorFlow\n- LangChain, LlamaIndex\n- Vector stores (Pinecone, Weaviate)\n- MLOps et déploiement LLM\n- Expérience : 2+ ans\n\n3. Data Engineer IA\n- Pipelines de données pour IA\n- Data preprocessing pour LLM\n- Gestion de datasets massifs\n- Expérience : 4+ ans" 
-                            },
-                            { 
-                              title: "Data Lakehouse Moderne", 
-                              template: "Appel d'offres : Construction Data Lakehouse Enterprise\n\nContexte : Mise en place d'une architecture data lakehouse moderne pour unifier analytics et ML\n\nProfils recherchés :\n\n1. Architecte Data Lakehouse (Lead)\n- Databricks, Delta Lake\n- Architecture medallion (Bronze/Silver/Gold)\n- Data mesh concepts\n- Unity Catalog, governance\n- Expérience : 7+ ans\n\n2. Data Engineer (x3)\n- Python, Spark, SQL\n- DBT, data transformation\n- Streaming (Kafka, Kinesis)\n- Orchestration (Airflow, Dagster)\n- Expérience : 4+ ans\n\n3. Analytics Engineer\n- Modélisation data warehouse\n- DBT advanced\n- Métriques et KPI\n- Expérience : 3+ ans" 
-                            },
-                            { 
-                              title: "MLOps Platform", 
-                              template: "Appel d'offres : Plateforme MLOps Enterprise\n\nContexte : Construction d'une plateforme MLOps pour industrialiser le déploiement de modèles ML\n\nProfils recherchés :\n\n1. Architecte MLOps (Lead)\n- MLflow, Kubeflow, SageMaker\n- Model registry et versioning\n- Feature store architecture\n- CI/CD pour ML\n- Expérience : 6+ ans\n\n2. ML Engineer (x2)\n- Python ML stack complet\n- Containerisation (Docker, K8s)\n- Model monitoring et drift\n- A/B testing de modèles\n- Expérience : 4+ ans\n\n3. DevOps ML\n- Kubernetes, Terraform\n- Monitoring (Prometheus, Grafana)\n- Infrastructure ML\n- Expérience : 4+ ans" 
-                            },
-                            { 
-                              title: "Data Science & Analytics BI", 
-                              template: "Appel d'offres : Équipe Data Science et Analytics\n\nContexte : Constitution d'une équipe data science pour projets ML et analytics avancés\n\nProfils recherchés :\n\n1. Lead Data Scientist\n- ML/Deep Learning expertise\n- Time series, NLP, Computer Vision\n- Encadrement technique\n- Communication stakeholders\n- Expérience : 6+ ans\n\n2. Data Scientist (x2)\n- Python data science stack\n- ML classique et deep learning\n- Feature engineering\n- Statistiques avancées\n- Expérience : 3+ ans\n\n3. Analytics Engineer / BI\n- SQL expert, DBT\n- Power BI ou Tableau\n- Data modeling\n- Expérience : 4+ ans" 
-                            },
-                            { 
-                              title: "Real-time Data Platform", 
-                              template: "Appel d'offres : Plateforme Data Streaming Temps Réel\n\nContexte : Construction d'une plateforme de traitement de données en temps réel pour analytics et ML\n\nProfils recherchés :\n\n1. Architecte Streaming Data\n- Kafka, Flink, Spark Streaming\n- Event-driven architecture\n- CDC (Change Data Capture)\n- Expérience : 7+ ans\n\n2. Data Engineer Streaming (x2)\n- Kafka ecosystem (Connect, Streams)\n- Python/Scala pour streaming\n- Real-time pipelines\n- Expérience : 4+ ans\n\n3. Platform Engineer\n- Kubernetes, observabilité\n- Infrastructure streaming\n- Performance tuning\n- Expérience : 5+ ans" 
-                            },
-                          ].map((job) => (
-                            <Button
-                              key={job.title}
-                              onClick={() => {
-                                setTenderText(job.template)
-                                setSelectedTemplate(job.title)
-                                // Marquer immédiatement comme multi-profil si c'est un template multi
-                                if (multiProfileTemplates.includes(job.title)) {
-                                  setIsMultiProfile(true)
-                                } else {
-                                  setIsMultiProfile(false)
-                                }
-                              }}
-                              size="sm"
-                              variant="outline"
-                              className={selectedTemplate === job.title 
-                                ? "bg-purple-600 hover:bg-purple-700 text-white border-purple-500 shadow-lg shadow-purple-500/50" 
-                                : "bg-gray-700 hover:bg-gray-600 text-white border-gray-600"
-                              }
-                              type="button"
-                            >
-                              {selectedTemplate === job.title && <span className="mr-1">✓</span>}
-                              {job.title}
-                            </Button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Quick Templates - Postes */}
-                      <div className="space-y-2 mb-4">
-                        <div className="flex items-center gap-2">
-                          <Label className="text-gray-300 text-sm font-semibold">
-                            Postes individuels :
-                          </Label>
-                          <Badge className="bg-yellow-600 text-white text-xs">
-                            Utilisez "Matching Simple"
-                          </Badge>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {[
-                            { 
-                              title: "Data Engineer Senior", 
-                              template: "Recherche Data Engineer Senior\n\nMission : Construction data platform et pipelines analytics\n\nCompétences requises :\n- Python avancé, SQL expert, Spark\n- ETL/ELT, orchestration (Airflow, Dagster)\n- Cloud (AWS/Azure/GCP)\n- Data Warehousing (Snowflake/BigQuery/Redshift)\n- Streaming (Kafka, Kinesis)\n- DBT, data modeling, data quality\n- CI/CD pour data pipelines\n\nExpérience : 5+ ans en environnement data moderne\n\nResponsabilités :\n- Design et implémentation de pipelines scalables\n- Optimisation des performances\n- Data quality et monitoring\n- Mentoring d'équipe" 
-                            },
-                            { 
-                              title: "Data Scientist / ML Engineer", 
-                              template: "Recherche Data Scientist / ML Engineer\n\nMission : Développement modèles ML et mise en production\n\nCompétences requises :\n- Python (Scikit-learn, Pandas, NumPy)\n- ML/Deep Learning (PyTorch/TensorFlow)\n- MLOps (MLflow, Kubeflow, Weights & Biases)\n- Feature engineering et feature stores\n- Time series, NLP, Computer Vision\n- Cloud ML services (SageMaker, Vertex AI)\n- Model deployment et monitoring\n- A/B testing et experimentation\n\nExpérience : 3-5 ans en ML/IA\n\nResponsabilités :\n- Développement de modèles prédictifs\n- Mise en production et monitoring\n- Analyse d'impact business" 
-                            },
-                            { 
-                              title: "ML Engineer IA Générative", 
-                              template: "Recherche ML Engineer IA Générative\n\nMission : Développement et déploiement de solutions GenAI\n\nCompétences requises :\n- LLM (GPT-4, Claude, Llama 2/3)\n- LangChain, LlamaIndex, Semantic Kernel\n- RAG (Retrieval Augmented Generation)\n- Vector databases (Pinecone, Weaviate, ChromaDB)\n- Prompt engineering et fine-tuning\n- Python, API design\n- Monitoring LLM et gestion des coûts\n\nExpérience : 2+ ans en ML, 1+ an en GenAI\n\nResponsabilités :\n- Développement d'applications GenAI\n- Optimisation de prompts et RAG\n- Déploiement et scalabilité\n- Évaluation de modèles" 
-                            },
-                            { 
-                              title: "Architecte Data", 
-                              template: "Recherche Architecte Data\n\nMission : Conception architecture data enterprise\n\nCompétences requises :\n- Architecture data lake/lakehouse/warehouse\n- Cloud (AWS/Azure/GCP) - architectures avancées\n- Data mesh et data fabric concepts\n- Data governance, lineage, catalog\n- Sécurité et compliance (RGPD)\n- Technologies Big Data (Spark, Flink)\n- Databricks, Snowflake expertise\n- Modernisation de plateformes legacy\n\nExpérience : 7+ ans dont 3+ ans en architecture\n\nResponsabilités :\n- Design d'architectures scalables\n- Choix technologiques et roadmap\n- Governance et qualité des données\n- Leadership technique" 
-                            },
-                            { 
-                              title: "Lead Data Scientist", 
-                              template: "Recherche Lead Data Scientist\n\nMission : Leadership technique et projets ML stratégiques\n\nCompétences requises :\n- ML/Deep Learning expertise approfondie\n- Computer Vision, NLP, Time Series\n- Reinforcement Learning\n- Statistiques avancées et causality\n- MLOps et industrialisation\n- Communication stakeholders et C-level\n- Encadrement d'équipe data science\n- Vision produit et ROI\n\nExpérience : 6+ ans dont 2+ ans de lead\n\nResponsabilités :\n- Définition stratégie ML\n- Pilotage de projets complexes\n- Mentoring et recrutement\n- Evangelisation IA" 
-                            },
-                            { 
-                              title: "Analytics Engineer", 
-                              template: "Recherche Analytics Engineer\n\nMission : Transformation data et analytics self-service\n\nCompétences requises :\n- SQL expert (requêtes complexes, optimisation)\n- DBT (data transformation et testing)\n- Data modeling (Kimball, Data Vault)\n- Python pour analytics\n- Data warehouse (Snowflake, BigQuery)\n- BI tools (Tableau, Power BI, Looker)\n- Git, CI/CD pour analytics\n- Métriques et KPI business\n\nExpérience : 3-5 ans en analytics/BI\n\nResponsabilités :\n- Modélisation et transformation data\n- Création de métriques business\n- Documentation et data catalog\n- Enablement des équipes métier" 
-                            },
-                            { 
-                              title: "Data Architect Cloud", 
-                              template: "Recherche Data Architect spécialisé Cloud\n\nMission : Architecture cloud-native pour data platform\n\nCompétences requises :\n- AWS (Redshift, S3, Glue, Athena, EMR) ou\n- Azure (Synapse, Data Factory, ADLS) ou\n- GCP (BigQuery, Dataflow, Composer)\n- Serverless architectures\n- Cost optimization et FinOps\n- Infrastructure as Code (Terraform, CloudFormation)\n- Data lake/lakehouse patterns\n- Multi-cloud strategies\n\nExpérience : 6+ ans dont 4+ ans cloud\n\nResponsabilités :\n- Design d'architectures cloud-native\n- Optimisation coûts et performances\n- Migration on-premise vers cloud\n- Best practices et standards" 
-                            },
-                            { 
-                              title: "Consultant Data & IA", 
-                              template: "Recherche Consultant Data & IA\n\nMission : Accompagnement transformation data et IA\n\nCompétences requises :\n- Stratégie data et IA (roadmap, use cases)\n- Architecture data moderne\n- Use cases IA : NLP, Computer Vision, ML prédictif, GenAI\n- Data governance et qualité\n- Change management et conduite du changement\n- Communication C-level\n- Expertise sectorielle (finance, retail, industrie)\n- Méthodologies agiles\n\nExpérience : 5+ ans en conseil data/IA\n\nResponsabilités :\n- Définition de stratégies data/IA\n- Identification et priorisation use cases\n- Accompagnement des transformations\n- Formation et montée en compétence" 
-                            },
-                          ].map((job) => (
-                            <Button
-                              key={job.title}
-                              onClick={() => {
-                                setTenderText(job.template)
-                                setSelectedTemplate(job.title)
-                                // Marquer comme simple (mono-profil)
-                                setIsMultiProfile(false)
-                              }}
-                              size="sm"
-                              variant="outline"
-                              className={selectedTemplate === job.title 
-                                ? "bg-blue-600 hover:bg-blue-700 text-white border-blue-500 shadow-lg shadow-blue-500/50" 
-                                : "bg-gray-700 hover:bg-gray-600 text-white border-gray-600"
-                              }
-                              type="button"
-                            >
-                              {selectedTemplate === job.title && <span className="mr-1">✓</span>}
-                              {job.title}
-                            </Button>
-                          ))}
-                        </div>
-                      </div>
-
-                      <Textarea
-                        id="tender-text"
-                        placeholder="Entrez les exigences du poste, compétences nécessaires, niveau d'expérience, etc... (Requis)"
-                        value={tenderText}
-                        onChange={(e) => {
-                          setTenderText(e.target.value)
-                          // Reset selected template if user manually edits the text
-                          if (selectedTemplate) {
-                            setSelectedTemplate(null)
-                          }
-                        }}
-                        className="min-h-[200px] bg-gray-700 border-gray-600 text-white"
-                        required
-                      />
-                    </div>
-
-                    {/* Version enrichie par l'IA */}
-                    {enrichedText && (
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <Label className="text-purple-400 font-semibold flex items-center gap-2">
-                            <span className="text-xl">✨</span>
-                            Version Enrichie par l'IA
-                          </Label>
-                          <Button
-                            onClick={() => setTenderText(enrichedText)}
-                            size="sm"
-                            variant="outline"
-                            className="bg-purple-600/20 border-purple-500 text-purple-300 hover:bg-purple-600/40"
-                            type="button"
-                          >
-                            Utiliser cette version
-                          </Button>
-                        </div>
-                        <div className="bg-gradient-to-br from-purple-900/40 via-indigo-900/30 to-blue-900/40 border-2 border-purple-500/50 rounded-lg p-6 shadow-lg shadow-purple-500/20">
-                          <div className="text-white whitespace-pre-wrap font-mono text-sm leading-relaxed">
-                            {enrichedText}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
-                      <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                      <p className="text-sm text-white mb-2">Ou téléchargez un document d'appel d'offres</p>
-                      <div className="flex justify-center flex-col items-center gap-2">
-                        <input
-                          type="file"
-                          id="file-upload"
-                          accept=".txt,.doc,.docx,.pdf"
-                          onChange={handleFileUpload}
-                          className="hidden"
-                        />
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="bg-yellow-400 text-black border-yellow-400 hover:bg-yellow-500 hover:text-black"
-                          onClick={() => document.getElementById('file-upload')?.click()}
-                          type="button"
-                        >
-                          Choisir un Fichier
-                        </Button>
-                        {uploadedFileName && (
-                          <p className="text-sm text-green-400">✓ {uploadedFileName}</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {expandedSection === "filters" && (
+            {/* Expanded Content - Filters only */}
+            {expandedSection === "filters" && (
+              <div className="mt-4 border-t border-gray-700 pt-4 relative z-40">
                   <div className="space-y-6">
                     {/* Section 1: Localisation & Disponibilité */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700">
@@ -3208,27 +3226,523 @@ Pour les graphiques, consultez l'interface web.
                       </Button>
                     </div>
                   </div>
-                )}
               </div>
             )}
-          </div>
-        </div>
 
-        {/* Results Section - Now Full Width */}
-        <div>
-          {!hasResults && !isMatching && (
-            <Card className="bg-gray-900 border-gray-700 h-96 flex items-center justify-center">
-              <div className="text-center text-gray-400">
-                <Search className="w-12 h-12 mx-auto mb-4 text-gray-500" />
-                <h3 className="text-lg font-medium mb-2 text-white">Prêt à Trouver des Correspondances</h3>
-                <p className="text-white">
-                  Cliquez sur "Démarrer le Matching" pour commencer l'analyse de notre base de données de{" "}
-                  {resumes.length} candidats
-                </p>
-                <p className="text-gray-400 text-sm mt-2">Veuillez d'abord renseigner une description de poste dans "Appel d'Offres"</p>
+            {/* Contenu Appel d'Offres - Toujours visible */}
+            <div className="mt-4 border-t border-gray-700 pt-4 space-y-4">
+              {/* Sélection du Mode - Design Cards */}
+              <div className="space-y-3">
+                <Label className="text-white font-semibold text-base flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-yellow-400" />
+                  Choisissez votre type de recherche
+                </Label>
+
+                {/* Cards sélectionnables */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Card Mode Recrutement Individuel */}
+                  <button
+                    onClick={() => handleSearchModeChange("simple")}
+                    className={`group relative p-5 rounded-xl border-2 transition-all duration-300 text-left ${
+                      searchMode === "simple"
+                        ? "bg-gradient-to-br from-blue-900/40 via-blue-800/30 to-blue-900/40 border-blue-500 shadow-xl shadow-blue-500/20"
+                        : "bg-gray-800/30 border-gray-700 hover:border-gray-600 hover:bg-gray-800/50"
+                    }`}
+                  >
+                    {/* Badge de sélection */}
+                    {searchMode === "simple" && (
+                      <div className="absolute top-3 right-3">
+                        <div className="bg-blue-500 rounded-full p-1">
+                          <CheckCircle className="w-4 h-4 text-white" />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Icône et titre */}
+                    <div className="flex items-start gap-4 mb-3">
+                      <div className={`p-3 rounded-lg transition-all duration-300 ${
+                        searchMode === "simple"
+                          ? "bg-blue-600/30 shadow-lg shadow-blue-500/20"
+                          : "bg-gray-700/50 group-hover:bg-gray-700"
+                      }`}>
+                        <Target className={`w-6 h-6 ${
+                          searchMode === "simple" ? "text-blue-400" : "text-gray-400 group-hover:text-gray-300"
+                        }`} />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className={`font-bold text-base mb-1 ${
+                          searchMode === "simple" ? "text-white" : "text-gray-300 group-hover:text-white"
+                        }`}>
+                          Recrutement Individuel
+                        </h3>
+                        <p className={`text-xs font-medium ${
+                          searchMode === "simple" ? "text-blue-300" : "text-gray-500 group-hover:text-gray-400"
+                        }`}>
+                          Pour un seul poste à pourvoir
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <p className={`text-xs leading-relaxed mb-3 ${
+                      searchMode === "simple" ? "text-gray-300" : "text-gray-500 group-hover:text-gray-400"
+                    }`}>
+                      Recherchez <span className="font-semibold">un profil précis</span> dans votre base de candidats. 
+                      Parfait pour un recrutement standard ou une mission spécifique.
+                    </p>
+
+                    {/* Exemples */}
+                    <div className="space-y-1.5 mb-3">
+                      <div className={`flex items-center gap-2 text-xs ${
+                        searchMode === "simple" ? "text-blue-200" : "text-gray-600 group-hover:text-gray-500"
+                      }`}>
+                        <div className={`w-1 h-1 rounded-full ${
+                          searchMode === "simple" ? "bg-blue-400" : "bg-gray-600"
+                        }`} />
+                        Data Engineer Senior
+                      </div>
+                      <div className={`flex items-center gap-2 text-xs ${
+                        searchMode === "simple" ? "text-blue-200" : "text-gray-600 group-hover:text-gray-500"
+                      }`}>
+                        <div className={`w-1 h-1 rounded-full ${
+                          searchMode === "simple" ? "bg-blue-400" : "bg-gray-600"
+                        }`} />
+                        Product Manager
+                      </div>
+                      <div className={`flex items-center gap-2 text-xs ${
+                        searchMode === "simple" ? "text-blue-200" : "text-gray-600 group-hover:text-gray-500"
+                      }`}>
+                        <div className={`w-1 h-1 rounded-full ${
+                          searchMode === "simple" ? "bg-blue-400" : "bg-gray-600"
+                        }`} />
+                        DevOps Engineer
+                      </div>
+                    </div>
+
+                    {/* Tags caractéristiques */}
+                    <div className="flex flex-wrap gap-1.5">
+                      <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-1 rounded-full font-medium ${
+                        searchMode === "simple"
+                          ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
+                          : "bg-gray-700/50 text-gray-500 border border-gray-700"
+                      }`}>
+                        <Zap className="w-3 h-3" />
+                        Rapide
+                      </span>
+                      <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-1 rounded-full font-medium ${
+                        searchMode === "simple"
+                          ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
+                          : "bg-gray-700/50 text-gray-500 border border-gray-700"
+                      }`}>
+                        <Target className="w-3 h-3" />
+                        Ciblé
+                      </span>
+                      <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-1 rounded-full font-medium ${
+                        searchMode === "simple"
+                          ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
+                          : "bg-gray-700/50 text-gray-500 border border-gray-700"
+                      }`}>
+                        1 profil
+                      </span>
+                    </div>
+                  </button>
+
+                  {/* Card Mode Appel d'Offres */}
+                  <button
+                    onClick={() => handleSearchModeChange("multi")}
+                    className={`group relative p-5 rounded-xl border-2 transition-all duration-300 text-left ${
+                      searchMode === "multi"
+                        ? "bg-gradient-to-br from-purple-900/40 via-purple-800/30 to-purple-900/40 border-purple-500 shadow-xl shadow-purple-500/20"
+                        : "bg-gray-800/30 border-gray-700 hover:border-gray-600 hover:bg-gray-800/50"
+                    }`}
+                  >
+                    {/* Badge de sélection */}
+                    {searchMode === "multi" && (
+                      <div className="absolute top-3 right-3">
+                        <div className="bg-purple-500 rounded-full p-1">
+                          <CheckCircle className="w-4 h-4 text-white" />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Icône et titre */}
+                    <div className="flex items-start gap-4 mb-3">
+                      <div className={`p-3 rounded-lg transition-all duration-300 ${
+                        searchMode === "multi"
+                          ? "bg-purple-600/30 shadow-lg shadow-purple-500/20"
+                          : "bg-gray-700/50 group-hover:bg-gray-700"
+                      }`}>
+                        <Layers className={`w-6 h-6 ${
+                          searchMode === "multi" ? "text-purple-400" : "text-gray-400 group-hover:text-gray-300"
+                        }`} />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className={`font-bold text-base mb-1 ${
+                          searchMode === "multi" ? "text-white" : "text-gray-300 group-hover:text-white"
+                        }`}>
+                          Appel d'Offres Complexe
+                        </h3>
+                        <p className={`text-xs font-medium ${
+                          searchMode === "multi" ? "text-purple-300" : "text-gray-500 group-hover:text-gray-400"
+                        }`}>
+                          Pour constituer une équipe complète
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <p className={`text-xs leading-relaxed mb-3 ${
+                      searchMode === "multi" ? "text-gray-300" : "text-gray-500 group-hover:text-gray-400"
+                    }`}>
+                      L'IA <span className="font-semibold">détecte automatiquement</span> tous les profils nécessaires 
+                      dans votre appel d'offres et effectue un matching séparé pour chacun.
+                    </p>
+
+                    {/* Exemples */}
+                    <div className="space-y-1.5 mb-3">
+                      <div className={`flex items-center gap-2 text-xs ${
+                        searchMode === "multi" ? "text-purple-200" : "text-gray-600 group-hover:text-gray-500"
+                      }`}>
+                        <div className={`w-1 h-1 rounded-full ${
+                          searchMode === "multi" ? "bg-purple-400" : "bg-gray-600"
+                        }`} />
+                        Migration Cloud (Architecte + 2 Engineers)
+                      </div>
+                      <div className={`flex items-center gap-2 text-xs ${
+                        searchMode === "multi" ? "text-purple-200" : "text-gray-600 group-hover:text-gray-500"
+                      }`}>
+                        <div className={`w-1 h-1 rounded-full ${
+                          searchMode === "multi" ? "bg-purple-400" : "bg-gray-600"
+                        }`} />
+                        Plateforme Data (Lead + Team)
+                      </div>
+                      <div className={`flex items-center gap-2 text-xs ${
+                        searchMode === "multi" ? "text-purple-200" : "text-gray-600 group-hover:text-gray-500"
+                      }`}>
+                        <div className={`w-1 h-1 rounded-full ${
+                          searchMode === "multi" ? "bg-purple-400" : "bg-gray-600"
+                        }`} />
+                        Projet IA (ML Engineers + Data Scientists)
+                      </div>
+                    </div>
+
+                    {/* Tags caractéristiques */}
+                    <div className="flex flex-wrap gap-1.5">
+                      <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-1 rounded-full font-medium ${
+                        searchMode === "multi"
+                          ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
+                          : "bg-gray-700/50 text-gray-500 border border-gray-700"
+                      }`}>
+                        <Sparkles className="w-3 h-3" />
+                        IA Avancée
+                      </span>
+                      <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-1 rounded-full font-medium ${
+                        searchMode === "multi"
+                          ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
+                          : "bg-gray-700/50 text-gray-500 border border-gray-700"
+                      }`}>
+                        <Users className="w-3 h-3" />
+                        Équipe
+                      </span>
+                      <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-1 rounded-full font-medium ${
+                        searchMode === "multi"
+                          ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
+                          : "bg-gray-700/50 text-gray-500 border border-gray-700"
+                      }`}>
+                        Multi-profils
+                      </span>
+                    </div>
+                  </button>
+                </div>
               </div>
-            </Card>
+
+              <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <Label className="text-white" htmlFor="tender-text">
+                          Description du Poste
+                        </Label>
+                        {searchMode === "multi" && (
+                        <div className="flex gap-2">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  onClick={handleAnalyzeTender}
+                                  disabled={isAnalyzingTender || !tenderText}
+                                  size="sm"
+                                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                                  type="button"
+                                >
+                                  {isAnalyzingTender ? (
+                                    <>
+                                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2" />
+                                      Détection...
+                                    </>
+                                  ) : (
+                                    <>
+                                      Détecter les profils (Multi)
+                                    </>
+                                  )}
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent className="bg-gray-800 text-white border-blue-500 max-w-xs">
+                                <p className="font-semibold mb-1">Appel d'Offres Complexe</p>
+                                <p className="text-sm">Détecte automatiquement plusieurs profils dans l'appel d'offres et effectue un matching séparé pour chacun.</p>
+                                <p className="text-xs text-blue-300 mt-2">💡 Idéal pour : appels d'offres complexes, équipes multiples</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                        )}
+                      </div>
+
+                      {/* Quick Templates - Conditional based on search mode */}
+                      {searchMode === "multi" && (
+                      <div className="space-y-2 mb-4">
+                        <div className="flex items-center gap-2">
+                          <Label className="text-gray-300 text-sm font-semibold">
+                            Suggestions - Appels d'offres (multi-profils) :
+                          </Label>
+                          <Badge className="bg-purple-600 text-white text-xs">
+                            Appel d'Offres
+                          </Badge>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {[
+                            { 
+                              title: "Migration Cloud Data", 
+                              template: "Appel d'offres : Migration Data Platform vers le Cloud\n\nContexte : Migration de notre plateforme data on-premise (100To) vers Azure Cloud\n\nProfils recherchés :\n\n1. Architecte Data Cloud (Lead)\n- Azure Synapse, Data Factory, Databricks\n- Architecture data lake/lakehouse\n- Migration de workloads complexes\n- Data governance et sécurité\n- Expérience : 8+ ans\n\n2. Data Engineer Senior (x2)\n- Python, Spark, SQL avancé\n- ETL/ELT migration et optimisation\n- Azure Data Services\n- Data quality et monitoring\n- Expérience : 5+ ans\n\n3. DevOps Data\n- CI/CD pour pipelines data\n- Infrastructure as Code (Terraform)\n- Monitoring et observabilité\n- Expérience : 4+ ans" 
+                            },
+                            { 
+                              title: "Plateforme IA Générative", 
+                              template: "Appel d'offres : Plateforme IA Générative Enterprise\n\nContexte : Construction d'une plateforme IA générative interne pour automatiser documentation, support et analyses\n\nProfils recherchés :\n\n1. Architecte IA Générative (Lead)\n- LLM (GPT-4, Claude, Llama 2/3)\n- Architecture RAG et vector databases\n- Fine-tuning et prompt engineering\n- Sécurité et gouvernance IA\n- Expérience : 3+ ans en GenAI\n\n2. ML Engineer GenAI (x2)\n- Python, PyTorch/TensorFlow\n- LangChain, LlamaIndex\n- Vector stores (Pinecone, Weaviate)\n- MLOps et déploiement LLM\n- Expérience : 2+ ans\n\n3. Data Engineer IA\n- Pipelines de données pour IA\n- Data preprocessing pour LLM\n- Gestion de datasets massifs\n- Expérience : 4+ ans" 
+                            },
+                            { 
+                              title: "Data Lakehouse Moderne", 
+                              template: "Appel d'offres : Construction Data Lakehouse Enterprise\n\nContexte : Mise en place d'une architecture data lakehouse moderne pour unifier analytics et ML\n\nProfils recherchés :\n\n1. Architecte Data Lakehouse (Lead)\n- Databricks, Delta Lake\n- Architecture medallion (Bronze/Silver/Gold)\n- Data mesh concepts\n- Unity Catalog, governance\n- Expérience : 7+ ans\n\n2. Data Engineer (x3)\n- Python, Spark, SQL\n- DBT, data transformation\n- Streaming (Kafka, Kinesis)\n- Orchestration (Airflow, Dagster)\n- Expérience : 4+ ans\n\n3. Analytics Engineer\n- Modélisation data warehouse\n- DBT advanced\n- Métriques et KPI\n- Expérience : 3+ ans" 
+                            },
+                            { 
+                              title: "MLOps Platform", 
+                              template: "Appel d'offres : Plateforme MLOps Enterprise\n\nContexte : Construction d'une plateforme MLOps pour industrialiser le déploiement de modèles ML\n\nProfils recherchés :\n\n1. Architecte MLOps (Lead)\n- MLflow, Kubeflow, SageMaker\n- Model registry et versioning\n- Feature store architecture\n- CI/CD pour ML\n- Expérience : 6+ ans\n\n2. ML Engineer (x2)\n- Python ML stack complet\n- Containerisation (Docker, K8s)\n- Model monitoring et drift\n- A/B testing de modèles\n- Expérience : 4+ ans\n\n3. DevOps ML\n- Kubernetes, Terraform\n- Monitoring (Prometheus, Grafana)\n- Infrastructure ML\n- Expérience : 4+ ans" 
+                            },
+                            { 
+                              title: "Data Science & Analytics BI", 
+                              template: "Appel d'offres : Équipe Data Science et Analytics\n\nContexte : Constitution d'une équipe data science pour projets ML et analytics avancés\n\nProfils recherchés :\n\n1. Lead Data Scientist\n- ML/Deep Learning expertise\n- Time series, NLP, Computer Vision\n- Encadrement technique\n- Communication stakeholders\n- Expérience : 6+ ans\n\n2. Data Scientist (x2)\n- Python data science stack\n- ML classique et deep learning\n- Feature engineering\n- Statistiques avancées\n- Expérience : 3+ ans\n\n3. Analytics Engineer / BI\n- SQL expert, DBT\n- Power BI ou Tableau\n- Data modeling\n- Expérience : 4+ ans" 
+                            },
+                            { 
+                              title: "Real-time Data Platform", 
+                              template: "Appel d'offres : Plateforme Data Streaming Temps Réel\n\nContexte : Construction d'une plateforme de traitement de données en temps réel pour analytics et ML\n\nProfils recherchés :\n\n1. Architecte Streaming Data\n- Kafka, Flink, Spark Streaming\n- Event-driven architecture\n- CDC (Change Data Capture)\n- Expérience : 7+ ans\n\n2. Data Engineer Streaming (x2)\n- Kafka ecosystem (Connect, Streams)\n- Python/Scala pour streaming\n- Real-time pipelines\n- Expérience : 4+ ans\n\n3. Platform Engineer\n- Kubernetes, observabilité\n- Infrastructure streaming\n- Performance tuning\n- Expérience : 5+ ans" 
+                            },
+                          ].map((job) => (
+                            <Button
+                              key={job.title}
+                              onClick={() => {
+                                setTenderText(job.template)
+                                setSelectedTemplate(job.title)
+                                // Automatically switch to multi mode for multi-profile templates
+                                setSearchMode("multi")
+                                if (multiProfileTemplates.includes(job.title)) {
+                                  setIsMultiProfile(true)
+                                } else {
+                                  setIsMultiProfile(false)
+                                }
+                              }}
+                              size="sm"
+                              variant="outline"
+                              className={selectedTemplate === job.title 
+                                ? "bg-purple-600 hover:bg-purple-700 text-white border-purple-500 shadow-lg shadow-purple-500/50" 
+                                : "bg-gray-700 hover:bg-gray-600 text-white border-gray-600"
+                              }
+                              type="button"
+                            >
+                              {selectedTemplate === job.title && <span className="mr-1">✓</span>}
+                              {job.title}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+                      )}
+
+                      {searchMode === "simple" && (
+                      <div className="space-y-2 mb-4">
+                        <div className="flex items-center gap-2">
+                          <Label className="text-gray-300 text-sm font-semibold">
+                            Suggestions - Postes individuels :
+                          </Label>
+                          <Badge className="bg-blue-600 text-white text-xs">
+                            Recrutement Individuel
+                          </Badge>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {[
+                            { 
+                              title: "Data Engineer Senior", 
+                              template: "Recherche Data Engineer Senior\n\nMission : Construction data platform et pipelines analytics\n\nCompétences requises :\n- Python avancé, SQL expert, Spark\n- ETL/ELT, orchestration (Airflow, Dagster)\n- Cloud (AWS/Azure/GCP)\n- Data Warehousing (Snowflake/BigQuery/Redshift)\n- Streaming (Kafka, Kinesis)\n- DBT, data modeling, data quality\n- CI/CD pour data pipelines\n\nExpérience : 5+ ans en environnement data moderne\n\nResponsabilités :\n- Design et implémentation de pipelines scalables\n- Optimisation des performances\n- Data quality et monitoring\n- Mentoring d'équipe" 
+                            },
+                            { 
+                              title: "Data Scientist / ML Engineer", 
+                              template: "Recherche Data Scientist / ML Engineer\n\nMission : Développement modèles ML et mise en production\n\nCompétences requises :\n- Python (Scikit-learn, Pandas, NumPy)\n- ML/Deep Learning (PyTorch/TensorFlow)\n- MLOps (MLflow, Kubeflow, Weights & Biases)\n- Feature engineering et feature stores\n- Time series, NLP, Computer Vision\n- Cloud ML services (SageMaker, Vertex AI)\n- Model deployment et monitoring\n- A/B testing et experimentation\n\nExpérience : 3-5 ans en ML/IA\n\nResponsabilités :\n- Développement de modèles prédictifs\n- Mise en production et monitoring\n- Analyse d'impact business" 
+                            },
+                            { 
+                              title: "ML Engineer IA Générative", 
+                              template: "Recherche ML Engineer IA Générative\n\nMission : Développement et déploiement de solutions GenAI\n\nCompétences requises :\n- LLM (GPT-4, Claude, Llama 2/3)\n- LangChain, LlamaIndex, Semantic Kernel\n- RAG (Retrieval Augmented Generation)\n- Vector databases (Pinecone, Weaviate, ChromaDB)\n- Prompt engineering et fine-tuning\n- Python, API design\n- Monitoring LLM et gestion des coûts\n\nExpérience : 2+ ans en ML, 1+ an en GenAI\n\nResponsabilités :\n- Développement d'applications GenAI\n- Optimisation de prompts et RAG\n- Déploiement et scalabilité\n- Évaluation de modèles" 
+                            },
+                            { 
+                              title: "Architecte Data", 
+                              template: "Recherche Architecte Data\n\nMission : Conception architecture data enterprise\n\nCompétences requises :\n- Architecture data lake/lakehouse/warehouse\n- Cloud (AWS/Azure/GCP) - architectures avancées\n- Data mesh et data fabric concepts\n- Data governance, lineage, catalog\n- Sécurité et compliance (RGPD)\n- Technologies Big Data (Spark, Flink)\n- Databricks, Snowflake expertise\n- Modernisation de plateformes legacy\n\nExpérience : 7+ ans dont 3+ ans en architecture\n\nResponsabilités :\n- Design d'architectures scalables\n- Choix technologiques et roadmap\n- Governance et qualité des données\n- Leadership technique" 
+                            },
+                            { 
+                              title: "Lead Data Scientist", 
+                              template: "Recherche Lead Data Scientist\n\nMission : Leadership technique et projets ML stratégiques\n\nCompétences requises :\n- ML/Deep Learning expertise approfondie\n- Computer Vision, NLP, Time Series\n- Reinforcement Learning\n- Statistiques avancées et causality\n- MLOps et industrialisation\n- Communication stakeholders et C-level\n- Encadrement d'équipe data science\n- Vision produit et ROI\n\nExpérience : 6+ ans dont 2+ ans de lead\n\nResponsabilités :\n- Définition stratégie ML\n- Pilotage de projets complexes\n- Mentoring et recrutement\n- Evangelisation IA" 
+                            },
+                            { 
+                              title: "Analytics Engineer", 
+                              template: "Recherche Analytics Engineer\n\nMission : Transformation data et analytics self-service\n\nCompétences requises :\n- SQL expert (requêtes complexes, optimisation)\n- DBT (data transformation et testing)\n- Data modeling (Kimball, Data Vault)\n- Python pour analytics\n- Data warehouse (Snowflake, BigQuery)\n- BI tools (Tableau, Power BI, Looker)\n- Git, CI/CD pour analytics\n- Métriques et KPI business\n\nExpérience : 3-5 ans en analytics/BI\n\nResponsabilités :\n- Modélisation et transformation data\n- Création de métriques business\n- Documentation et data catalog\n- Enablement des équipes métier" 
+                            },
+                            { 
+                              title: "Data Architect Cloud", 
+                              template: "Recherche Data Architect spécialisé Cloud\n\nMission : Architecture cloud-native pour data platform\n\nCompétences requises :\n- AWS (Redshift, S3, Glue, Athena, EMR) ou\n- Azure (Synapse, Data Factory, ADLS) ou\n- GCP (BigQuery, Dataflow, Composer)\n- Serverless architectures\n- Cost optimization et FinOps\n- Infrastructure as Code (Terraform, CloudFormation)\n- Data lake/lakehouse patterns\n- Multi-cloud strategies\n\nExpérience : 6+ ans dont 4+ ans cloud\n\nResponsabilités :\n- Design d'architectures cloud-native\n- Optimisation coûts et performances\n- Migration on-premise vers cloud\n- Best practices et standards" 
+                            },
+                            { 
+                              title: "Consultant Data & IA", 
+                              template: "Recherche Consultant Data & IA\n\nMission : Accompagnement transformation data et IA\n\nCompétences requises :\n- Stratégie data et IA (roadmap, use cases)\n- Architecture data moderne\n- Use cases IA : NLP, Computer Vision, ML prédictif, GenAI\n- Data governance et qualité\n- Change management et conduite du changement\n- Communication C-level\n- Expertise sectorielle (finance, retail, industrie)\n- Méthodologies agiles\n\nExpérience : 5+ ans en conseil data/IA\n\nResponsabilités :\n- Définition de stratégies data/IA\n- Identification et priorisation use cases\n- Accompagnement des transformations\n- Formation et montée en compétence" 
+                            },
+                          ].map((job) => (
+                            <Button
+                              key={job.title}
+                              onClick={() => {
+                                setTenderText(job.template)
+                                setSelectedTemplate(job.title)
+                                // Automatically switch to simple mode for single-profile templates
+                                setSearchMode("simple")
+                                setIsMultiProfile(false)
+                              }}
+                              size="sm"
+                              variant="outline"
+                              className={selectedTemplate === job.title 
+                                ? "bg-blue-600 hover:bg-blue-700 text-white border-blue-500 shadow-lg shadow-blue-500/50" 
+                                : "bg-gray-700 hover:bg-gray-600 text-white border-gray-600"
+                              }
+                              type="button"
+                            >
+                              {selectedTemplate === job.title && <span className="mr-1">✓</span>}
+                              {job.title}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+                      )}
+
+                      <div className="relative">
+                        <Textarea
+                          id="tender-text"
+                          placeholder="Entrez les exigences du poste, compétences nécessaires, niveau d'expérience, etc... (Requis)"
+                          value={tenderText}
+                          onChange={(e) => {
+                            setTenderText(e.target.value)
+                            // Reset selected template if user manually edits the text
+                            if (selectedTemplate) {
+                              setSelectedTemplate(null)
+                            }
+                          }}
+                          className="min-h-[200px] bg-gray-700 border-gray-600 text-white pb-12"
+                          required
+                        />
+                        
+                        {/* Enrichir button positioned at bottom right of textarea */}
+                        <div className="absolute bottom-2 right-2">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  onClick={handleImproveJobOffer}
+                                  disabled={isImproving || !tenderText}
+                                  size="sm"
+                                  className="bg-purple-600 hover:bg-purple-700 text-white shadow-lg"
+                                  type="button"
+                                >
+                                  {isImproving ? (
+                                    <>
+                                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2" />
+                                      Enrichissement...
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+                                      Enrichir la description
+                                    </>
+                                  )}
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent className="bg-gray-800 text-white border-purple-500 max-w-xs">
+                                <p className="font-semibold mb-1">Enrichissement IA</p>
+                                <p className="text-sm">Structure et complète votre description avec des détails techniques, compétences et responsabilités.</p>
+                                <p className="text-xs text-purple-300 mt-2">💡 Idéal pour : descriptions basiques à étoffer</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Version enrichie par l'IA */}
+                    {enrichedText && (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-purple-400 font-semibold flex items-center gap-2">
+                            <span className="text-xl">✨</span>
+                            Version Enrichie par l'IA
+                          </Label>
+                          <Button
+                            onClick={() => setTenderText(enrichedText)}
+                            size="sm"
+                            variant="outline"
+                            className="bg-purple-600/20 border-purple-500 text-purple-300 hover:bg-purple-600/40"
+                            type="button"
+                          >
+                            Utiliser cette version
+                          </Button>
+                        </div>
+                        <div className="bg-gradient-to-br from-purple-900/40 via-indigo-900/30 to-blue-900/40 border-2 border-purple-500/50 rounded-lg p-6 shadow-lg shadow-purple-500/20">
+                          <div className="text-white whitespace-pre-wrap font-mono text-sm leading-relaxed">
+                            {enrichedText}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+                      <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                      <p className="text-sm text-white mb-2">Ou téléchargez un document d'appel d'offres</p>
+                      <div className="flex justify-center flex-col items-center gap-2">
+                        <input
+                          type="file"
+                          id="file-upload"
+                          accept=".txt,.doc,.docx,.pdf"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                        />
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="bg-yellow-400 text-black border-yellow-400 hover:bg-yellow-500 hover:text-black"
+                          onClick={() => document.getElementById('file-upload')?.click()}
+                          type="button"
+                        >
+                          Choisir un Fichier
+                        </Button>
+                        {uploadedFileName && (
+                          <p className="text-sm text-green-400">✓ {uploadedFileName}</p>
+                        )}
+                      </div>
+                    </div>
+              </div>
+            </div>
+          </div>
           )}
+
+          {/* Results Section - Now Full Width */}
+          <div className="pt-2 pb-8">
 
           {isMatching && (
             <div className="space-y-4">
@@ -3300,15 +3814,49 @@ Pour les graphiques, consultez l'interface web.
             <div className="space-y-4">
               {/* Multi-Profile Results Header with Tabs */}
               <div className="flex items-center justify-between flex-wrap gap-3">
-                <div>
-                  <h2 className="text-xl font-semibold text-white">Résultats du Matching Multi-Profils</h2>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Badge variant="secondary">{Object.keys(profileResults).length} profil(s)</Badge>
-                    <Badge className="bg-blue-600 text-white">
-                      {Object.values(profileResults).reduce((acc, curr) => acc + curr.length, 0)} candidats au total
-                    </Badge>
+                <div className="flex items-center gap-3">
+                  <div>
+                    <h2 className="text-xl font-semibold text-white">Résultats du Matching Multi-Profils</h2>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge variant="secondary">{Object.keys(profileResults).length} profil(s)</Badge>
+                      <Badge className="bg-blue-600 text-white">
+                        {Object.values(profileResults).reduce((acc, curr) => acc + curr.length, 0)} candidats au total
+                      </Badge>
+                    </div>
                   </div>
+                  
+                  {/* Bouton Information sur le Matching */}
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setShowMatchingInfoDialog(true)}
+                          className={`relative h-9 w-9 p-0 rounded-full bg-gradient-to-br from-yellow-500/30 to-yellow-600/30 hover:from-yellow-500/50 hover:to-yellow-600/50 text-yellow-400 border-2 border-yellow-400/70 hover:border-yellow-400 shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/60 transition-all duration-300 hover:scale-110 ${showInfoButtonAnimation ? 'animate-pulse hover:animate-none' : ''}`}
+                        >
+                          <HelpCircle className="w-5 h-5" />
+                          {/* Cercle d'animation */}
+                          {showInfoButtonAnimation && (
+                            <span className="absolute inset-0 rounded-full border-2 border-yellow-400/50 animate-ping" />
+                          )}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-yellow-500 text-gray-900 border-yellow-400">
+                        <p className="font-semibold">💡 Comment fonctionne le matching ?</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
+                
+                <Button
+                  variant="outline"
+                  onClick={handleReset}
+                  className="bg-red-600/20 text-red-300 border-red-500/50 hover:bg-red-600/30 hover:text-red-200 hover:border-red-400 whitespace-nowrap"
+                >
+                  <RotateCcw className="w-4 h-4 mr-2" />
+                  Réinitialiser
+                </Button>
               </div>
 
               {/* Profile Tabs */}
@@ -3897,7 +4445,11 @@ Pour les graphiques, consultez l'interface web.
 
                               <Dialog>
                                 <DialogTrigger asChild>
-                                  <Button variant="outline" size="sm" onClick={() => setSelectedResume(resume)}>
+                                  <Button 
+                                    size="sm" 
+                                    onClick={() => setSelectedResume(resume)}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                                  >
                                     <Eye className="w-4 h-4 mr-2" />
                                     Voir Détails
                                   </Button>
@@ -3910,15 +4462,18 @@ Pour les graphiques, consultez l'interface web.
                               </Dialog>
 
                               <Button 
-                                variant="outline" 
                                 size="sm"
                                 onClick={() => shareProfile(resume)}
+                                className="bg-purple-600 hover:bg-purple-700 text-white"
                               >
                                 <Share2 className="w-4 h-4 mr-2" />
                                 Partager
                               </Button>
                               
-                              <Button variant="outline" size="sm">
+                              <Button 
+                                size="sm"
+                                className="bg-purple-600 hover:bg-purple-700 text-white"
+                              >
                                 <FileText className="w-4 h-4 mr-2" />
                                 View CV
                               </Button>
@@ -3937,17 +4492,54 @@ Pour les graphiques, consultez l'interface web.
           {hasResults && Object.keys(profileResults).length === 0 && (
             <div className="space-y-4">
               <div className="flex items-center justify-between flex-wrap gap-3">
-                <div>
-                  <h2 className="text-xl font-semibold text-white">Résultats du Matching</h2>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Badge variant="secondary">{matchedResumes.length} candidats au total</Badge>
-                    {favorites.length > 0 && (
-                      <Badge className="bg-yellow-600 text-white">
-                        ⭐ {favorites.length} favori{favorites.length > 1 ? 's' : ''}
-                      </Badge>
-                    )}
+                <div className="flex items-center gap-3">
+                  <div>
+                    <h2 className="text-xl font-semibold text-white">Résultats du Matching</h2>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge variant="secondary">{matchedResumes.length} candidats au total</Badge>
+                      {favorites.length > 0 && (
+                        <Badge className="bg-yellow-600 text-white">
+                          ⭐ {favorites.length} favori{favorites.length > 1 ? 's' : ''}
+                        </Badge>
+                      )}
+                    </div>
                   </div>
+                  
+                  {/* Bouton Information sur le Matching */}
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setShowMatchingInfoDialog(true)}
+                          className={`relative h-9 w-9 p-0 rounded-full bg-gradient-to-br from-yellow-500/30 to-yellow-600/30 hover:from-yellow-500/50 hover:to-yellow-600/50 text-yellow-400 border-2 border-yellow-400/70 hover:border-yellow-400 shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/60 transition-all duration-300 hover:scale-110 ${showInfoButtonAnimation ? 'animate-pulse hover:animate-none' : ''}`}
+                        >
+                          <HelpCircle className="w-5 h-5" />
+                          {/* Cercle d'animation */}
+                          {showInfoButtonAnimation && (
+                            <span className="absolute inset-0 rounded-full border-2 border-yellow-400/50 animate-ping" />
+                          )}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-yellow-500 text-gray-900 border-yellow-400">
+                        <p className="font-semibold">💡 Comment fonctionne le matching ?</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
+                
+                <Button
+                  variant="outline"
+                  onClick={handleReset}
+                  className="bg-red-600/20 text-red-300 border-red-500/50 hover:bg-red-600/30 hover:text-red-200 hover:border-red-400 whitespace-nowrap"
+                >
+                  <RotateCcw className="w-4 h-4 mr-2" />
+                  Réinitialiser
+                </Button>
+              </div>
+
+              <div className="flex items-center justify-between flex-wrap gap-3">
                 <div className="flex items-center gap-2 flex-wrap">
                   {/* Favorites Filter Button */}
                   <Button
@@ -4403,7 +4995,14 @@ Pour les graphiques, consultez l'interface web.
               )}
 
               <div className="space-y-4">
-                {getFilteredAndSortedResumes().map((resume) => (
+                {(() => {
+                  const allResults = getFilteredAndSortedResumes()
+                  const totalPages = Math.ceil(allResults.length / itemsPerPage)
+                  const startIndex = (currentPage - 1) * itemsPerPage
+                  const endIndex = startIndex + itemsPerPage
+                  const paginatedResults = allResults.slice(startIndex, endIndex)
+                  
+                  return paginatedResults.map((resume) => (
                   <Card key={resume.id} className={`hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-in-out bg-gray-900 border-gray-700 ${compareMode && selectedForCompare.has(resume.id) ? 'ring-2 ring-yellow-400 shadow-yellow-400/50' : ''}`}>
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between">
@@ -4573,7 +5172,11 @@ Pour les graphiques, consultez l'interface web.
 
                           <Dialog>
                             <DialogTrigger asChild>
-                              <Button variant="outline" size="sm" onClick={() => setSelectedResume(resume)}>
+                              <Button 
+                                size="sm" 
+                                onClick={() => setSelectedResume(resume)}
+                                className="bg-blue-600 hover:bg-blue-700 text-white"
+                              >
                                 <Eye className="w-4 h-4 mr-2" />
                                 Voir Détails
                               </Button>
@@ -4586,15 +5189,18 @@ Pour les graphiques, consultez l'interface web.
                           </Dialog>
 
                           <Button 
-                            variant="outline" 
                             size="sm"
                             onClick={() => shareProfile(resume)}
+                            className="bg-purple-600 hover:bg-purple-700 text-white"
                           >
                             <Share2 className="w-4 h-4 mr-2" />
                             Partager
                           </Button>
                           
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            size="sm"
+                            className="bg-purple-600 hover:bg-purple-700 text-white"
+                          >
                             <FileText className="w-4 h-4 mr-2" />
                             View CV
                           </Button>
@@ -4602,11 +5208,106 @@ Pour les graphiques, consultez l'interface web.
                       </div>
                     </CardContent>
                   </Card>
-                ))}
+                ))
+                })()}
               </div>
+
+              {/* Pagination Controls */}
+              {(() => {
+                const allResults = getFilteredAndSortedResumes()
+                const totalPages = Math.ceil(allResults.length / itemsPerPage)
+                
+                if (totalPages <= 1) return null
+                
+                return (
+                  <Card className="bg-gray-900 border-gray-700 mt-6">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between flex-wrap gap-4">
+                        {/* Informations de pagination */}
+                        <div className="text-sm text-gray-400">
+                          Affichage de {((currentPage - 1) * itemsPerPage) + 1} à {Math.min(currentPage * itemsPerPage, allResults.length)} sur {allResults.length} résultats
+                        </div>
+                        
+                        {/* Contrôles de pagination */}
+                        <div className="flex items-center gap-2">
+                          <Button
+                            onClick={() => setCurrentPage(1)}
+                            disabled={currentPage === 1}
+                            size="sm"
+                            variant="outline"
+                            className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            « Premier
+                          </Button>
+                          
+                          <Button
+                            onClick={() => setCurrentPage(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            size="sm"
+                            variant="outline"
+                            className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            ‹ Précédent
+                          </Button>
+                          
+                          {/* Numéros de page */}
+                          <div className="flex items-center gap-1">
+                            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                              let pageNum
+                              if (totalPages <= 5) {
+                                pageNum = i + 1
+                              } else if (currentPage <= 3) {
+                                pageNum = i + 1
+                              } else if (currentPage >= totalPages - 2) {
+                                pageNum = totalPages - 4 + i
+                              } else {
+                                pageNum = currentPage - 2 + i
+                              }
+                              
+                              return (
+                                <Button
+                                  key={pageNum}
+                                  onClick={() => setCurrentPage(pageNum)}
+                                  size="sm"
+                                  className={currentPage === pageNum
+                                    ? "bg-yellow-600 hover:bg-yellow-700 text-white border-0 min-w-[36px]"
+                                    : "bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-600 min-w-[36px]"
+                                  }
+                                >
+                                  {pageNum}
+                                </Button>
+                              )
+                            })}
+                          </div>
+                          
+                          <Button
+                            onClick={() => setCurrentPage(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            size="sm"
+                            variant="outline"
+                            className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            Suivant ›
+                          </Button>
+                          
+                          <Button
+                            onClick={() => setCurrentPage(totalPages)}
+                            disabled={currentPage === totalPages}
+                            size="sm"
+                            variant="outline"
+                            className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            Dernier »
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )
+              })()}
             </div>
           )}
-          </div>
+          </div> 
         </div>
       )}
 
@@ -4696,15 +5397,15 @@ Pour les graphiques, consultez l'interface web.
                 </div>
                 <div className="flex-1">
                   <h3 className="text-sm font-semibold text-yellow-800 mb-1">
-                    💡 Conseil : Utilisez le Matching Simple
+                    💡 Conseil : Passez en Recrutement Individuel
                   </h3>
                   <p className="text-sm text-yellow-700">
-                    Un seul profil a été détecté. Pour une recherche plus rapide et directe, nous vous recommandons d'utiliser le bouton 
-                    <span className="font-semibold"> "Matching Simple (1 profil)" </span> 
-                    au lieu du mode multi-profils.
+                    Un seul profil a été détecté. Pour une recherche plus rapide et directe, nous vous recommandons d'utiliser le mode 
+                    <span className="font-semibold"> "Recrutement Individuel" </span> 
+                    au lieu de l'appel d'offres complexe.
                   </p>
                   <p className="text-xs text-yellow-600 mt-2">
-                    Le mode multi-profils est optimisé pour les appels d'offres avec plusieurs rôles différents (ex: Architecte + Développeurs + DevOps).
+                    L'appel d'offres complexe est optimisé pour constituer des équipes avec plusieurs rôles différents (ex: Architecte + Développeurs + DevOps).
                   </p>
                 </div>
               </div>
@@ -4871,7 +5572,7 @@ Pour les graphiques, consultez l'interface web.
                 </div>
                 <div className="flex-1">
                   <h3 className="text-sm font-semibold text-blue-900 mb-2">
-                    💡 Conseil : Utilisez le mode Multi-Profils
+                    💡 Conseil : Utilisez l'Appel d'Offres Complexe
                   </h3>
                   <p className="text-sm text-blue-800">
                     Le template "<span className="font-semibold">{selectedTemplate}</span>" contient plusieurs profils distincts. 
@@ -4889,7 +5590,7 @@ Pour les graphiques, consultez l'interface web.
               <div className="border-2 border-green-500 bg-green-50 rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <CheckCircle className="w-5 h-5 text-green-600" />
-                  <h4 className="font-semibold text-green-900">Recommandé : Mode Multi</h4>
+                  <h4 className="font-semibold text-green-900">Recommandé : Appel d'Offres Complexe</h4>
                 </div>
                 <ul className="space-y-2 text-sm text-green-800">
                   <li className="flex items-start gap-2">
@@ -4911,7 +5612,7 @@ Pour les graphiques, consultez l'interface web.
               <div className="border-2 border-yellow-500 bg-yellow-50 rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <XCircle className="w-5 h-5 text-yellow-600" />
-                  <h4 className="font-semibold text-yellow-900">Matching Simple</h4>
+                  <h4 className="font-semibold text-yellow-900">Recrutement Individuel</h4>
                 </div>
                 <ul className="space-y-2 text-sm text-yellow-800">
                   <li className="flex items-start gap-2">
@@ -4946,13 +5647,13 @@ Pour les graphiques, consultez l'interface web.
                   variant="outline"
                   onClick={() => {
                     setShowMultiProfileWarning(false)
-                    // Continuer avec le matching simple quand même
+                    // Continuer en recrutement individuel
                     setSelectedTemplate(null)
                     handleStartMatching()
                   }}
                   className="bg-yellow-50 border-yellow-500 text-yellow-700 hover:bg-yellow-100"
                 >
-                  Continuer en mode simple
+                  Continuer en Recrutement Individuel
                 </Button>
                 <Button
                   onClick={() => {
@@ -4966,6 +5667,807 @@ Pour les graphiques, consultez l'interface web.
                 </Button>
               </div>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog de Confirmation de Changement de Mode */}
+      <Dialog open={showModeChangeDialog} onOpenChange={setShowModeChangeDialog}>
+        <DialogContent className="bg-gray-900 border-gray-700 text-white max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <Info className="w-5 h-5 text-yellow-500" />
+              Changer de type de recherche ?
+            </DialogTitle>
+            <DialogDescription className="text-gray-400 mt-2">
+              Vous avez déjà saisi une description. Que souhaitez-vous faire ?
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 mt-4">
+            {/* Preview du mode cible */}
+            <div className={`p-4 rounded-lg border ${
+              pendingMode === "simple" 
+                ? "bg-blue-900/20 border-blue-700/50" 
+                : "bg-purple-900/20 border-purple-700/50"
+            }`}>
+              <div className="flex items-start gap-3">
+                <div className={`p-2 rounded-md ${
+                  pendingMode === "simple" ? "bg-blue-600/20" : "bg-purple-600/20"
+                }`}>
+                  {pendingMode === "simple" ? (
+                    <Target className="w-5 h-5 text-blue-400" />
+                  ) : (
+                    <Layers className="w-5 h-5 text-purple-400" />
+                  )}
+                </div>
+                <div className="flex-1">
+                  <p className="text-white text-sm font-semibold mb-1">
+                    {pendingMode === "simple" ? "Recrutement Individuel" : "Appel d'Offres Complexe"}
+                  </p>
+                  <p className="text-gray-400 text-xs">
+                    {pendingMode === "simple" 
+                      ? "Pour un seul poste à pourvoir" 
+                      : "Pour constituer une équipe complète"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Options */}
+            <div className="space-y-2">
+              <p className="text-sm text-gray-300 font-medium">Choisissez une option :</p>
+              
+              <Button
+                onClick={() => confirmModeChange(false)}
+                className="w-full justify-start bg-gray-800 hover:bg-gray-700 text-white border border-gray-600"
+                variant="outline"
+              >
+                <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
+                <div className="text-left">
+                  <div className="font-semibold text-sm">Conserver le texte</div>
+                  <div className="text-xs text-gray-400">Changer uniquement le mode de recherche</div>
+                </div>
+              </Button>
+
+              <Button
+                onClick={() => confirmModeChange(true)}
+                className="w-full justify-start bg-gray-800 hover:bg-gray-700 text-white border border-gray-600"
+                variant="outline"
+              >
+                <RotateCcw className="w-4 h-4 mr-2 text-orange-500" />
+                <div className="text-left">
+                  <div className="font-semibold text-sm">Effacer et recommencer</div>
+                  <div className="text-xs text-gray-400">Supprimer le texte et changer de mode</div>
+                </div>
+              </Button>
+
+              <Button
+                onClick={cancelModeChange}
+                className="w-full justify-center bg-gray-700 hover:bg-gray-600 text-gray-300 border border-gray-600"
+                variant="outline"
+              >
+                <X className="w-4 h-4 mr-2" />
+                Annuler
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Panneau d'Historique */}
+      <Dialog open={showHistoryPanel} onOpenChange={setShowHistoryPanel}>
+        <DialogContent className="bg-gray-900 border-gray-700 text-white max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <div className="flex items-center justify-between">
+              <DialogTitle className="flex items-center gap-2 text-xl">
+                <Clock className="w-6 h-6 text-purple-500" />
+                Historique des recherches
+              </DialogTitle>
+              {searchHistory.length > 0 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearAllHistory}
+                  className="bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 border border-red-500/30 hover:border-red-500/50 transition-all"
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  Tout effacer
+                </Button>
+              )}
+            </div>
+            <DialogDescription className="text-gray-400 mt-2">
+              Consultez et restaurez vos recherches précédentes
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="mt-6 space-y-3">
+            {searchHistory.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <Clock className="w-16 h-16 text-gray-700 mb-4" />
+                <p className="text-gray-400 text-lg mb-2">Aucun historique</p>
+                <p className="text-gray-500 text-sm">
+                  Vos recherches seront sauvegardées automatiquement après chaque matching
+                </p>
+              </div>
+            ) : (
+              searchHistory.map((entry) => (
+                <Card key={entry.id} className="bg-gray-800/50 border-gray-700 hover:border-purple-500/50 transition-all">
+                  <CardContent className="p-4">
+                    <div className="flex items-start gap-4">
+                      {/* Icône et date */}
+                      <div className="flex flex-col items-center gap-2 min-w-[80px]">
+                        <div className={`p-3 rounded-lg ${
+                          entry.searchMode === "simple" 
+                            ? "bg-blue-600/20 text-blue-400" 
+                            : "bg-purple-600/20 text-purple-400"
+                        }`}>
+                          {entry.searchMode === "simple" ? (
+                            <Target className="w-5 h-5" />
+                          ) : (
+                            <Layers className="w-5 h-5" />
+                          )}
+                        </div>
+                        <div className="text-center">
+                          <div className="text-xs text-gray-400">
+                            {new Date(entry.timestamp).toLocaleDateString('fr-FR', { 
+                              day: '2-digit', 
+                              month: 'short' 
+                            })}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {new Date(entry.timestamp).toLocaleTimeString('fr-FR', { 
+                              hour: '2-digit', 
+                              minute: '2-digit' 
+                            })}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Contenu */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2 mb-2">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <Badge className={
+                              entry.searchMode === "simple" 
+                                ? "bg-blue-600 text-white" 
+                                : "bg-purple-600 text-white"
+                            }>
+                              {entry.searchMode === "simple" ? "Recrutement Individuel" : "Appel d'Offres Complexe"}
+                            </Badge>
+                            {entry.selectedTemplate && (
+                              <Badge variant="outline" className="text-gray-400 border-gray-600">
+                                {entry.selectedTemplate}
+                              </Badge>
+                            )}
+                            {entry.profilesCount && (
+                              <Badge variant="outline" className="text-purple-400 border-purple-600">
+                                {entry.profilesCount} profil{entry.profilesCount > 1 ? 's' : ''}
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Description tronquée */}
+                        <p className="text-sm text-gray-300 mb-3 line-clamp-2">
+                          {entry.tenderText.substring(0, 150)}
+                          {entry.tenderText.length > 150 && "..."}
+                        </p>
+
+                        {/* Résultats */}
+                        <div className="flex items-center gap-4 text-xs text-gray-400 mb-3">
+                          <div className="flex items-center gap-1">
+                            <Users className="w-3 h-3" />
+                            <span>{entry.resultsCount} candidat{entry.resultsCount > 1 ? 's' : ''}</span>
+                          </div>
+                          {entry.topMatches.length > 0 && (
+                            <div className="flex items-center gap-1">
+                              <Award className="w-3 h-3 text-yellow-400" />
+                              <span>Top: {entry.topMatches[0].score}%</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Top matches */}
+                        {entry.topMatches.length > 0 && (
+                          <div className="bg-gray-900/50 rounded p-2 mb-3">
+                            <p className="text-xs text-gray-500 mb-1">Meilleurs matchs :</p>
+                            <div className="space-y-1">
+                              {entry.topMatches.map((match, idx) => (
+                                <div key={idx} className="flex items-center justify-between text-xs">
+                                  <span className="text-gray-300 truncate">
+                                    {idx + 1}. {match.name}
+                                  </span>
+                                  <div className="flex items-center gap-2 ml-2">
+                                    <span className="text-gray-500 text-[10px]">{match.title}</span>
+                                    <Badge className="bg-green-600/20 text-green-400 text-[10px] px-1.5 py-0">
+                                      {match.score}%
+                                    </Badge>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Filtres actifs */}
+                        {(entry.filters.location || entry.filters.availability || entry.filters.minExperience || 
+                          entry.filters.sectors.length > 0 || entry.filters.skills.length > 0) && (
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-xs text-gray-500">Filtres:</span>
+                            {entry.filters.location && (
+                              <Badge variant="outline" className="text-xs text-gray-400 border-gray-700">
+                                📍 {entry.filters.location}
+                              </Badge>
+                            )}
+                            {entry.filters.minExperience && (
+                              <Badge variant="outline" className="text-xs text-gray-400 border-gray-700">
+                                ⏱️ {entry.filters.minExperience}+ ans
+                              </Badge>
+                            )}
+                            {entry.filters.sectors.length > 0 && (
+                              <Badge variant="outline" className="text-xs text-gray-400 border-gray-700">
+                                🏢 {entry.filters.sectors.length} secteur{entry.filters.sectors.length > 1 ? 's' : ''}
+                              </Badge>
+                            )}
+                            {entry.filters.skills.length > 0 && (
+                              <Badge variant="outline" className="text-xs text-gray-400 border-gray-700">
+                                💡 {entry.filters.skills.length} compétence{entry.filters.skills.length > 1 ? 's' : ''}
+                              </Badge>
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex flex-col gap-2">
+                        <Button
+                          size="sm"
+                          onClick={() => restoreSearchFromHistory(entry)}
+                          className="bg-purple-600 hover:bg-purple-700 text-white"
+                        >
+                          <RotateCcw className="w-4 h-4 mr-2" />
+                          Restaurer
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => deleteHistoryEntry(entry.id)}
+                          className="bg-gray-700/30 text-gray-400 hover:bg-red-500/20 hover:text-red-400 border border-gray-600/30 hover:border-red-500/50 transition-all"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog d'Information sur le Matching */}
+      <Dialog open={showMatchingInfoDialog} onOpenChange={setShowMatchingInfoDialog}>
+        <DialogContent className="bg-gray-900 border-gray-700 text-white max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-2xl">
+              <Info className="w-7 h-7 text-blue-500" />
+              Comment fonctionne le Matching IA ?
+            </DialogTitle>
+            <DialogDescription className="text-gray-400 mt-2">
+              Découvrez notre méthodologie d'analyse et de calcul des scores de correspondance
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="mt-6 space-y-6">
+            {/* Section 1: Vue d'ensemble */}
+            <Card className="bg-gray-800/50 border-gray-700 overflow-hidden">
+              <CardContent className="p-0">
+                {/* Header avec icône */}
+                <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 p-6 border-b border-yellow-400/30">
+                  <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+                    <div className="p-2 bg-yellow-500/20 rounded-lg border border-yellow-400/30">
+                      <Sparkles className="w-6 h-6 text-yellow-400" />
+                    </div>
+                    🎯 Vue d'Ensemble
+                  </h3>
+                </div>
+                
+                {/* Contenu principal */}
+                <div className="p-6 space-y-5">
+                  {/* Technologie principale */}
+                  <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-gray-900/80 to-gray-800/80 rounded-lg border border-yellow-400/20">
+                    <div className="flex-shrink-0">
+                      <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg shadow-yellow-500/30">
+                        <Zap className="w-8 h-8 text-gray-900" />
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-400 mb-1">Propulsé par</p>
+                      <h4 className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">
+                        Llama 3.3
+                      </h4>
+                      <p className="text-xs text-gray-500">via Groq - IA de dernière génération</p>
+                    </div>
+                  </div>
+
+                  {/* Caractéristiques clés */}
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="text-center p-4 bg-gray-900/50 rounded-lg border border-gray-600">
+                      <Target className="w-6 h-6 text-yellow-400 mx-auto mb-2" />
+                      <p className="text-xs font-semibold text-white">Analyse Sémantique</p>
+                      <p className="text-xs text-gray-500 mt-1">Compréhension profonde</p>
+                    </div>
+                    
+                    <div className="text-center p-4 bg-gray-900/50 rounded-lg border border-gray-600">
+                      <CheckCircle className="w-6 h-6 text-yellow-400 mx-auto mb-2" />
+                      <p className="text-xs font-semibold text-white">Matching Précis</p>
+                      <p className="text-xs text-gray-500 mt-1">Algorithme optimisé</p>
+                    </div>
+                    
+                    <div className="text-center p-4 bg-gray-900/50 rounded-lg border border-gray-600">
+                      <BarChart3 className="w-6 h-6 text-yellow-400 mx-auto mb-2" />
+                      <p className="text-xs font-semibold text-white">Score 0-100%</p>
+                      <p className="text-xs text-gray-500 mt-1">Évaluation claire</p>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-gray-300 leading-relaxed text-center">
+                    Notre IA analyse en profondeur chaque CV et le compare intelligemment à votre appel d'offres 
+                    pour générer un <span className="text-yellow-400 font-semibold">score de correspondance précis et explicable</span>.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Section 2: Processus d'analyse */}
+            <Card className="bg-gray-800/50 border-gray-700">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">
+                  <Sparkles className="w-6 h-6" />
+                  ⚙️ Processus d'Analyse
+                </h3>
+                
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">1</div>
+                    <div>
+                      <h4 className="font-semibold text-white mb-1">Extraction & Parsing</h4>
+                      <p className="text-sm text-gray-400">
+                        Le CV est analysé pour extraire les compétences techniques, certifications, expérience, formations et secteurs d'activité.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold">2</div>
+                    <div>
+                      <h4 className="font-semibold text-white mb-1">Analyse Sémantique de l'Appel d'Offres</h4>
+                      <p className="text-sm text-gray-400">
+                        L'IA identifie les compétences requises, le niveau d'expérience attendu et le contexte métier de votre recherche.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold">3</div>
+                    <div>
+                      <h4 className="font-semibold text-white mb-1">Matching Multi-Critères</h4>
+                      <p className="text-sm text-gray-400">
+                        Comparaison intelligente entre le profil du candidat et les exigences du poste sur plusieurs dimensions.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-yellow-600 text-white flex items-center justify-center font-bold">4</div>
+                    <div>
+                      <h4 className="font-semibold text-white mb-1">Génération du Score & Recommandations</h4>
+                      <p className="text-sm text-gray-400">
+                        Calcul du score final avec identification des compétences correspondantes, manquantes et recommandations de formations.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Section 3: Critères de matching */}
+            <Card className="bg-gray-800/50 border-gray-700">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold text-green-400 mb-4 flex items-center gap-2">
+                  <Target className="w-6 h-6" />
+                  📊 Critères de Matching
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 bg-gray-900/50 rounded-lg border border-green-500/30">
+                    <h4 className="font-semibold text-green-400 mb-2 flex items-center gap-2">
+                      <Code className="w-4 h-4" />
+                      Compétences Techniques (40%)
+                    </h4>
+                    <p className="text-sm text-gray-400">
+                      Correspondance exacte et sémantique des technologies, frameworks et outils. 
+                      L'IA reconnaît les synonymes (ex: "JS" = "JavaScript").
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-gray-900/50 rounded-lg border border-blue-500/30">
+                    <h4 className="font-semibold text-blue-400 mb-2 flex items-center gap-2">
+                      <Briefcase className="w-4 h-4" />
+                      Expérience (25%)
+                    </h4>
+                    <p className="text-sm text-gray-400">
+                      Années d'expérience, niveau de séniorité et pertinence des postes précédents 
+                      par rapport au rôle recherché.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-gray-900/50 rounded-lg border border-purple-500/30">
+                    <h4 className="font-semibold text-purple-400 mb-2 flex items-center gap-2">
+                      <GraduationCap className="w-4 h-4" />
+                      Formations & Certifications (20%)
+                    </h4>
+                    <p className="text-sm text-gray-400">
+                      Diplômes, certifications professionnelles et formations continues alignées 
+                      avec les prérequis du poste.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-gray-900/50 rounded-lg border border-yellow-500/30">
+                    <h4 className="font-semibold text-yellow-400 mb-2 flex items-center gap-2">
+                      <Building className="w-4 h-4" />
+                      Contexte & Secteur (15%)
+                    </h4>
+                    <p className="text-sm text-gray-400">
+                      Expérience dans des secteurs similaires, taille d'entreprise et contexte 
+                      métier (startup, corporate, consulting, etc.).
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Section 4: Interprétation des scores */}
+            <Card className="bg-gray-800/50 border-gray-700">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold text-purple-400 mb-4 flex items-center gap-2">
+                  <TrendingUp className="w-6 h-6" />
+                  🎓 Guide d'Interprétation des Scores
+                </h3>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-emerald-900/30 to-green-900/30 rounded-lg border-l-4 border-green-500">
+                    <Badge className="bg-green-600 text-white text-lg px-3 py-1">90-100%</Badge>
+                    <div>
+                      <p className="font-semibold text-green-400">🌟 Excellent Match</p>
+                      <p className="text-xs text-gray-400">Profil parfaitement aligné. Toutes les compétences clés sont présentes. Recommandé pour entretien immédiat.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 rounded-lg border-l-4 border-blue-500">
+                    <Badge className="bg-blue-600 text-white text-lg px-3 py-1">80-89%</Badge>
+                    <div>
+                      <p className="font-semibold text-blue-400">✅ Très Bon Match</p>
+                      <p className="text-xs text-gray-400">Compétences principales présentes avec quelques gaps mineurs. L'expérience compense. Très bon candidat.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-yellow-900/30 to-orange-900/30 rounded-lg border-l-4 border-yellow-500">
+                    <Badge className="bg-yellow-600 text-white text-lg px-3 py-1">70-79%</Badge>
+                    <div>
+                      <p className="font-semibold text-yellow-400">🔶 Bon Potentiel</p>
+                      <p className="text-xs text-gray-400">Fondamentaux solides avec formations nécessaires. Peut monter en compétence rapidement.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-orange-900/30 to-red-900/30 rounded-lg border-l-4 border-orange-500">
+                    <Badge className="bg-orange-600 text-white text-lg px-3 py-1">&lt;70%</Badge>
+                    <div>
+                      <p className="font-semibold text-orange-400">⚠️ Gaps Significatifs</p>
+                      <p className="text-xs text-gray-400">Plusieurs compétences clés manquantes. Formations importantes requises. À évaluer avec précaution.</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Section 5: Avantages */}
+            <Card className="bg-gray-800/50 border-gray-700 overflow-hidden">
+              <CardContent className="p-0">
+                {/* Header avec icône */}
+                <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 p-6 border-b border-yellow-400/30">
+                  <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+                    <div className="p-2 bg-yellow-500/20 rounded-lg border border-yellow-400/30">
+                      <Lightbulb className="w-6 h-6 text-yellow-400" />
+                    </div>
+                    💡 Avantages de notre IA
+                  </h3>
+                </div>
+                
+                {/* Contenu principal */}
+                <div className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Avantage 1 */}
+                    <div className="group relative p-5 bg-gray-900/50 rounded-xl border border-gray-600 hover:border-yellow-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/20">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0">
+                          <div className="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center border border-yellow-400/30 group-hover:scale-110 transition-transform group-hover:bg-yellow-500/20">
+                            <CheckCircle className="w-6 h-6 text-yellow-400" />
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-bold text-white text-base mb-2">Analyse Contextuelle</h4>
+                          <p className="text-sm text-gray-400 leading-relaxed">
+                            Comprend le contexte au-delà des mots-clés exacts pour une évaluation plus précise
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Avantage 2 */}
+                    <div className="group relative p-5 bg-gray-900/50 rounded-xl border border-gray-600 hover:border-yellow-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/20">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0">
+                          <div className="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center border border-yellow-400/30 group-hover:scale-110 transition-transform group-hover:bg-yellow-500/20">
+                            <Target className="w-6 h-6 text-yellow-400" />
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-bold text-white text-base mb-2">Matching Sémantique</h4>
+                          <p className="text-sm text-gray-400 leading-relaxed">
+                            Reconnaît les équivalences et synonymes entre les compétences
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Avantage 3 */}
+                    <div className="group relative p-5 bg-gray-900/50 rounded-xl border border-gray-600 hover:border-yellow-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/20">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0">
+                          <div className="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center border border-yellow-400/30 group-hover:scale-110 transition-transform group-hover:bg-yellow-500/20">
+                            <Sparkles className="w-6 h-6 text-yellow-400" />
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-bold text-white text-base mb-2">Recommandations Actionnables</h4>
+                          <p className="text-sm text-gray-400 leading-relaxed">
+                            Formations précises et ciblées pour combler les gaps identifiés
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Avantage 4 */}
+                    <div className="group relative p-5 bg-gray-900/50 rounded-xl border border-gray-600 hover:border-yellow-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/20">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0">
+                          <div className="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center border border-yellow-400/30 group-hover:scale-110 transition-transform group-hover:bg-yellow-500/20">
+                            <Info className="w-6 h-6 text-yellow-400" />
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-bold text-white text-base mb-2">Raisonnement Explicable</h4>
+                          <p className="text-sm text-gray-400 leading-relaxed">
+                            Justification claire et transparente de chaque score calculé
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="flex justify-end mt-6 pt-4 border-t border-gray-700">
+            <Button onClick={() => setShowMatchingInfoDialog(false)} className="bg-blue-600 hover:bg-blue-700">
+              J'ai compris
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog de Configuration des Pondérations */}
+      <Dialog open={showWeightsDialog} onOpenChange={setShowWeightsDialog}>
+        <DialogContent className="bg-gray-900 border-gray-700 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-2xl">
+              <Settings className="w-7 h-7 text-yellow-500" />
+              Personnaliser la Pondération
+            </DialogTitle>
+            <DialogDescription className="text-gray-400 mt-2">
+              Ajustez l'importance de chaque critère dans le calcul du score de correspondance
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="mt-6 space-y-6 pr-2">
+            {/* Explication */}
+            <div className="p-4 bg-blue-900/30 border border-blue-500/50 rounded-lg">
+              <p className="text-sm text-gray-300">
+                <strong className="text-blue-400">Note :</strong> Les pondérations doivent totaliser 100%. 
+                Ajustez les curseurs pour définir l'importance relative de chaque critère.
+              </p>
+            </div>
+
+            {/* Total Progress Bar */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-400">Total :</span>
+                <span className={`font-bold ${
+                  matchingWeights.technicalSkills + matchingWeights.experience + matchingWeights.training + matchingWeights.context === 100
+                    ? 'text-green-400'
+                    : 'text-orange-400'
+                }`}>
+                  {matchingWeights.technicalSkills + matchingWeights.experience + matchingWeights.training + matchingWeights.context}%
+                </span>
+              </div>
+              <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                <div 
+                  className={`h-full transition-all duration-300 ${
+                    matchingWeights.technicalSkills + matchingWeights.experience + matchingWeights.training + matchingWeights.context === 100
+                      ? 'bg-green-500'
+                      : 'bg-orange-500'
+                  }`}
+                  style={{ 
+                    width: `${Math.min(matchingWeights.technicalSkills + matchingWeights.experience + matchingWeights.training + matchingWeights.context, 100)}%` 
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Compétences Techniques */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Code className="w-5 h-5 text-blue-400" />
+                  <span className="font-semibold text-white">Compétences Techniques</span>
+                </div>
+                <span className="text-lg font-bold text-blue-400">{matchingWeights.technicalSkills}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="5"
+                value={matchingWeights.technicalSkills}
+                onChange={(e) => setMatchingWeights({...matchingWeights, technicalSkills: parseInt(e.target.value)})}
+                className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+              />
+              <p className="text-xs text-gray-400">
+                Technologies, langages, frameworks, outils maîtrisés
+              </p>
+            </div>
+
+            {/* Expérience */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Briefcase className="w-5 h-5 text-purple-400" />
+                  <span className="font-semibold text-white">Expérience Professionnelle</span>
+                </div>
+                <span className="text-lg font-bold text-purple-400">{matchingWeights.experience}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="5"
+                value={matchingWeights.experience}
+                onChange={(e) => setMatchingWeights({...matchingWeights, experience: parseInt(e.target.value)})}
+                className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-500"
+              />
+              <p className="text-xs text-gray-400">
+                Années d'expérience, projets similaires, rôles occupés
+              </p>
+            </div>
+
+            {/* Formations & Certifications */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <GraduationCap className="w-5 h-5 text-green-400" />
+                  <span className="font-semibold text-white">Formations & Certifications</span>
+                </div>
+                <span className="text-lg font-bold text-green-400">{matchingWeights.training}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="5"
+                value={matchingWeights.training}
+                onChange={(e) => setMatchingWeights({...matchingWeights, training: parseInt(e.target.value)})}
+                className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-green-500"
+              />
+              <p className="text-xs text-gray-400">
+                Diplômes, certifications professionnelles, formations continues
+              </p>
+            </div>
+
+            {/* Contexte & Secteur */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Building className="w-5 h-5 text-yellow-400" />
+                  <span className="font-semibold text-white">Contexte & Secteur</span>
+                </div>
+                <span className="text-lg font-bold text-yellow-400">{matchingWeights.context}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="5"
+                value={matchingWeights.context}
+                onChange={(e) => setMatchingWeights({...matchingWeights, context: parseInt(e.target.value)})}
+                className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-yellow-500"
+              />
+              <p className="text-xs text-gray-400">
+                Secteur d'activité, taille des projets, environnement métier
+              </p>
+            </div>
+
+            {/* Presets rapides */}
+            <div className="pt-4 border-t border-gray-700">
+              <p className="text-sm font-semibold text-gray-300 mb-3">Presets rapides :</p>
+              <div className="grid grid-cols-2 gap-3">
+                <Button
+                  onClick={() => setMatchingWeights({ technicalSkills: 40, experience: 30, training: 20, context: 10 })}
+                  variant="outline"
+                  size="sm"
+                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:border-yellow-500"
+                >
+                  ⚖️ Équilibré (défaut)
+                </Button>
+                <Button
+                  onClick={() => setMatchingWeights({ technicalSkills: 60, experience: 20, training: 15, context: 5 })}
+                  variant="outline"
+                  size="sm"
+                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:border-blue-500"
+                >
+                  💻 Focus Technique
+                </Button>
+                <Button
+                  onClick={() => setMatchingWeights({ technicalSkills: 25, experience: 50, training: 15, context: 10 })}
+                  variant="outline"
+                  size="sm"
+                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:border-purple-500"
+                >
+                  📊 Focus Expérience
+                </Button>
+                <Button
+                  onClick={() => setMatchingWeights({ technicalSkills: 30, experience: 25, training: 35, context: 10 })}
+                  variant="outline"
+                  size="sm"
+                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:border-green-500"
+                >
+                  🎓 Focus Formation
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-700">
+            <Button 
+              onClick={() => setMatchingWeights({ technicalSkills: 40, experience: 30, training: 20, context: 10 })} 
+              variant="outline"
+              className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700"
+            >
+              Réinitialiser
+            </Button>
+            <Button 
+              onClick={() => setShowWeightsDialog(false)} 
+              disabled={matchingWeights.technicalSkills + matchingWeights.experience + matchingWeights.training + matchingWeights.context !== 100}
+              className="bg-yellow-600 hover:bg-yellow-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {matchingWeights.technicalSkills + matchingWeights.experience + matchingWeights.training + matchingWeights.context === 100
+                ? '✓ Appliquer les Pondérations'
+                : '⚠️ Total doit être 100%'}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -4988,10 +6490,10 @@ Pour les graphiques, consultez l'interface web.
               <h3 className="text-white font-semibold mb-4">Fonctionnalités</h3>
               <ul className="space-y-2">
                 <li className="text-gray-400 text-sm hover:text-white transition-colors cursor-pointer">
-                  Matching Simple
+                  Recrutement Individuel
                 </li>
                 <li className="text-gray-400 text-sm hover:text-white transition-colors cursor-pointer">
-                  Multi-Profils
+                  Appel d'Offres Complexe
                 </li>
                 <li className="text-gray-400 text-sm hover:text-white transition-colors cursor-pointer">
                   Analyse IA Enrichie

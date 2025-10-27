@@ -1,0 +1,50 @@
+{
+    "nom": "Manon Leroy",
+    "poste": "Business Analyst – Data",
+    "email": "manon.leroy@fr.ey.com",
+    "telephone": "+33 6 34 56 78 12",
+    "profil": {
+        "description": "Manon Leroy est diplômée de Paris Dauphine avec un master en contrôle de gestion et audit. Elle possède 3 ans d'expérience en business analysis avec une forte orientation data et process.",
+        "formation": "Université Paris-Dauphine, Master Contrôle de Gestion"
+    },
+    "competences": {
+        "langages": [
+            "SQL",
+            "Excel avancé"
+        ],
+        "outils": [
+            "Power BI",
+            "Tableau",
+            "Jira",
+            "Confluence",
+            "Lucidchart"
+        ],
+        "themes": [
+            "Business Analysis",
+            "Requirements Gathering",
+            "Process Modeling",
+            "Data Analysis",
+            "Reporting"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (B2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Refonte système reporting – Banque",
+            "description": "Recueil des besoins pour refonte du système de reporting financier. Ateliers avec 50 utilisateurs, spécifications fonctionnelles, user stories. Livraison de 40 rapports Power BI. Compétences : Business Analysis, Requirements, Power BI"
+        },
+        {
+            "titre": "Automatisation processus – Assurance",
+            "description": "Analyse et optimisation de processus métier. Identification d'opportunités d'automatisation, rédaction de cahiers des charges. Gain de 30% de productivité. Compétences : Process Analysis, Documentation"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "PMI Professional in Business Analysis - PMI-PBA (2024)"
+        ]
+    }
+}

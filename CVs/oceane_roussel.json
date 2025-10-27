@@ -1,0 +1,52 @@
+{
+    "nom": "Océane Roussel",
+    "poste": "Consultant – Change Management Data",
+    "email": "oceane.roussel@fr.ey.com",
+    "telephone": "+33 6 78 90 12 56",
+    "profil": {
+        "description": "Océane Roussel est diplômée de l'ESSEC avec un master en Management du Changement. Elle possède 5 ans d'expérience en conduite du changement sur des projets de transformation data.",
+        "formation": "ESSEC, Master Management du Changement"
+    },
+    "competences": {
+        "themes": [
+            "Change Management",
+            "Training",
+            "Communication",
+            "Stakeholder Management",
+            "Data Literacy",
+            "Adoption"
+        ],
+        "outils": [
+            "Prosci ADKAR",
+            "Kotter",
+            "PowerPoint",
+            "Teams",
+            "Mural"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C1)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Transformation Data-Driven – Industrie",
+            "description": "Conduite du changement pour transformation data d'un groupe de 5000 personnes. Plan de communication, formation de 200 key users, data literacy program. Adoption de 75%. Compétences : Change Management, Training, Communication"
+        },
+        {
+            "titre": "Déploiement Data Office – Banque",
+            "description": "Accompagnement du changement pour création du Data Office. Communication interne, workshops de sensibilisation, formation data stewards. Compétences : Change Management, Data Governance, Training"
+        },
+        {
+            "titre": "Adoption Self-Service BI – Retail",
+            "description": "Programme d'adoption d'une plateforme self-service BI. Formation de 500 utilisateurs, création de supports, help desk. Taux d'adoption 80%. Compétences : Change Management, Training, Data Literacy"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Prosci Change Management Certification (2022)",
+            "Certified Data Literacy Professional (2023)"
+        ]
+    }
+}

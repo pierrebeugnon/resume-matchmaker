@@ -1,0 +1,67 @@
+{
+    "nom": "Sophie Martin",
+    "poste": "Senior Data Engineer",
+    "email": "sophie.martin@fr.ey.com",
+    "telephone": "+33 6 12 34 56 78",
+    "profil": {
+        "description": "Sophie Martin est diplômée de l'école Polytech Paris avec une spécialisation en Big Data et Cloud Computing. Elle possède 7 ans d'expérience dans la conception d'architectures data scalables pour de grands groupes industriels et bancaires.",
+        "formation": "Polytech Paris, spécialisation Big Data & Cloud Computing"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "Scala",
+            "SQL",
+            "Java",
+            "Bash"
+        ],
+        "outils": [
+            "Apache Spark",
+            "Kafka",
+            "Airflow",
+            "Databricks",
+            "Snowflake",
+            "AWS",
+            "Terraform"
+        ],
+        "themes": [
+            "Data Engineering",
+            "ETL/ELT",
+            "Data Pipeline",
+            "Stream Processing",
+            "Data Lake Architecture"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C1)",
+            "Espagnol (B2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Migration Data Platform vers le Cloud AWS – Grande Banque Française",
+            "description": "Conception et mise en œuvre d'une architecture data lake sur AWS pour centraliser 150 To de données. Migration de pipelines batch et streaming depuis une infrastructure on-premise. Orchestration avec Airflow, traitement avec Spark. Mise en place de la data governance avec AWS Glue Catalog. Langages/Outils : Python, Spark, AWS (S3, Glue, EMR, Redshift), Airflow, Terraform"
+        },
+        {
+            "titre": "Développement de pipelines temps réel – Acteur Telecom",
+            "description": "Construction d'une plateforme de traitement de données temps réel pour l'analyse comportementale de 50M d'utilisateurs. Architecture Kafka + Spark Streaming + Cassandra. Mise en place de monitoring avec Prometheus et Grafana. Langages/Outils : Scala, Kafka, Spark Streaming, Cassandra, Kubernetes"
+        },
+        {
+            "titre": "Optimisation des performances data – Industrie Automobile",
+            "description": "Audit et optimisation de pipelines ETL existants, réduction de 60% des temps de traitement. Refactoring de code Spark, mise en place de partitioning stratégique, optimisation des jointures. Formation des équipes aux bonnes pratiques. Langages/Outils : Spark, Databricks, Delta Lake, Python"
+        }
+    ],
+    "projets_internes": [
+        {
+            "titre": "Framework de Data Quality – EY",
+            "description": "Développement d'un framework Python open-source pour l'automatisation des contrôles qualité data. Intégration avec Great Expectations et développement de règles métiers personnalisées. Langages/Outils : Python, Great Expectations, Docker"
+        }
+    ],
+    "formations_certifications": {
+        "certifications": [
+            "AWS Certified Data Analytics Specialty (2022)",
+            "Databricks Certified Associate Developer for Apache Spark (2023)",
+            "Terraform Associate (2024)"
+        ]
+    }
+}

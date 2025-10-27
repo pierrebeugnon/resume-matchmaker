@@ -1,0 +1,52 @@
+{
+    "nom": "Hugo Mercier",
+    "poste": "Data Engineer – Azure",
+    "email": "hugo.mercier@fr.ey.com",
+    "telephone": "+33 6 01 23 45 89",
+    "profil": {
+        "description": "Hugo Mercier est diplômé de l'ESGI avec une spécialisation en Big Data. Il possède 4 ans d'expérience en data engineering sur Azure avec une expertise en Azure Synapse et Data Factory.",
+        "formation": "ESGI, spécialisation Big Data"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "SQL",
+            "PySpark"
+        ],
+        "outils": [
+            "Azure Synapse",
+            "Azure Data Factory",
+            "Azure Databricks",
+            "ADLS Gen2",
+            "Azure SQL Database",
+            "Power BI"
+        ],
+        "themes": [
+            "Data Engineering",
+            "ETL/ELT",
+            "Data Warehouse",
+            "Cloud Azure"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (B2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Data Platform Azure – Banque Retail",
+            "description": "Construction d'une plateforme data sur Azure Synapse. Pipelines Data Factory pour 30 sources, transformation avec Spark dans Databricks. Data warehouse sur Synapse SQL Pool. Langages/Outils : Azure Synapse, Data Factory, Databricks, SQL"
+        },
+        {
+            "titre": "Migration vers Azure – Assurance",
+            "description": "Migration d'un data warehouse on-premise vers Azure. Refonte des ETL avec Data Factory, optimisation des performances. Formation des équipes data. Langages/Outils : Azure Data Factory, Azure SQL, Python"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Microsoft Certified: Azure Data Engineer Associate DP-203 (2023)",
+            "Databricks Certified Associate Developer (2024)"
+        ]
+    }
+}

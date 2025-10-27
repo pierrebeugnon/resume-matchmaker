@@ -1,0 +1,61 @@
+{
+    "nom": "Lucas Bernard",
+    "poste": "Data Architect",
+    "email": "lucas.bernard@fr.ey.com",
+    "telephone": "+33 6 45 67 89 01",
+    "profil": {
+        "description": "Lucas Bernard est ingénieur diplômé de Télécom ParisTech avec 8 ans d'expérience en architecture data. Il a conçu et déployé des plateformes data pour des entreprises du CAC 40, avec une expertise particulière en architectures cloud-native et data mesh.",
+        "formation": "Télécom ParisTech, spécialisation Systèmes Distribués"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "SQL",
+            "Java"
+        ],
+        "outils": [
+            "Databricks",
+            "Snowflake",
+            "AWS",
+            "Azure",
+            "Terraform",
+            "dbt",
+            "Fivetran",
+            "Talend"
+        ],
+        "themes": [
+            "Data Architecture",
+            "Data Lake/Lakehouse",
+            "Data Mesh",
+            "Cloud Architecture",
+            "Data Modeling",
+            "Data Governance"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C1)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Architecture Data Lakehouse – Groupe Bancaire International",
+            "description": "Conception d'une architecture data lakehouse sur Databricks avec architecture médaillon (Bronze/Silver/Gold). Définition des standards de modélisation, mise en place du Unity Catalog pour la gouvernance. Migration de 500 To de données. Langages/Outils : Databricks, Delta Lake, Spark, Unity Catalog, Terraform"
+        },
+        {
+            "titre": "Implémentation Data Mesh – CAC 40 Energie",
+            "description": "Design et implémentation d'une architecture Data Mesh avec 12 domaines data. Définition de la plateforme self-service, mise en place des data products, création du framework de gouvernance fédérée. Langages/Outils : AWS, Kafka, dbt, Data Catalog, Terraform"
+        },
+        {
+            "titre": "Migration vers Snowflake – Retail",
+            "description": "Architecture et migration d'un data warehouse on-premise vers Snowflake. Refonte du modèle de données, optimisation des performances, mise en place du CDC. Formation des équipes techniques. Langages/Outils : Snowflake, Fivetran, dbt, SQL"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Databricks Platform Architect (2023)",
+            "AWS Solutions Architect Professional (2022)",
+            "Snowflake SnowPro Advanced Architect (2024)"
+        ]
+    }
+}

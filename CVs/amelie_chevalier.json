@@ -1,0 +1,55 @@
+{
+    "nom": "Amélie Chevalier",
+    "poste": "Data Scientist – Recommender Systems",
+    "email": "amelie.chevalier@fr.ey.com",
+    "telephone": "+33 6 23 45 67 12",
+    "profil": {
+        "description": "Amélie Chevalier est diplômée de l'École Centrale Paris avec un master en Data Science. Elle possède 5 ans d'expérience en systèmes de recommandation avec une expertise en collaborative filtering et deep learning.",
+        "formation": "École Centrale Paris, Master Data Science"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "SQL",
+            "Scala"
+        ],
+        "ia_ml": [
+            "Recommender Systems",
+            "Collaborative Filtering",
+            "Matrix Factorization",
+            "Deep Learning for RecSys",
+            "A/B Testing"
+        ],
+        "outils": [
+            "TensorFlow",
+            "PyTorch",
+            "Surprise",
+            "LightFM",
+            "Spark MLlib"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C1)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Moteur de recommandations – Plateforme Streaming",
+            "description": "Développement d'un système de recommandation hybride (CF + content-based) pour 10M utilisateurs. Deep learning avec neural collaborative filtering. +25% d'engagement. Langages/Outils : PyTorch, Spark, Redis, Python"
+        },
+        {
+            "titre": "Recommandations produits – E-commerce",
+            "description": "Système de recommandation produit avec matrix factorization (SVD). Personnalisation temps réel, A/B testing. +15% de conversion. Langages/Outils : Surprise, Spark, FastAPI, Python"
+        },
+        {
+            "titre": "Recommandations contextuelles – Travel Tech",
+            "description": "Modèle de recommandation contextuel avec features temporelles et géographiques. Multi-armed bandit pour exploration/exploitation. Langages/Outils : scikit-learn, LightGBM, Python"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Recommender Systems Specialization - University of Minnesota (2022)"
+        ]
+    }
+}

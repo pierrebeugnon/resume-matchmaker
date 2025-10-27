@@ -1,0 +1,58 @@
+{
+    "nom": "Valérie Bonnet",
+    "poste": "Manager – Data Privacy & Compliance",
+    "email": "valerie.bonnet@fr.ey.com",
+    "telephone": "+33 6 56 78 90 34",
+    "profil": {
+        "description": "Valérie Bonnet est diplômée d'un master en Droit du Numérique de l'Université Panthéon-Assas. Elle possède 9 ans d'expérience en data privacy et conformité RGPD avec une double compétence juridique et technique.",
+        "formation": "Université Panthéon-Assas, Master Droit du Numérique"
+    },
+    "competences": {
+        "themes": [
+            "RGPD",
+            "Data Privacy",
+            "Conformité",
+            "Privacy by Design",
+            "PIA/DPIA",
+            "Data Protection"
+        ],
+        "frameworks": [
+            "RGPD",
+            "CCPA",
+            "ISO 27001",
+            "ISO 27701"
+        ],
+        "outils": [
+            "OneTrust",
+            "TrustArc",
+            "Collibra",
+            "SQL"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Programme RGPD – Groupe Bancaire International",
+            "description": "Pilotage du programme de mise en conformité RGPD pour 20 pays. Cartographie des traitements, PIA, registre RGPD. Formation de 500 collaborateurs. Budget 5M€. Compétences : RGPD, Project Management, Training"
+        },
+        {
+            "titre": "Privacy by Design – Fintech",
+            "description": "Intégration du privacy by design dans les projets data. Accompagnement des équipes produit et data, validation des architectures. 30 projets audités. Compétences : Privacy by Design, Data Architecture, RGPD"
+        },
+        {
+            "titre": "Conformité internationale – E-commerce",
+            "description": "Mise en conformité RGPD et CCPA pour marketplace internationale. Data mapping, cookie consent, data subject rights. Compétences : RGPD, CCPA, International Compliance"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "CIPP/E - Certified Information Privacy Professional Europe (2020)",
+            "CIPM - Certified Information Privacy Manager (2021)",
+            "ISO 27001 Lead Implementer (2022)"
+        ]
+    }
+}

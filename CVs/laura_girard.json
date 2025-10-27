@@ -1,0 +1,45 @@
+{
+    "nom": "Laura Girard",
+    "poste": "Junior Data Engineer",
+    "email": "laura.girard@fr.ey.com",
+    "telephone": "+33 6 78 90 12 56",
+    "profil": {
+        "description": "Laura Girard est diplômée de l'INSA Lyon avec une spécialisation en informatique. Elle possède 1 an d'expérience en data engineering avec une forte volonté d'apprendre et de progresser.",
+        "formation": "INSA Lyon, spécialisation Informatique"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "SQL",
+            "Java"
+        ],
+        "outils": [
+            "Airflow",
+            "Docker",
+            "Git",
+            "PostgreSQL",
+            "Spark"
+        ],
+        "themes": [
+            "ETL",
+            "Data Pipeline",
+            "Data Integration"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (B2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Pipelines ETL – Startup Tech",
+            "description": "Développement de pipelines ETL avec Python et Airflow. Extraction de données depuis APIs REST, transformation avec Pandas, chargement en PostgreSQL. Monitoring et alerting. Langages/Outils : Python, Airflow, PostgreSQL, Docker"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Google Cloud Data Engineer Associate (2024)"
+        ]
+    }
+}

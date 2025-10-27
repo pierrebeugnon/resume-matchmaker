@@ -1,0 +1,61 @@
+{
+    "nom": "Sébastien Roche",
+    "poste": "Consultant – Data Testing & Quality Assurance",
+    "email": "sebastien.roche@fr.ey.com",
+    "telephone": "+33 6 90 12 34 89",
+    "profil": {
+        "description": "Sébastien Roche est diplômé de l'ESIGELEC avec un master en Génie Informatique. Il possède 5 ans d'expérience en testing de données et assurance qualité avec une expertise en tests automatisés et data validation.",
+        "formation": "ESIGELEC, Master Génie Informatique"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "SQL",
+            "Groovy"
+        ],
+        "outils": [
+            "Great Expectations",
+            "dbt",
+            "pytest",
+            "Selenium",
+            "Jenkins",
+            "GitLab CI"
+        ],
+        "themes": [
+            "Data Testing",
+            "Test Automation",
+            "Data Validation",
+            "Quality Assurance",
+            "CI/CD Testing"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (B2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Framework de tests data – Banque",
+            "description": "Développement d'un framework de tests automatisés pour pipelines data. Tests unitaires, tests d'intégration, tests de non-régression. 500+ tests automatisés. Langages/Outils : Python, Great Expectations, pytest, Jenkins"
+        },
+        {
+            "titre": "Validation de données – Assurance",
+            "description": "Mise en place de contrôles qualité automatisés sur data warehouse. Validation de complétude, cohérence, conformité. Détection de 100+ anomalies. Langages/Outils : SQL, Python, Great Expectations"
+        },
+        {
+            "titre": "Tests dbt – E-commerce",
+            "description": "Implémentation de tests dbt pour validation de transformations. Tests génériques et spécifiques, documentation. Intégration CI/CD. Langages/Outils : dbt, SQL, GitLab CI"
+        },
+        {
+            "titre": "Data Reconciliation – Fintech",
+            "description": "Développement d'outils de réconciliation de données entre systèmes. Comparaison automatisée, reporting d'écarts. 99.9% de précision. Langages/Outils : Python, Pandas, SQL"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "ISTQB Certified Tester Foundation Level (2021)",
+            "Test Automation University - API Testing (2023)"
+        ]
+    }
+}

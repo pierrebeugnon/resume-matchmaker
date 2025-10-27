@@ -1,0 +1,61 @@
+{
+    "nom": "Romain Thomas",
+    "poste": "Lead Machine Learning Engineer",
+    "email": "romain.thomas@fr.ey.com",
+    "telephone": "+33 6 45 67 89 23",
+    "profil": {
+        "description": "Romain Thomas est diplômé de l'EPFL avec un doctorat en Computer Science. Il possède 8 ans d'expérience en ML engineering avec une expertise en deep learning et computer vision.",
+        "formation": "EPFL, Doctorat en Computer Science"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "C++",
+            "SQL",
+            "Rust"
+        ],
+        "ia_ml": [
+            "Deep Learning",
+            "Computer Vision",
+            "Object Detection",
+            "Image Segmentation",
+            "Transfer Learning",
+            "Model Optimization"
+        ],
+        "outils": [
+            "PyTorch",
+            "TensorFlow",
+            "OpenCV",
+            "ONNX",
+            "TensorRT",
+            "Docker",
+            "Kubernetes",
+            "MLflow"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Système de vision industrielle – Manufacturier",
+            "description": "Développement d'un système de détection de défauts avec deep learning. Architecture CNN custom, training sur 100k images annotées. Déploiement edge avec TensorRT. Précision 98%. Langages/Outils : PyTorch, OpenCV, TensorRT, C++"
+        },
+        {
+            "titre": "Reconnaissance faciale sécurisée – Fintech",
+            "description": "Système d'authentification biométrique avec deep learning. Face recognition avec ArcFace, liveness detection. Sécurité bancaire niveau PSD2. Langages/Outils : PyTorch, OpenCV, FastAPI, Docker"
+        },
+        {
+            "titre": "Optimisation de modèles ML – Startup AI",
+            "description": "Optimisation de modèles pour déploiement edge et mobile. Quantization, pruning, knowledge distillation. Réduction de 80% de la latence. Langages/Outils : ONNX, TensorRT, PyTorch Mobile"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "TensorFlow Developer Certificate (2021)",
+            "NVIDIA Deep Learning Institute - Computer Vision (2022)"
+        ]
+    }
+}

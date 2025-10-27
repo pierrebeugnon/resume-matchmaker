@@ -1,0 +1,53 @@
+{
+    "nom": "Morgane Perrin",
+    "poste": "Senior Consultant – Customer Data Platform",
+    "email": "morgane.perrin@fr.ey.com",
+    "telephone": "+33 6 67 89 01 56",
+    "profil": {
+        "description": "Morgane Perrin est diplômée de l'ESSEC avec un master en Marketing Digital. Elle possède 6 ans d'expérience en Customer Data Platform avec une expertise en unification de données clients et personnalisation.",
+        "formation": "ESSEC, Master Marketing Digital"
+    },
+    "competences": {
+        "themes": [
+            "Customer Data Platform",
+            "Customer 360",
+            "Identity Resolution",
+            "Personalization",
+            "Marketing Automation",
+            "RGPD"
+        ],
+        "outils": [
+            "Segment",
+            "mParticle",
+            "Tealium",
+            "Adobe Real-Time CDP",
+            "Salesforce CDP",
+            "SQL"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Implémentation CDP – E-commerce Luxe",
+            "description": "Déploiement de Segment CDP pour unifier données de 15 sources. Identity resolution sur 5M clients, activation vers 20 destinations. +40% de ROI marketing. Compétences : CDP, Identity Resolution, Integration"
+        },
+        {
+            "titre": "Customer 360 – Banque Retail",
+            "description": "Construction d'une vue client 360° avec Adobe Real-Time CDP. Collecte omnicanale, unification, segmentation avancée. Personnalisation temps réel. Compétences : CDP, Customer 360, Personalization"
+        },
+        {
+            "titre": "Conformité RGPD CDP – Assurance",
+            "description": "Mise en conformité RGPD de la CDP. Consent management, data subject rights, privacy by design. Audit et remédiation. Compétences : RGPD, CDP, Privacy"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Segment Associate Certification (2023)",
+            "CIPP/E - Privacy Professional (2024)"
+        ]
+    }
+}

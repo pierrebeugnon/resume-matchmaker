@@ -1,0 +1,62 @@
+{
+    "nom": "Benjamin Fontaine",
+    "poste": "Senior Consultant – DataOps",
+    "email": "benjamin.fontaine@fr.ey.com",
+    "telephone": "+33 6 89 01 23 67",
+    "profil": {
+        "description": "Benjamin Fontaine est diplômé de l'ENSIMAG avec une spécialisation en systèmes distribués. Il possède 7 ans d'expérience en DataOps avec une expertise en automatisation et industrialisation de plateformes data.",
+        "formation": "ENSIMAG, spécialisation Systèmes Distribués"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "Bash",
+            "Go",
+            "SQL"
+        ],
+        "outils": [
+            "Kubernetes",
+            "Terraform",
+            "GitLab CI",
+            "Ansible",
+            "Prometheus",
+            "Grafana",
+            "ELK Stack",
+            "Airflow"
+        ],
+        "themes": [
+            "DataOps",
+            "DevOps",
+            "CI/CD",
+            "Monitoring",
+            "Automation",
+            "Site Reliability Engineering"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C1)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Plateforme DataOps – Banque",
+            "description": "Mise en place d'une plateforme DataOps pour industrialiser les déploiements data. Pipelines CI/CD pour jobs Spark et dbt, tests automatisés, monitoring avec Prometheus. Réduction de 60% du time-to-production. Langages/Outils : GitLab CI, Kubernetes, Terraform, Airflow"
+        },
+        {
+            "titre": "Observabilité Data Platform – E-commerce",
+            "description": "Implémentation d'une solution d'observabilité pour plateforme data. Monitoring de pipelines, alerting, dashboards Grafana. Data quality checks automatisés. Langages/Outils : Prometheus, Grafana, Python, Great Expectations"
+        },
+        {
+            "titre": "Infrastructure as Code – Assurance",
+            "description": "Migration de l'infrastructure data vers IaC avec Terraform. Automatisation du provisioning de clusters Spark, bases de données, buckets S3. Reproductibilité multi-environnements. Langages/Outils : Terraform, AWS, Ansible"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Certified Kubernetes Administrator - CKA (2021)",
+            "HashiCorp Certified: Terraform Associate (2022)",
+            "DataOps Methodology - DataKitchen (2023)"
+        ]
+    }
+}

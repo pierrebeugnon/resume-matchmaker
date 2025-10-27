@@ -1,0 +1,55 @@
+{
+    "nom": "Kevin Blanc",
+    "poste": "Manager – Analytics & Performance",
+    "email": "kevin.blanc@fr.ey.com",
+    "telephone": "+33 6 67 89 01 45",
+    "profil": {
+        "description": "Kevin Blanc est diplômé d'HEC Paris avec un MBA. Il possède 10 ans d'expérience en conseil analytics et transformation digitale. Il a piloté plus de 20 missions stratégiques data pour des CAC 40.",
+        "formation": "HEC Paris, MBA"
+    },
+    "competences": {
+        "themes": [
+            "Digital Analytics",
+            "Web Analytics",
+            "Marketing Analytics",
+            "Customer Analytics",
+            "ROI Optimization",
+            "A/B Testing",
+            "CRO"
+        ],
+        "outils": [
+            "Google Analytics 4",
+            "Adobe Analytics",
+            "Amplitude",
+            "Mixpanel",
+            "Segment",
+            "Google Tag Manager",
+            "Looker Studio"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Programme d'optimisation e-commerce – Retail",
+            "description": "Pilotage d'un programme d'optimisation du tunnel de conversion. Implémentation d'une stack analytics (GA4, Amplitude, Segment). Plan de taggage, dashboards, A/B testing. +30% de conversion, +50M€ CA. Compétences : Analytics, CRO, A/B Testing"
+        },
+        {
+            "titre": "Transformation data-driven marketing – Luxe",
+            "description": "Accompagnement de la transformation data-driven du marketing. Customer Data Platform, attribution multi-touch, personnalisation. ROI marketing +40%. Compétences : CDP, Marketing Analytics, Strategy"
+        },
+        {
+            "titre": "Analytics produit – SaaS B2B",
+            "description": "Mise en place de la pratique product analytics. Définition des métriques North Star, événements clés, cohorte analysis. Instrumentation avec Amplitude. Compétences : Product Analytics, Metrics, Strategy"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Google Analytics 4 Certification (2023)",
+            "Amplitude Product Analytics Certification (2024)"
+        ]
+    }
+}

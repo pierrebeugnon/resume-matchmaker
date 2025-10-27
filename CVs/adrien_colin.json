@@ -1,0 +1,52 @@
+{
+    "nom": "Adrien Colin",
+    "poste": "Consultant – Data Mesh & Domain Data",
+    "email": "adrien.colin@fr.ey.com",
+    "telephone": "+33 6 78 90 12 67",
+    "profil": {
+        "description": "Adrien Colin est diplômé de l'ESGI avec un master en Architecture SI. Il possède 3 ans d'expérience en architecture data mesh avec une expertise en domain-driven design et data products.",
+        "formation": "ESGI, Master Architecture SI"
+    },
+    "competences": {
+        "themes": [
+            "Data Mesh",
+            "Domain-Driven Design",
+            "Data Products",
+            "Federated Governance",
+            "Self-Service Platform",
+            "Data as a Product"
+        ],
+        "outils": [
+            "Kubernetes",
+            "Terraform",
+            "dbt",
+            "Kafka",
+            "Data Catalog"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (B2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Implémentation Data Mesh – FinTech",
+            "description": "Mise en place d'une architecture Data Mesh avec 8 domaines. Définition des data products, plateforme self-service, gouvernance fédérée. Autonomie des équipes +60%. Compétences : Data Mesh, Architecture, DDD"
+        },
+        {
+            "titre": "Data Product Development – E-commerce",
+            "description": "Création de data products avec approche product thinking. SLA, API, documentation, monitoring. 15 data products déployés. Compétences : Data Products, API Design, Product Management"
+        },
+        {
+            "titre": "Self-Service Platform – Retail",
+            "description": "Construction d'une plateforme self-service data avec Kubernetes et dbt. Templates, CI/CD, observabilité. Adoption de 50 data engineers. Compétences : Platform Engineering, Kubernetes, dbt"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Domain-Driven Design - Eric Evans (2023)",
+            "Data Mesh Principles - Thoughtworks (2024)"
+        ]
+    }
+}

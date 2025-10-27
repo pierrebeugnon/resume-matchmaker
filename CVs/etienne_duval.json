@@ -1,0 +1,62 @@
+{
+    "nom": "Étienne Duval",
+    "poste": "Architecte Solution – Big Data",
+    "email": "etienne.duval@fr.ey.com",
+    "telephone": "+33 6 89 01 23 67",
+    "profil": {
+        "description": "Étienne Duval est diplômé de Télécom Bretagne avec une spécialisation en architecture logicielle. Il possède 12 ans d'expérience en architecture big data avec une expertise en écosystème Hadoop et cloud-native.",
+        "formation": "Télécom Bretagne, spécialisation Architecture Logicielle"
+    },
+    "competences": {
+        "langages": [
+            "Java",
+            "Scala",
+            "Python",
+            "SQL"
+        ],
+        "outils": [
+            "Hadoop",
+            "Spark",
+            "Kafka",
+            "HBase",
+            "Hive",
+            "Presto",
+            "Kubernetes",
+            "Databricks",
+            "Confluent"
+        ],
+        "themes": [
+            "Big Data Architecture",
+            "Distributed Systems",
+            "Real-time Processing",
+            "Batch Processing",
+            "Lambda Architecture"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Architecture Data Platform – CAC 40 Telecom",
+            "description": "Conception d'une plateforme big data pour traiter 10 To/jour de données. Architecture Lambda avec Kafka, Spark Streaming, HDFS. Batch processing avec Spark. Compétences : Big Data Architecture, Kafka, Spark, Hadoop"
+        },
+        {
+            "titre": "Migration vers Cloud Native – Banque",
+            "description": "Migration d'un cluster Hadoop on-premise vers architecture cloud-native sur Databricks. Refonte des jobs Spark, optimisation performances. Réduction de 40% des coûts. Compétences : Cloud Architecture, Databricks, Migration"
+        },
+        {
+            "titre": "Real-time Analytics Platform – E-commerce",
+            "description": "Architecture de plateforme analytics temps réel. Kafka pour ingestion, Spark Streaming, Druid pour analytics. Dashboards temps réel avec latence <1s. Compétences : Real-time Processing, Kafka, Spark, Druid"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Cloudera Certified Professional - CCP Data Engineer (2019)",
+            "Databricks Certified Solution Architect (2023)",
+            "TOGAF 9 Certified (2021)"
+        ]
+    }
+}

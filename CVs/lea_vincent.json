@@ -1,0 +1,59 @@
+{
+    "nom": "Léa Vincent",
+    "poste": "Consultant – IA Générative",
+    "email": "lea.vincent@fr.ey.com",
+    "telephone": "+33 6 34 56 78 12",
+    "profil": {
+        "description": "Léa Vincent est diplômée de l'École des Mines de Paris avec une spécialisation en IA. Elle possède 3 ans d'expérience en GenAI avec une expertise en LLM, RAG et prompt engineering.",
+        "formation": "École des Mines de Paris, spécialisation Intelligence Artificielle"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "SQL"
+        ],
+        "ia_ml": [
+            "LLM",
+            "RAG",
+            "Prompt Engineering",
+            "Fine-tuning",
+            "GenAI"
+        ],
+        "outils": [
+            "LangChain",
+            "LlamaIndex",
+            "OpenAI API",
+            "Azure OpenAI",
+            "ChromaDB",
+            "Pinecone",
+            "Weaviate",
+            "Streamlit"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C1)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Assistant virtuel GenAI – Grande Banque",
+            "description": "Développement d'un assistant virtuel basé sur GPT-4 avec RAG. Indexation de 100k documents réglementaires, système de retrieval avec ChromaDB. Déploiement Azure OpenAI. Adoption de 500 utilisateurs. Langages/Outils : LangChain, ChromaDB, GPT-4, FastAPI, Azure"
+        },
+        {
+            "titre": "Automatisation documentation – Consulting",
+            "description": "Création d'un outil de génération automatique de documents de cadrage projet avec GenAI. Templates intelligents, extraction d'informations, génération de slides. Gain de 40% de temps. Langages/Outils : LangChain, GPT-4, Streamlit"
+        },
+        {
+            "titre": "Moteur de recherche sémantique – Assurance",
+            "description": "Implémentation d'un moteur de recherche sémantique sur base documentaire de 50k contrats. Vector search avec Pinecone, ranking avec LLM. Précision de 85%. Langages/Outils : LlamaIndex, Pinecone, OpenAI, FastAPI"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Prompt Engineering for Developers - OpenAI (2023)",
+            "Building Applications with Vector Databases - DeepLearning.AI (2024)",
+            "LangChain for LLM Application Development (2024)"
+        ]
+    }
+}

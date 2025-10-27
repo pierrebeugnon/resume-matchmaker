@@ -1,0 +1,49 @@
+{
+    "nom": "Maxime Roux",
+    "poste": "Staff – Data Quality Analyst",
+    "email": "maxime.roux@fr.ey.com",
+    "telephone": "+33 6 23 45 67 01",
+    "profil": {
+        "description": "Maxime Roux est diplômé de l'Université de Lille avec un master en Statistiques et Data Mining. Il possède 2 ans d'expérience en data quality avec une forte orientation technique.",
+        "formation": "Université de Lille, Master Statistiques et Data Mining"
+    },
+    "competences": {
+        "langages": [
+            "SQL",
+            "Python",
+            "R"
+        ],
+        "outils": [
+            "Great Expectations",
+            "Talend Data Quality",
+            "Informatica DQ",
+            "Power BI"
+        ],
+        "themes": [
+            "Data Quality",
+            "Data Profiling",
+            "Data Cleansing",
+            "Anomaly Detection"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (B2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Contrôles qualité automatisés – Assurance",
+            "description": "Implémentation de contrôles qualité avec Great Expectations sur 50 datasets. Automatisation des alertes, dashboards de monitoring. Détection de 200+ anomalies. Langages/Outils : Python, Great Expectations, Airflow, SQL"
+        },
+        {
+            "titre": "Data Profiling – Banque",
+            "description": "Analyse de qualité sur base client de 10M lignes. Détection de doublons, valeurs manquantes, incohérences. Recommandations de nettoyage. Langages/Outils : SQL, Python, Pandas"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Data Quality Fundamentals - DAMA (2023)"
+        ]
+    }
+}

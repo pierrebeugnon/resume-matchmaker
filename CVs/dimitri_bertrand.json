@@ -1,0 +1,48 @@
+{
+    "nom": "Dimitri Bertrand",
+    "poste": "Staff – Data Integration",
+    "email": "dimitri.bertrand@fr.ey.com",
+    "telephone": "+33 6 12 34 56 01",
+    "profil": {
+        "description": "Dimitri Bertrand est diplômé de l'EPSI avec un BTS Informatique. Il possède 2 ans d'expérience en intégration de données avec une expertise en outils ETL comme Talend.",
+        "formation": "EPSI, BTS Informatique"
+    },
+    "competences": {
+        "langages": [
+            "SQL",
+            "Java",
+            "Python"
+        ],
+        "outils": [
+            "Talend",
+            "Pentaho",
+            "SSIS",
+            "Informatica PowerCenter"
+        ],
+        "themes": [
+            "ETL",
+            "Data Integration",
+            "Data Migration"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (B1)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Intégration de données – Assurance",
+            "description": "Développement de jobs Talend pour intégration de données depuis 10 sources vers data warehouse. Transformations, gestion des rejets, logging. Langages/Outils : Talend, SQL, Oracle"
+        },
+        {
+            "titre": "Migration de données – Banque",
+            "description": "Migration de données depuis AS/400 vers SQL Server. Extraction, validation, chargement. 5M lignes migrées. Langages/Outils : SSIS, SQL Server, AS/400"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Talend Data Integration Certified Developer (2024)"
+        ]
+    }
+}

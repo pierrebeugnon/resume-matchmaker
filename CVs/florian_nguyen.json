@@ -1,0 +1,57 @@
+{
+    "nom": "Florian Nguyen",
+    "poste": "Consultant – Data Science & IoT",
+    "email": "florian.nguyen@fr.ey.com",
+    "telephone": "+33 6 34 56 78 23",
+    "profil": {
+        "description": "Florian Nguyen est diplômé de l'INSA Toulouse avec une spécialisation en IoT et Big Data. Il possède 4 ans d'expérience en data science appliquée à l'IoT avec une expertise en maintenance prédictive.",
+        "formation": "INSA Toulouse, spécialisation IoT & Big Data"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "R",
+            "SQL"
+        ],
+        "ia_ml": [
+            "Predictive Maintenance",
+            "Anomaly Detection",
+            "Time Series",
+            "Sensor Data Analysis"
+        ],
+        "outils": [
+            "scikit-learn",
+            "TensorFlow",
+            "InfluxDB",
+            "Grafana",
+            "MQTT",
+            "Apache NiFi"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (B2)",
+            "Vietnamien"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Maintenance prédictive – Industrie Aéronautique",
+            "description": "Développement de modèles de maintenance prédictive sur données capteurs. Détection d'anomalies, prédiction de pannes. Réduction de 30% des temps d'arrêt. Langages/Outils : Python, scikit-learn, TensorFlow, InfluxDB"
+        },
+        {
+            "titre": "Optimisation énergétique – Smart Building",
+            "description": "Modèles ML pour optimisation de la consommation énergétique. Prévision de charge, recommandations temps réel. -20% de consommation. Langages/Outils : Python, LSTM, MQTT, Grafana"
+        },
+        {
+            "titre": "Quality Control – Manufacturier",
+            "description": "Détection automatique de défauts avec vision et ML. Analyse d'images en temps réel, alerting. Précision 94%. Langages/Outils : OpenCV, TensorFlow, Edge Computing"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "IoT Fundamentals - Cisco (2022)",
+            "Predictive Maintenance with Machine Learning (2023)"
+        ]
+    }
+}

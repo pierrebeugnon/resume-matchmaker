@@ -1,0 +1,53 @@
+{
+    "nom": "Chloé Lambert",
+    "poste": "Data Product Manager",
+    "email": "chloe.lambert@fr.ey.com",
+    "telephone": "+33 6 90 12 34 78",
+    "profil": {
+        "description": "Chloé Lambert est diplômée de l'ESSEC avec un master en Product Management. Elle possède 5 ans d'expérience en product management data avec une expertise en data products et self-service analytics.",
+        "formation": "ESSEC Business School, Master Product Management"
+    },
+    "competences": {
+        "themes": [
+            "Product Management",
+            "Data Products",
+            "Self-Service Analytics",
+            "User Research",
+            "Product Strategy",
+            "Agile/Scrum"
+        ],
+        "outils": [
+            "Jira",
+            "Confluence",
+            "Figma",
+            "Amplitude",
+            "Mixpanel",
+            "SQL"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Data Product Owner – SaaS B2B",
+            "description": "Product owner d'une plateforme self-service analytics. Définition de la roadmap produit, user research, priorisation features. Adoption de 500 utilisateurs, NPS de 45. Compétences : Product Management, User Research, Agile"
+        },
+        {
+            "titre": "Data Marketplace – Fintech",
+            "description": "Conception et lancement d'un data marketplace interne. Catalogue de 100 data products, self-service data access, data contracts. Réduction de 50% du temps d'accès aux données. Compétences : Data Products, Product Strategy"
+        },
+        {
+            "titre": "BI Platform – Retail",
+            "description": "Product management de la plateforme BI de l'entreprise. Migration Tableau vers Looker, refonte UX, formation utilisateurs. 1000 utilisateurs actifs. Compétences : Product Management, BI, Change Management"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Certified Scrum Product Owner - CSPO (2022)",
+            "Product Management - Product School (2023)"
+        ]
+    }
+}

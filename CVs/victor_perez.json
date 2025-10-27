@@ -1,0 +1,58 @@
+{
+    "nom": "Victor Perez",
+    "poste": "Lead Data Engineer – GCP",
+    "email": "victor.perez@fr.ey.com",
+    "telephone": "+33 6 56 78 90 45",
+    "profil": {
+        "description": "Victor Perez est diplômé de l'EPITA avec une spécialisation en Cloud Computing. Il possède 7 ans d'expérience en data engineering sur Google Cloud Platform avec une expertise en BigQuery et Dataflow.",
+        "formation": "EPITA, spécialisation Cloud Computing"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "SQL",
+            "Java"
+        ],
+        "outils": [
+            "BigQuery",
+            "Dataflow",
+            "Pub/Sub",
+            "Cloud Composer",
+            "Cloud Storage",
+            "Dataproc",
+            "Looker"
+        ],
+        "themes": [
+            "Data Engineering",
+            "ETL/ELT",
+            "Data Warehouse",
+            "Stream Processing"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C1)",
+            "Espagnol"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Data Warehouse BigQuery – Fintech",
+            "description": "Architecture et implémentation d'un data warehouse sur BigQuery. 500 To de données, 200 tables, partitioning et clustering. ELT avec dbt. Langages/Outils : BigQuery, dbt, Cloud Composer, SQL"
+        },
+        {
+            "titre": "Pipelines Streaming – E-commerce",
+            "description": "Pipelines de streaming avec Dataflow et Pub/Sub. Ingestion temps réel de 50k events/seconde, transformations complexes. Latence <1s. Langages/Outils : Dataflow, Pub/Sub, Apache Beam, Java"
+        },
+        {
+            "titre": "Migration vers GCP – Retail",
+            "description": "Migration d'une infrastructure on-premise vers GCP. Architecture data lake sur Cloud Storage, processing avec Dataproc. Réduction de 35% des coûts. Langages/Outils : GCP, Terraform, Python"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Google Cloud Professional Data Engineer (2022)",
+            "Google Cloud Professional Cloud Architect (2023)"
+        ]
+    }
+}

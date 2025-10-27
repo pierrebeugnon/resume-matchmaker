@@ -1,0 +1,58 @@
+{
+    "nom": "Noémie Garnier",
+    "poste": "Senior Consultant – Streaming Data",
+    "email": "noemie.garnier@fr.ey.com",
+    "telephone": "+33 6 01 23 45 89",
+    "profil": {
+        "description": "Noémie Garnier est diplômée de l'ENSIMAG avec une spécialisation en systèmes distribués. Elle possède 6 ans d'expérience en streaming data avec une expertise en Kafka et Flink.",
+        "formation": "ENSIMAG, spécialisation Systèmes Distribués"
+    },
+    "competences": {
+        "langages": [
+            "Java",
+            "Scala",
+            "Python",
+            "SQL"
+        ],
+        "outils": [
+            "Kafka",
+            "Confluent",
+            "Flink",
+            "Spark Streaming",
+            "Kafka Connect",
+            "Kafka Streams",
+            "Schema Registry"
+        ],
+        "themes": [
+            "Stream Processing",
+            "Event-Driven Architecture",
+            "Real-time Analytics",
+            "CDC"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C1)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Plateforme Streaming – Fintech",
+            "description": "Architecture et implémentation d'une plateforme de streaming avec Confluent Cloud. 100 topics, 1M messages/seconde. CDC avec Debezium, processing avec Kafka Streams. Langages/Outils : Kafka, Confluent, Debezium, Java"
+        },
+        {
+            "titre": "Real-time Fraud Detection – Banque",
+            "description": "Système de détection de fraudes en temps réel avec Flink. Processing complex event, pattern detection, alerting <100ms. Langages/Outils : Flink, Kafka, Cassandra, Java"
+        },
+        {
+            "titre": "Event-Driven Microservices – E-commerce",
+            "description": "Architecture event-driven pour microservices avec Kafka. Event sourcing, CQRS patterns, Schema Registry pour gouvernance. Langages/Outils : Kafka, Avro, Spring Boot, Java"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Confluent Certified Developer for Apache Kafka (2022)",
+            "Apache Flink Training (2023)"
+        ]
+    }
+}

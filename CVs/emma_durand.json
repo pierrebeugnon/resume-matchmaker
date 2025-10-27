@@ -1,0 +1,58 @@
+{
+    "nom": "Emma Durand",
+    "poste": "BI Developer",
+    "email": "emma.durand@fr.ey.com",
+    "telephone": "+33 6 12 34 56 89",
+    "profil": {
+        "description": "Emma Durand est diplômée de l'EFREI Paris avec une spécialisation en Business Intelligence. Elle possède 3 ans d'expérience en développement BI avec une expertise en Power BI et Tableau.",
+        "formation": "EFREI Paris, spécialisation Business Intelligence"
+    },
+    "competences": {
+        "langages": [
+            "SQL",
+            "DAX",
+            "Python",
+            "MDX"
+        ],
+        "outils": [
+            "Power BI",
+            "Tableau",
+            "SSAS",
+            "SSIS",
+            "Azure",
+            "Excel"
+        ],
+        "themes": [
+            "Business Intelligence",
+            "Data Visualization",
+            "ETL",
+            "OLAP",
+            "Reporting"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (B2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Reporting Financier – Groupe Industriel",
+            "description": "Développement de rapports Power BI pour le contrôle de gestion. Connexions multi-sources (SAP, SQL Server), modélisation en étoile, DAX avancé. 30 rapports déployés pour 150 utilisateurs. Langages/Outils : Power BI, DAX, SQL Server, SAP"
+        },
+        {
+            "titre": "Tableaux de bord RH – Grande Distribution",
+            "description": "Création de dashboards Tableau pour les KPIs RH (turnover, absentéisme, recrutement). Intégration avec SIRH, refresh quotidien. Adoption de 90%. Langages/Outils : Tableau, SQL, Python"
+        },
+        {
+            "titre": "Migration SSRS vers Power BI – Banque",
+            "description": "Migration de 50 rapports SSRS vers Power BI. Refonte UX, optimisation des performances, formation utilisateurs. Langages/Outils : Power BI, SSRS, SQL"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Microsoft Certified: Power BI Data Analyst Associate (2023)",
+            "Tableau Desktop Specialist (2024)"
+        ]
+    }
+}

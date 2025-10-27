@@ -1,0 +1,78 @@
+{
+    "nom": "Thomas Dubois",
+    "poste": "Lead Data Scientist",
+    "email": "thomas.dubois@fr.ey.com",
+    "telephone": "+33 6 23 45 67 89",
+    "profil": {
+        "description": "Thomas Dubois est titulaire d'un doctorat en Machine Learning de l'Université Paris-Saclay. Il possède 9 ans d'expérience en Data Science avec une expertise particulière en NLP et Computer Vision. Il a encadré plus de 15 projets IA en milieu bancaire et retail.",
+        "formation": "Doctorat en Machine Learning, Université Paris-Saclay"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "R",
+            "SQL",
+            "Julia"
+        ],
+        "ia_ml": [
+            "Deep Learning",
+            "NLP",
+            "Computer Vision",
+            "Time Series Forecasting",
+            "Reinforcement Learning",
+            "MLOps"
+        ],
+        "outils": [
+            "PyTorch",
+            "TensorFlow",
+            "Scikit-learn",
+            "MLflow",
+            "Kubeflow",
+            "Weights & Biases",
+            "Hugging Face",
+            "LangChain"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C2)",
+            "Allemand (B1)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Modèles de Credit Scoring nouvelle génération – Grande Banque Européenne",
+            "description": "Lead technique sur le développement de modèles ML avancés pour le scoring crédit. Implémentation d'algorithmes XGBoost et LightGBM avec explicabilité (SHAP values). Amélioration de 15% de l'AUC par rapport aux modèles traditionnels. Mise en production sur Azure ML. Langages/Outils : Python, XGBoost, SHAP, Azure ML, MLflow"
+        },
+        {
+            "titre": "Chatbot bancaire avec IA Générative – Banque Digitale",
+            "description": "Conception d'un assistant virtuel basé sur GPT-4 et RAG pour le support client. Indexation de 50k documents avec Azure Cognitive Search. Fine-tuning de modèles pour le secteur bancaire. Déploiement avec Azure OpenAI Service. Langages/Outils : Python, LangChain, Azure OpenAI, Vector DB, FastAPI"
+        },
+        {
+            "titre": "Détection de fraudes en temps réel – Fintech",
+            "description": "Développement d'un système de détection de fraudes avec Machine Learning en temps réel. Architecture basée sur Kafka Streams et modèles Random Forest. Réduction de 40% des faux positifs. Monitoring avec Grafana. Langages/Outils : Python, Scikit-learn, Kafka, Redis, Docker"
+        },
+        {
+            "titre": "Prédiction de churn client – Opérateur Télécom",
+            "description": "Modélisation prédictive du churn avec techniques avancées d'ensemble learning. Feature engineering sur données comportementales et transactionnelles. Déploiement d'API REST pour scoring en temps réel. Langages/Outils : Python, Scikit-learn, FastAPI, PostgreSQL"
+        }
+    ],
+    "projets_internes": [
+        {
+            "titre": "Centre d'Excellence MLOps – EY",
+            "description": "Co-fondateur du centre d'excellence MLOps. Définition des standards et best practices pour l'industrialisation de modèles ML. Création de templates projet et pipelines CI/CD. Langages/Outils : MLflow, Kubeflow, GitLab CI, Terraform"
+        },
+        {
+            "titre": "Accélérateur GenAI pour le Consulting",
+            "description": "Développement d'une suite d'outils GenAI pour accélérer la production de livrables consulting. RAG sur base documentaire interne, génération de slides, synthèse de documents. Langages/Outils : LangChain, ChromaDB, GPT-4, Streamlit"
+        }
+    ],
+    "formations_certifications": {
+        "certifications": [
+            "Microsoft Azure Data Scientist Associate DP-100 (2021)",
+            "Deep Learning Specialization - Coursera (2020)",
+            "MLOps Specialization - DeepLearning.AI (2022)",
+            "Prompt Engineering for Developers - OpenAI (2023)",
+            "Databricks Generative AI Engineer (2024)"
+        ]
+    }
+}

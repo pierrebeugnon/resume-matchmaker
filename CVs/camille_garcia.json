@@ -1,0 +1,59 @@
+{
+    "nom": "Camille Garcia",
+    "poste": "Analytics Engineer",
+    "email": "camille.garcia@fr.ey.com",
+    "telephone": "+33 6 90 12 34 56",
+    "profil": {
+        "description": "Camille Garcia est diplômée de l'Université Paris-Dauphine avec un master en Data Science for Business. Elle possède 4 ans d'expérience en analytics engineering avec une expertise en modélisation data warehouse et transformation de données.",
+        "formation": "Université Paris-Dauphine, Master Data Science for Business"
+    },
+    "competences": {
+        "langages": [
+            "SQL",
+            "Python",
+            "YAML",
+            "Jinja"
+        ],
+        "outils": [
+            "dbt",
+            "Snowflake",
+            "BigQuery",
+            "Looker",
+            "Git",
+            "Airflow"
+        ],
+        "themes": [
+            "Data Modeling",
+            "Data Transformation",
+            "ELT",
+            "Data Quality",
+            "Analytics Engineering"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C1)",
+            "Espagnol"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Data Warehouse sur Snowflake – SaaS B2B",
+            "description": "Construction d'un data warehouse avec dbt sur Snowflake. Modélisation dimensionnelle (Kimball), 150+ modèles dbt, tests de qualité, documentation. Orchestration avec Airflow. Langages/Outils : dbt, Snowflake, SQL, Airflow, Git"
+        },
+        {
+            "titre": "Transformation ELT – Fintech",
+            "description": "Migration d'une architecture ETL vers ELT moderne avec Fivetran + dbt. Refonte complète du data warehouse, amélioration des performances de 60%. Formation des équipes data. Langages/Outils : dbt, Fivetran, BigQuery, Looker"
+        },
+        {
+            "titre": "Plateforme Metrics Layer – Marketplace",
+            "description": "Mise en place d'une couche sémantique avec dbt metrics et Lightdash. Centralisation des définitions de métriques, self-service analytics pour 100 utilisateurs. Langages/Outils : dbt, Lightdash, PostgreSQL"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "dbt Analytics Engineering Certification (2023)",
+            "Snowflake SnowPro Core Certification (2023)"
+        ]
+    }
+}

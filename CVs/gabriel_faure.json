@@ -1,0 +1,60 @@
+{
+    "nom": "Gabriel Faure",
+    "poste": "Senior Data Scientist – NLP",
+    "email": "gabriel.faure@fr.ey.com",
+    "telephone": "+33 6 67 89 01 45",
+    "profil": {
+        "description": "Gabriel Faure est diplômé de l'ENS Cachan avec un master en Linguistique Computationnelle. Il possède 6 ans d'expérience en NLP avec une expertise en transformers et LLMs.",
+        "formation": "ENS Cachan, Master Linguistique Computationnelle"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "SQL"
+        ],
+        "ia_ml": [
+            "NLP",
+            "Transformers",
+            "BERT",
+            "GPT",
+            "Named Entity Recognition",
+            "Text Classification",
+            "Sentiment Analysis",
+            "Question Answering"
+        ],
+        "outils": [
+            "Hugging Face",
+            "spaCy",
+            "NLTK",
+            "Gensim",
+            "FastAPI",
+            "Docker"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C2)",
+            "Allemand (B2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Analyse de sentiments clients – E-commerce",
+            "description": "Développement d'un système d'analyse de sentiments sur avis clients. Fine-tuning BERT sur corpus français, classification multi-classes. Traitement de 100k avis/jour. Langages/Outils : Transformers, BERT, FastAPI, Python"
+        },
+        {
+            "titre": "Extraction d'entités – Assurance",
+            "description": "NER pour extraction automatique d'informations dans contrats d'assurance. spaCy custom, amélioration continue avec active learning. F1-score de 92%. Langages/Outils : spaCy, Python, Prodigy"
+        },
+        {
+            "titre": "Chatbot FAQ – Banque",
+            "description": "Système de question-answering basé sur transformers. Indexation de base de connaissances, ranking sémantique, génération de réponses. Taux de résolution 75%. Langages/Outils : Sentence-BERT, FAISS, FastAPI"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Natural Language Processing Specialization - Coursera (2021)",
+            "Advanced NLP with spaCy - DataCamp (2022)"
+        ]
+    }
+}

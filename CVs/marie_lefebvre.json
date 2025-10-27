@@ -1,0 +1,71 @@
+{
+    "nom": "Marie Lefebvre",
+    "poste": "Manager – Data Strategy & Consulting",
+    "email": "marie.lefebvre@fr.ey.com",
+    "telephone": "+33 6 34 56 78 90",
+    "profil": {
+        "description": "Marie Lefebvre est diplômée de HEC Paris avec une spécialisation en transformation digitale et data. Elle possède 11 ans d'expérience en conseil stratégique data, accompagnant les grands comptes dans leur transformation data-driven. Elle a piloté plus de 30 programmes de transformation data.",
+        "formation": "HEC Paris, Master en Management et Transformation Digitale"
+    },
+    "competences": {
+        "themes": [
+            "Stratégie Data",
+            "Data Governance",
+            "Data Management",
+            "Transformation digitale",
+            "Change Management",
+            "Data Monetization",
+            "Operating Model"
+        ],
+        "outils": [
+            "Collibra",
+            "Informatica",
+            "Alation",
+            "PowerBI",
+            "Tableau"
+        ],
+        "frameworks": [
+            "DAMA-DMBOK",
+            "DCAM",
+            "TOGAF",
+            "SAFe Agile"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C2)",
+            "Italien (B2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Programme de transformation Data – CAC 40 Industrie",
+            "description": "Pilotage d'un programme de transformation data sur 3 ans avec budget de 25M€. Définition de la vision et stratégie data, mise en place d'un Data Office de 40 personnes. Déploiement d'une plateforme data centralisée et d'un framework de gouvernance. ROI de 35M€ identifié sur 5 ans. Compétences : Strategy, PMO, Change Management, Data Governance"
+        },
+        {
+            "titre": "Roadmap Data & Analytics – Grande Distribution",
+            "description": "Élaboration d'une roadmap data sur 5 ans alignée avec la stratégie business. Identification et priorisation de 50 use cases data/IA. Définition de l'architecture cible et du business case (100M€ de valeur). Animation de 30 ateliers avec les métiers. Compétences : Strategy, Business Case, Architecture Data"
+        },
+        {
+            "titre": "Mise en place d'un Data Office – Banque de détail",
+            "description": "Création et structuration du Data Office : définition des rôles (CDO, Data Stewards, Data Owners), mise en place de la comitologie data, élaboration des politiques de gouvernance. Accompagnement du change management. Compétences : Data Governance, Organization Design, Change Management"
+        },
+        {
+            "titre": "Monétisation des données – Acteur Assurance",
+            "description": "Étude de monétisation des actifs data avec identification d'opportunités générant 15M€ de CA additionnel. Analyse de la maturité data, benchmark marché, business case détaillés. Mise en conformité RGPD pour data sharing. Compétences : Data Monetization, Business Model, RGPD"
+        }
+    ],
+    "projets_internes": [
+        {
+            "titre": "Méthodologie Data Strategy – EY",
+            "description": "Co-création de la méthodologie data strategy d'EY France. Développement d'outils d'assessment de maturité data, templates de roadmap, framework de business case data. Compétences : Méthodologie, Knowledge Management"
+        }
+    ],
+    "formations_certifications": {
+        "certifications": [
+            "Certified Data Management Professional - CDMP (2020)",
+            "DCAM Practitioner (2021)",
+            "SAFe Program Consultant (2022)",
+            "AWS Cloud Practitioner (2023)"
+        ]
+    }
+}

@@ -1,0 +1,61 @@
+{
+    "nom": "Stéphanie Giraud",
+    "poste": "Senior Consultant – Data Modeling",
+    "email": "stephanie.giraud@fr.ey.com",
+    "telephone": "+33 6 89 01 23 78",
+    "profil": {
+        "description": "Stéphanie Giraud est diplômée de l'Université de Lyon avec un master en Bases de Données. Elle possède 8 ans d'expérience en modélisation de données avec une expertise en modèles dimensionnels, Data Vault et Data Warehouse.",
+        "formation": "Université de Lyon, Master Bases de Données"
+    },
+    "competences": {
+        "langages": [
+            "SQL",
+            "Python"
+        ],
+        "themes": [
+            "Data Modeling",
+            "Dimensional Modeling",
+            "Data Vault",
+            "Data Warehouse Design",
+            "Normalization",
+            "ERD"
+        ],
+        "outils": [
+            "PowerDesigner",
+            "ERwin",
+            "dbt",
+            "Snowflake",
+            "Oracle",
+            "SQL Server"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (B2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Modélisation Data Warehouse – Banque",
+            "description": "Conception du modèle dimensionnel pour data warehouse de 200 tables. Modèle en étoile et flocon, gestion des dimensions lentement changeantes (SCD). Documentation complète. Compétences : Dimensional Modeling, Kimball, SQL"
+        },
+        {
+            "titre": "Implémentation Data Vault – Assurance",
+            "description": "Architecture Data Vault 2.0 pour data warehouse historisé. Hubs, Links, Satellites. Automatisation avec dbt. Scalabilité et agilité. Compétences : Data Vault, dbt, Architecture"
+        },
+        {
+            "titre": "Migration modèle 3NF vers Star Schema – Retail",
+            "description": "Refonte du modèle de données pour optimiser les performances analytiques. Migration de 3NF vers star schema. Amélioration de 70% des performances requêtes. Compétences : Data Modeling, Performance Tuning, SQL"
+        },
+        {
+            "titre": "Modèle de données temps réel – FinTech",
+            "description": "Conception de modèle pour analytics temps réel. Dénormalisation stratégique, partitioning, indexation. Latence <500ms sur requêtes complexes. Compétences : Data Modeling, Real-time, Optimization"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Data Vault 2.0 Practitioner Certification (2021)",
+            "Kimball Dimensional Modeling (2020)"
+        ]
+    }
+}

@@ -1,0 +1,49 @@
+{
+    "nom": "Antoine Moreau",
+    "poste": "Junior Data Analyst",
+    "email": "antoine.moreau@fr.ey.com",
+    "telephone": "+33 6 67 89 01 23",
+    "profil": {
+        "description": "Antoine Moreau est diplômé de l'ENSAE Paris avec une spécialisation en statistiques et économétrie. Il a 2 ans d'expérience en analyse de données dans le secteur bancaire et possède de solides compétences analytiques.",
+        "formation": "ENSAE Paris, spécialisation Statistiques et Économétrie"
+    },
+    "competences": {
+        "langages": [
+            "SQL",
+            "Python",
+            "R"
+        ],
+        "outils": [
+            "Excel",
+            "Power BI",
+            "Jupyter",
+            "Git"
+        ],
+        "themes": [
+            "Analyse statistique",
+            "Data Exploration",
+            "Reporting",
+            "A/B Testing"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (B2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Analyses comportementales clients – Banque Retail",
+            "description": "Analyse des comportements d'achat et de navigation sur le site web. Segmentation client avec k-means, analyse de cohortes, calcul de LTV. Création de rapports hebdomadaires pour les équipes marketing. Langages/Outils : SQL, Python, Power BI"
+        },
+        {
+            "titre": "Optimisation campagnes marketing – Assurance",
+            "description": "Analyse de performance des campagnes email et SMS. Tests A/B sur différents messages et audiences. Recommandations data-driven ayant permis +25% de taux de conversion. Langages/Outils : SQL, Python, Excel"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Google Data Analytics Professional Certificate (2023)"
+        ]
+    }
+}

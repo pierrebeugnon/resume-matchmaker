@@ -1,0 +1,58 @@
+{
+    "nom": "Sarah Michel",
+    "poste": "Cloud Data Engineer – AWS",
+    "email": "sarah.michel@fr.ey.com",
+    "telephone": "+33 6 56 78 90 34",
+    "profil": {
+        "description": "Sarah Michel est diplômée de l'EPITA avec une spécialisation en Cloud Computing. Elle possède 5 ans d'expérience en data engineering sur AWS avec une expertise en architectures serverless.",
+        "formation": "EPITA, spécialisation Cloud Computing"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "SQL",
+            "Scala"
+        ],
+        "outils": [
+            "AWS Glue",
+            "AWS Lambda",
+            "AWS EMR",
+            "Redshift",
+            "S3",
+            "Athena",
+            "Step Functions",
+            "CloudFormation"
+        ],
+        "themes": [
+            "Data Engineering",
+            "Serverless Architecture",
+            "Data Lake",
+            "ETL"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C1)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Data Lake AWS – Fintech",
+            "description": "Architecture et implémentation d'un data lake sur AWS S3. Ingestion de 50 sources avec Glue, transformation avec EMR Spark. Catalogue Glue, requêtage Athena. 200 To stockés. Langages/Outils : AWS (S3, Glue, EMR, Athena), Spark, Python"
+        },
+        {
+            "titre": "Pipelines Serverless – Startup SaaS",
+            "description": "Construction de pipelines serverless avec Lambda et Step Functions. Ingestion temps réel avec Kinesis, transformation avec Lambda. Architecture event-driven. Langages/Outils : AWS Lambda, Kinesis, Step Functions, Python"
+        },
+        {
+            "titre": "Data Warehouse Redshift – E-commerce",
+            "description": "Mise en place d'un data warehouse sur Redshift. Modélisation en étoile, optimisation des performances (sort keys, dist keys). Intégration avec Tableau. Langages/Outils : Redshift, SQL, Tableau"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "AWS Certified Data Analytics Specialty (2022)",
+            "AWS Certified Solutions Architect Professional (2023)"
+        ]
+    }
+}

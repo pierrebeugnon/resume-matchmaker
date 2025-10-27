@@ -1,0 +1,65 @@
+{
+    "nom": "Alexandre Richard",
+    "poste": "Senior Consultant – Data Governance",
+    "email": "alexandre.richard@fr.ey.com",
+    "telephone": "+33 6 01 23 45 67",
+    "profil": {
+        "description": "Alexandre Richard est diplômé de Sciences Po Paris avec un master en Management des Systèmes d'Information. Il possède 8 ans d'expérience en data governance et data management avec une expertise reconnue en conformité RGPD et cadres réglementaires.",
+        "formation": "Sciences Po Paris, Master Management des SI"
+    },
+    "competences": {
+        "themes": [
+            "Data Governance",
+            "Data Quality",
+            "Data Lineage",
+            "RGPD",
+            "Data Catalog",
+            "Master Data Management",
+            "Metadata Management"
+        ],
+        "outils": [
+            "Collibra",
+            "Alation",
+            "Informatica",
+            "Talend Data Fabric",
+            "Atlan"
+        ],
+        "frameworks": [
+            "DAMA-DMBOK",
+            "DCAM",
+            "GDPR"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C2)",
+            "Allemand (B2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Programme Data Governance – Groupe Bancaire",
+            "description": "Mise en place d'un framework de data governance pour 15 pays. Déploiement de Collibra, définition des politiques de gouvernance, formation de 200 data stewards. Compliance BCBS 239. Compétences : Data Governance, Collibra, Change Management"
+        },
+        {
+            "titre": "Conformité RGPD – Assureur",
+            "description": "Audit RGPD et mise en conformité du patrimoine data. Cartographie des flux de données personnelles, mise en place du registre des traitements, PIA sur 50 traitements. Accompagnement DPO. Compétences : RGPD, Data Privacy, Audit"
+        },
+        {
+            "titre": "Data Quality Management – Industrie",
+            "description": "Programme data quality avec déploiement d'Informatica DQ. Définition de 500+ règles qualité, monitoring automatisé, KPIs qualité. Amélioration de 40% de la qualité des données. Compétences : Data Quality, Informatica, SQL"
+        },
+        {
+            "titre": "Master Data Management – Retail",
+            "description": "Implémentation d'une solution MDM produit et client avec Informatica. Définition du golden record, data matching, deduplication. Centralisation de 5M références produits. Compétences : MDM, Informatica, Data Integration"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Certified Data Management Professional - CDMP (2020)",
+            "DCAM Data Management Capability Assessment (2021)",
+            "Collibra Data Citizen (2022)",
+            "CIPP/E - Certified Information Privacy Professional (2023)"
+        ]
+    }
+}

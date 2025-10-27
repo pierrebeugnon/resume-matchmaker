@@ -1,0 +1,50 @@
+{
+    "nom": "Jessica Martinez",
+    "poste": "Manager – Data Monetization & Strategy",
+    "email": "jessica.martinez@fr.ey.com",
+    "telephone": "+33 6 45 67 89 34",
+    "profil": {
+        "description": "Jessica Martinez est diplômée de l'ESCP avec un MBA. Elle possède 10 ans d'expérience en stratégie data et monétisation avec une expertise en business models data-driven et data partnerships.",
+        "formation": "ESCP Business School, MBA"
+    },
+    "competences": {
+        "themes": [
+            "Data Monetization",
+            "Data Strategy",
+            "Business Model Innovation",
+            "Data Partnerships",
+            "Data Products",
+            "Go-to-Market"
+        ],
+        "outils": [
+            "PowerPoint",
+            "Excel",
+            "Tableau"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C2)",
+            "Espagnol"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Stratégie de monétisation data – Groupe Média",
+            "description": "Définition de la stratégie de monétisation des actifs data avec identification de 8 sources de revenus générant 20M€. Data partnerships, vente de insights, API commerciales. Compétences : Data Monetization, Strategy, Business Development"
+        },
+        {
+            "titre": "Lancement Data Products – Telecom",
+            "description": "Go-to-market de 5 data products B2B (insights mobilité, analytics retail). Business case, pricing, sales enablement. 5M€ de CA Y1. Compétences : Product Strategy, GTM, Business Model"
+        },
+        {
+            "titre": "Data Partnerships – Retail",
+            "description": "Structuration d'un programme de data partnerships. Négociation de 10 accords, définition des use cases, cadre juridique. Compétences : Partnerships, Negotiation, RGPD"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Data Monetization Professional Certificate (2022)"
+        ]
+    }
+}

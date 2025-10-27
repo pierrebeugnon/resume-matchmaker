@@ -29,7 +29,15 @@ export interface MatchingResponse {
   summary: string
 }
 
+export interface MatchingWeights {
+  technicalSkills: number
+  experience: number
+  training: number
+  context: number
+}
+
 export interface MatchingRequest {
   job_offer: JobOffer
   cv_list: CandidateCV[]
+  weights?: MatchingWeights
 }

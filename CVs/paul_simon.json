@@ -1,0 +1,57 @@
+{
+    "nom": "Paul Simon",
+    "poste": "Senior Data Scientist – Time Series",
+    "email": "paul.simon@fr.ey.com",
+    "telephone": "+33 6 45 67 89 23",
+    "profil": {
+        "description": "Paul Simon est diplômé de l'ENS Lyon avec un doctorat en mathématiques appliquées. Il possède 7 ans d'expérience en data science avec une spécialisation en séries temporelles et forecasting.",
+        "formation": "ENS Lyon, Doctorat en Mathématiques Appliquées"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "R",
+            "SQL"
+        ],
+        "ia_ml": [
+            "Time Series Analysis",
+            "Forecasting",
+            "Statistical Modeling",
+            "ARIMA",
+            "Prophet",
+            "LSTM"
+        ],
+        "outils": [
+            "Prophet",
+            "statsmodels",
+            "pmdarima",
+            "TensorFlow",
+            "scikit-learn"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Prévisions de demande – Grande Distribution",
+            "description": "Développement de modèles de forecasting pour 10k références produits. Implémentation Prophet et SARIMA, gestion de la saisonnalité. Amélioration de 25% de la précision vs baseline. Langages/Outils : Python, Prophet, statsmodels, SQL"
+        },
+        {
+            "titre": "Détection d'anomalies industrielles – Manufacturier",
+            "description": "Modèles de détection d'anomalies sur séries temporelles de capteurs IoT. LSTM pour prédiction, détection d'écarts. Alertes en temps réel. Langages/Outils : TensorFlow, Python, Kafka"
+        },
+        {
+            "titre": "Forecasting financier – Banque d'investissement",
+            "description": "Modélisation de séries temporelles financières pour prévision de trésorerie. Modèles GARCH, VAR, tests de stationnarité. Langages/Outils : R, Python, statsmodels"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Time Series Analysis Specialization - Coursera (2021)",
+            "Advanced Statistical Learning - Stanford (2022)"
+        ]
+    }
+}

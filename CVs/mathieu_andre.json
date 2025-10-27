@@ -1,0 +1,46 @@
+{
+    "nom": "Mathieu André",
+    "poste": "Consultant – Master Data Management",
+    "email": "mathieu.andre@fr.ey.com",
+    "telephone": "+33 6 23 45 67 01",
+    "profil": {
+        "description": "Mathieu André est diplômé de l'EDHEC avec un master en Management des Systèmes d'Information. Il possède 4 ans d'expérience en MDM et data integration avec une expertise en Informatica.",
+        "formation": "EDHEC, Master Management des SI"
+    },
+    "competences": {
+        "themes": [
+            "Master Data Management",
+            "Data Integration",
+            "Data Quality",
+            "Golden Record",
+            "Data Matching"
+        ],
+        "outils": [
+            "Informatica MDM",
+            "Talend MDM",
+            "SAP MDG",
+            "Collibra",
+            "SQL"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (B2)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "MDM Client – Banque",
+            "description": "Implémentation d'un MDM client avec Informatica. Consolidation de 3M clients depuis 15 sources. Data matching, deduplication, golden record. Amélioration qualité de 40%. Compétences : MDM, Informatica, Data Integration"
+        },
+        {
+            "titre": "MDM Produit – Industrie",
+            "description": "Déploiement d'un MDM produit avec Informatica. Centralisation de 500k références, workflows de validation, data stewardship. Compétences : MDM, Data Governance, Informatica"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "Informatica MDM Professional (2023)"
+        ]
+    }
+}

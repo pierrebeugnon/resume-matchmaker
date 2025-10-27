@@ -1,0 +1,58 @@
+{
+    "nom": "Julie Laurent",
+    "poste": "ML Engineer",
+    "email": "julie.laurent@fr.ey.com",
+    "telephone": "+33 6 78 90 12 34",
+    "profil": {
+        "description": "Julie Laurent est ingénieure diplômée de CentraleSupélec avec une spécialisation en Intelligence Artificielle. Elle possède 5 ans d'expérience en développement et déploiement de modèles ML en production, avec une expertise en Computer Vision et NLP.",
+        "formation": "CentraleSupélec, spécialisation Intelligence Artificielle"
+    },
+    "competences": {
+        "langages": [
+            "Python",
+            "SQL",
+            "C++"
+        ],
+        "ia_ml": [
+            "Computer Vision",
+            "NLP",
+            "Deep Learning",
+            "MLOps"
+        ],
+        "outils": [
+            "PyTorch",
+            "TensorFlow",
+            "OpenCV",
+            "Docker",
+            "Kubernetes",
+            "MLflow",
+            "FastAPI"
+        ],
+        "langues": [
+            "Français",
+            "Anglais (C1)"
+        ]
+    },
+    "experiences_professionnelles": [
+        {
+            "titre": "Système de détection de fraude documentaire – Fintech",
+            "description": "Développement d'un système de détection de fraude sur documents d'identité avec deep learning. Modèles CNN pour détection d'anomalies, OCR avancé. Déploiement sur Azure avec API REST. Précision de 96%. Langages/Outils : PyTorch, OpenCV, FastAPI, Azure, Docker"
+        },
+        {
+            "titre": "Chatbot intelligent – Banque en ligne",
+            "description": "Développement d'un chatbot avec NLP pour le service client. Fine-tuning de BERT sur corpus bancaire, intégration avec système CRM. Traitement de 10k requêtes/jour. Langages/Outils : Transformers, Hugging Face, FastAPI, Redis"
+        },
+        {
+            "titre": "Plateforme MLOps – Assurance",
+            "description": "Mise en place d'une plateforme MLOps pour industrialiser le déploiement de modèles. Pipelines CI/CD, monitoring, A/B testing. Réduction de 70% du time-to-market. Langages/Outils : MLflow, Kubernetes, Jenkins, Prometheus"
+        }
+    ],
+    "projets_internes": [],
+    "formations_certifications": {
+        "certifications": [
+            "TensorFlow Developer Certificate (2022)",
+            "MLOps Specialization - DeepLearning.AI (2023)",
+            "Kubernetes Administrator CKA (2024)"
+        ]
+    }
+}
