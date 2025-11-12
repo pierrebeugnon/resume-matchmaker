@@ -21,22 +21,27 @@ interface ResumeDetailDialogProps {
   getMatchBadgeStyle: (score: number) => string
   shareProfile: (resume: any) => void
   showMatchingInfo?: boolean  // Par défaut true pour compatibilité
+  dynamicScore?: number  // Score dynamique calculé (optionnel pour rétrocompatibilité)
 }
 
 export function ResumeDetailDialog({ 
   resume, 
   getMatchBadgeStyle, 
   shareProfile,
-  showMatchingInfo = true
+  showMatchingInfo = true,
+  dynamicScore
 }: ResumeDetailDialogProps) {
+  // Utiliser dynamicScore si fourni, sinon fallback sur resume.matchScore
+  const displayScore = dynamicScore !== undefined ? dynamicScore : resume.matchScore
+  
   return (
     <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-gray-900 text-white border-gray-700">
       <DialogHeader>
         <DialogTitle className="flex items-center space-x-3 text-white text-2xl">
           <span>{resume.name}</span>
-          {showMatchingInfo && resume.matchScore !== undefined && (
-            <Badge className={getMatchBadgeStyle(resume.matchScore)}>
-              {resume.matchScore}% correspondance
+          {showMatchingInfo && displayScore !== undefined && (
+            <Badge className={getMatchBadgeStyle(displayScore)}>
+              {displayScore}% correspondance
             </Badge>
           )}
         </DialogTitle>

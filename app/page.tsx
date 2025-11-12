@@ -5,6 +5,10 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ResumeDetailDialog } from "@/components/ResumeDetailDialog"
 import { ComparisonModal } from "@/components/ComparisonModal"
+import { ScoreSimulator } from "@/components/ScoreSimulator"
+import { MiniScoreBreakdown } from "@/components/MiniScoreBreakdown"
+import ChatBot from "@/components/ChatBot"
+import ChatBotV2 from "@/components/ChatBotV2" // Version 2 - Premium Design
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
@@ -110,6 +114,10 @@ interface Resume {
   education: string
   previousRoles: string[]
   keyAchievements: string[]
+  experiences?: Array<{
+    title: string
+    description: string
+  }>
   reasoning?: string
   matchingSkills?: string[]
   missingSkills?: string[]
@@ -120,6 +128,13 @@ interface Resume {
   trainingRecommendations?: string[]
   successPrediction?: string
   interviewTopics?: string[]
+  // Score breakdown détaillé
+  scoreBreakdown?: {
+    technicalSkills: number
+    experience: number
+    training: number
+    context: number
+  }
 }
 
 interface SearchHistoryEntry {
@@ -172,6 +187,7 @@ export default function ResumeMatchmaker() {
   const [expandedSection, setExpandedSection] = useState<"tender" | "filters" | null>("tender")
   const [compareMode, setCompareMode] = useState(false)
   const [selectedForCompare, setSelectedForCompare] = useState<Set<string>>(new Set())
+  const [expandedAnalysis, setExpandedAnalysis] = useState<Set<string>>(new Set())
   const [showCompareModal, setShowCompareModal] = useState(false)
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
   const [showAnalytics, setShowAnalytics] = useState(false)
@@ -195,6 +211,13 @@ export default function ResumeMatchmaker() {
     training: 20,
     context: 10
   })
+  
+  // Smart Matching Score v2 - Simulation
+  const [showSimulationDialog, setShowSimulationDialog] = useState(false)
+  const [isSimulating, setIsSimulating] = useState(false)
+  const [simulatedWeights, setSimulatedWeights] = useState(matchingWeights)
+  const [originalWeights, setOriginalWeights] = useState(matchingWeights)
+  const [selectedResumeForSimulation, setSelectedResumeForSimulation] = useState<Resume | null>(null)
   
   // Désactiver l'animation du bouton info après 10 secondes
   useEffect(() => {
@@ -359,7 +382,7 @@ export default function ResumeMatchmaker() {
       ...getFilteredAndSortedResumes().map(r => [
         r.name,
         r.title,
-        r.matchScore + "%",
+        calculateDynamicScore(r) + "%",
         r.experience,
         r.email,
         r.phone,
@@ -388,7 +411,7 @@ export default function ResumeMatchmaker() {
       ...getFilteredAndSortedResumes().map(r => [
         r.name,
         r.title,
-        r.matchScore.toString(),
+        calculateDynamicScore(r).toString(),
         r.experience,
         r.email,
         r.phone,
@@ -416,7 +439,7 @@ export default function ResumeMatchmaker() {
     const profileText = `
 🎯 Profil Candidat - ${resume.name}
 
-📊 Score de correspondance: ${resume.matchScore}%
+📊 Score de correspondance: ${calculateDynamicScore(resume)}%
 💼 Poste: ${resume.title}
 ⏱️ Expérience: ${resume.experience}
 📍 Localisation: ${resume.location}
@@ -451,7 +474,7 @@ ${selectedResumes.map((resume, index) => `
 CANDIDAT ${index + 1}: ${resume.name}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📊 SCORE DE CORRESPONDANCE: ${resume.matchScore}%
+📊 SCORE DE CORRESPONDANCE: ${calculateDynamicScore(resume)}%
 💼 Poste: ${resume.title}
 ⏱️ Expérience: ${resume.experience}
 📍 Localisation: ${resume.location}
@@ -514,7 +537,7 @@ Pour les graphiques, consultez l'interface web.
     ]
     
     getFilteredAndSortedResumes().forEach(resume => {
-      const score = resume.matchScore
+      const score = calculateDynamicScore(resume)
       const range = ranges.find(r => score >= r.min && score < r.max)
       if (range) range.count++
     })
@@ -525,11 +548,12 @@ Pour les graphiques, consultez l'interface web.
   const prepareExperienceVsScoreData = () => {
     return getFilteredAndSortedResumes().map(resume => {
       const expYears = parseInt(resume.experience.split(" ")[0]) || 0
+      const dynamicScore = calculateDynamicScore(resume)
       return {
         name: resume.name,
         experience: expYears,
-        score: resume.matchScore,
-        color: resume.matchScore >= 80 ? "#10b981" : resume.matchScore >= 70 ? "#f59e0b" : "#ef4444"
+        score: dynamicScore,
+        color: dynamicScore >= 80 ? "#10b981" : dynamicScore >= 70 ? "#f59e0b" : "#ef4444"
       }
     })
   }
@@ -540,7 +564,7 @@ Pour les graphiques, consultez l'interface web.
       return {
         name: resume.name.split(" ")[0], // First name only
         years: expYears,
-        score: resume.matchScore
+        score: calculateDynamicScore(resume)
       }
     }).sort((a, b) => b.years - a.years)
   }
@@ -728,6 +752,23 @@ Pour les graphiques, consultez l'interface web.
     return Array.from(foundSectors)
   }
 
+  // Helper function to calculate dynamic score based on current weights
+  const calculateDynamicScore = (resume: Resume): number => {
+    if (!resume.scoreBreakdown) {
+      // Si pas de breakdown, utiliser le matchScore stocké
+      return resume.matchScore
+    }
+    
+    const breakdown = resume.scoreBreakdown
+    const weightedScore = 
+      (breakdown.technicalSkills * matchingWeights.technicalSkills / 100) +
+      (breakdown.experience * matchingWeights.experience / 100) +
+      (breakdown.training * matchingWeights.training / 100) +
+      (breakdown.context * matchingWeights.context / 100)
+    
+    return Math.round(weightedScore)
+  }
+
   // Load real CVs on component mount
   useEffect(() => {
     const loadCVs = async () => {
@@ -770,6 +811,7 @@ Pour les graphiques, consultez l'interface web.
               education: cv.formation || "",
               previousRoles: cv.experiences?.map(exp => exp.title) || [],
               keyAchievements: [],
+              experiences: cv.experiences || [],
               sectors: sectors,
               tace: 0, // Sera calculé après avec calculateTACE
               // Analyse IA enrichie (sera mise à jour après le matching)
@@ -1269,13 +1311,91 @@ Pour les graphiques, consultez l'interface web.
             interviewTopics.push(`Évaluer l'autonomie et la capacité à gérer des projets complexes`)
           }
           
+          // MÉTHODE RÉALISTE : Calculer chaque critère de manière honnête et déterministe
+          // Le score IA est la référence, on le décompose selon les vraies performances
+          const aiScore = score // Score IA stable (ex: 92%)
+          
+          // Extraire les données réelles du CV
+          const yearsOfExp = parseInt(resume.experience.match(/\d+/)?.[0] || "0")
+          const certCount = resume.certifications?.length || 0
+          const totalSkills = (match.matching_skills?.length || 0) + (match.missing_skills?.length || 0)
+          const matchedSkills = match.matching_skills?.length || 0
+          
+          // Calculer les scores de manière RÉALISTE (0-100% basé sur vraies données)
+          // 1. Compétences Techniques = ratio exact des compétences matchées
+          const techScore = totalSkills > 0 
+            ? Math.round((matchedSkills / totalSkills) * 100) // Ex: 16/23 = 69.5% → 70%
+            : aiScore
+          
+          // 2. Expérience = score IA ajusté selon plusieurs facteurs
+          
+          // 2.1. Bonus/malus selon années d'expérience (baseline: 5 ans)
+          const yearsBonus = Math.max(-10, Math.min(10, (yearsOfExp - 5) * 2)) // -10 à +10
+          
+          // 2.2. Bonus selon nombre de postes (variété d'expériences)
+          const nbPostes = resume.experiences?.length || 0
+          const postesBonus = Math.min(5, nbPostes) // Max +5 (1 point par poste, cap à 5)
+          
+          // 2.3. Bonus selon pertinence des postes par rapport à l'offre
+          const jobTitleLower = jobOffer.title.toLowerCase()
+          const jobDescLower = jobOffer.description.toLowerCase()
+          const keyWords = ['data', 'engineer', 'senior', 'developer', 'analyst', 'scientist', 'architect', 'lead', 'manager']
+          
+          const relevantPosts = resume.experiences?.filter(exp => {
+            const titleLower = exp.title.toLowerCase()
+            const descLower = exp.description.toLowerCase()
+            // Un poste est pertinent s'il contient des mots-clés de l'offre
+            return keyWords.some(keyword => 
+              (jobTitleLower.includes(keyword) && titleLower.includes(keyword)) ||
+              (jobDescLower.includes(keyword) && descLower.includes(keyword))
+            )
+          }).length || 0
+          
+          const relevanceBonus = Math.min(10, relevantPosts * 3) // +3 par poste pertinent, max +10
+          
+          // Score final Expérience (combinaison des 3 facteurs)
+          const totalExpBonus = yearsBonus + postesBonus + relevanceBonus
+          const expScore = Math.max(0, Math.min(100, aiScore + totalExpBonus))
+          
+          // 3. Formation = score IA ajusté selon certifications (plus de certifs = meilleur score)
+          const trainBonus = Math.max(-10, Math.min(10, (certCount - 3) * 3)) // -10 à +10
+          const trainScore = Math.max(0, Math.min(100, aiScore + trainBonus))
+          
+          // 4. Contexte = score IA de base (secteur/taille entreprise)
+          const hasSectors = (match.sectors?.length || 0) > 0
+          const ctxBonus = hasSectors ? 5 : -5
+          const ctxScore = Math.max(0, Math.min(100, aiScore + ctxBonus))
+          
+          // PAS d'ajustement artificiel - on garde les scores réalistes
+          // Cela signifie que le score final PEUT différer légèrement du score IA,
+          // mais c'est plus honnête et évite les scores > 100%
+          const scoreBreakdown = {
+            technicalSkills: techScore,
+            experience: expScore,
+            training: trainScore,
+            context: ctxScore
+          }
+          
+          // Calculer le matchScore final avec les pondérations actuelles
+          const calculatedMatchScore = Math.round(
+            (scoreBreakdown.technicalSkills * matchingWeights.technicalSkills / 100) +
+            (scoreBreakdown.experience * matchingWeights.experience / 100) +
+            (scoreBreakdown.training * matchingWeights.training / 100) +
+            (scoreBreakdown.context * matchingWeights.context / 100)
+          )
+          
+          console.log(`✅ ${resume.name} - Score IA: ${score}% → Score calculé: ${calculatedMatchScore}%`)
+          console.log(`   📊 Breakdown:`, scoreBreakdown)
+          console.log(`   👔 Expérience détaillée: ${yearsOfExp} ans (${yearsBonus > 0 ? '+' : ''}${yearsBonus}), ${nbPostes} postes (+${postesBonus}), ${relevantPosts} pertinents (+${relevanceBonus}) → Total: ${expScore}%`)
+          
           return {
             ...resume,
-            matchScore: match.relevance_score,
+            matchScore: calculatedMatchScore, // Utiliser le score calculé, pas celui de l'IA
             reasoning: match.reasoning,
             matchingSkills: match.matching_skills,
             missingSkills: match.missing_skills,
             sectors: match.sectors || resume.sectors,
+            scoreBreakdown: scoreBreakdown, // NOUVEAU : Breakdown pour scoring dynamique
             // Enriched AI analysis
             culturalFitScore: Math.round(culturalFit),
             trainingRecommendations: trainings,
@@ -4287,9 +4407,13 @@ Pour les graphiques, consultez l'interface web.
 
                   {/* Candidate Cards (Full Version) */}
                   <div className="space-y-4">
-                    {getFilteredAndSortedResumes().map((resume) => (
+                    {getFilteredAndSortedResumes().map((resume) => {
+                      // Calculer le score dynamique une seule fois par carte
+                      const dynamicScore = calculateDynamicScore(resume)
+                      
+                      return (
                       <Card key={resume.id} className={`hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-in-out bg-gray-900 border-gray-700 ${compareMode && selectedForCompare.has(resume.id) ? 'ring-2 ring-yellow-400 shadow-yellow-400/50' : ''}`}>
-                        <CardContent className="p-6">
+                        <CardContent className="p-5">
                           <div className="flex items-start justify-between">
                             {compareMode && (
                               <div className="mr-4 pt-1">
@@ -4303,25 +4427,26 @@ Pour les graphiques, consultez l'interface web.
                               </div>
                             )}
                             <div className="flex-1">
-                              <div className="flex items-center justify-between mb-2">
-                                <div className="flex items-center space-x-3">
+                              {/* HEADER COMPACT */}
+                              <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-3">
                                   <h3 className="text-lg font-semibold text-white">{resume.name}</h3>
                                   <TooltipProvider>
                                     <Tooltip>
                                       <TooltipTrigger asChild>
-                                        <Badge className={getMatchBadgeStyle(resume.matchScore)}>
-                                          {resume.matchScore}% correspondance
+                                        <Badge className={getMatchBadgeStyle(dynamicScore)}>
+                                          {dynamicScore}% correspondance
                                         </Badge>
                                       </TooltipTrigger>
                                       <TooltipContent className="bg-gray-800 text-white border-gray-600">
                                         <div className="space-y-1">
-                                          <p className="font-semibold">{getMatchCategory(resume.matchScore)}</p>
+                                          <p className="font-semibold">{getMatchCategory(dynamicScore)}</p>
                                           <p className="text-xs text-gray-300">
-                                            {resume.matchScore >= 90 && "Candidat idéal pour le poste"}
-                                            {resume.matchScore >= 80 && resume.matchScore < 90 && "Excellent candidat, quelques compétences mineures manquantes"}
-                                            {resume.matchScore >= 70 && resume.matchScore < 80 && "Bon candidat avec une formation nécessaire"}
-                                            {resume.matchScore >= 60 && resume.matchScore < 70 && "Candidat partiel, gaps importants à combler"}
-                                            {resume.matchScore < 60 && "Candidat ne correspondant pas aux critères principaux"}
+                                            {dynamicScore >= 90 && "Consultant idéal pour la mission"}
+                                            {dynamicScore >= 80 && dynamicScore < 90 && "Excellent consultant, quelques compétences mineures manquantes"}
+                                            {dynamicScore >= 70 && dynamicScore < 80 && "Bon consultant avec montée en compétence nécessaire"}
+                                            {dynamicScore >= 60 && dynamicScore < 70 && "Consultant partiel, gaps importants à combler"}
+                                            {dynamicScore < 60 && "Consultant ne correspondant pas aux critères principaux"}
                                           </p>
                                         </div>
                                       </TooltipContent>
@@ -4342,105 +4467,205 @@ Pour les graphiques, consultez l'interface web.
                                 </button>
                               </div>
 
-                              <div className="flex items-center space-x-2 mb-3">
-                                <p className="text-white">{resume.title}</p>
+                              {/* INFO LIGNE */}
+                              <div className="flex items-center gap-3 mb-3 text-sm">
+                                <p className="text-white font-medium">{resume.title}</p>
+                                <span className="text-gray-500">•</span>
                                 <Badge className={`text-xs ${getGradeBadgeStyle(resume.grade)} border`}>
                                   {resume.grade}
                                 </Badge>
-                              </div>
-
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <div className="flex items-center space-x-2 text-sm text-white">
-                                  <CheckCircle className="w-4 h-4" />
-                                  <span>{resume.availability}</span>
+                                <span className="text-gray-500">•</span>
+                                <div className="flex items-center gap-1.5 text-green-400">
+                                  <CheckCircle className="w-3.5 h-3.5" />
+                                  <span className="text-xs">{resume.availability}</span>
                                 </div>
+                                {resume.tace !== undefined && (
+                                  <>
+                                    <span className="text-gray-500">•</span>
+                                    <span className={`text-xs font-medium ${resume.tace === 0 ? 'text-green-400' : resume.tace < 50 ? 'text-yellow-400' : 'text-orange-400'}`}>
+                                      TACE: {resume.tace}%
+                                    </span>
+                                  </>
+                                )}
                               </div>
 
-                              <div className="space-y-2">
+                              {/* BREAKDOWN BARRES HORIZONTALES */}
+                              {resume.scoreBreakdown && (
+                                <div className="space-y-2 mb-4 p-3 bg-gray-800/50 rounded-lg border border-gray-700">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Breakdown du Match</span>
+                                  </div>
+                                  <div className="space-y-1.5">
+                                    <div className="flex items-center gap-2">
+                                      <Code className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
+                                      <span className="text-xs w-20 text-gray-300">Tech</span>
+                                      <div className="flex-1 h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                                        <div className="h-full bg-blue-500 rounded-full transition-all duration-500" style={{width: `${resume.scoreBreakdown.technicalSkills}%`}} />
+                                      </div>
+                                      <span className="text-xs font-bold text-blue-400 w-10 text-right">{Math.round(resume.scoreBreakdown.technicalSkills)}%</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <Briefcase className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
+                                      <span className="text-xs w-20 text-gray-300">Expérience</span>
+                                      <div className="flex-1 h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                                        <div className="h-full bg-purple-500 rounded-full transition-all duration-500" style={{width: `${resume.scoreBreakdown.experience}%`}} />
+                                      </div>
+                                      <span className="text-xs font-bold text-purple-400 w-10 text-right">{Math.round(resume.scoreBreakdown.experience)}%</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <GraduationCap className="w-3.5 h-3.5 text-green-400 flex-shrink-0" />
+                                      <span className="text-xs w-20 text-gray-300">Formations</span>
+                                      <div className="flex-1 h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                                        <div className="h-full bg-green-500 rounded-full transition-all duration-500" style={{width: `${resume.scoreBreakdown.training}%`}} />
+                                      </div>
+                                      <span className="text-xs font-bold text-green-400 w-10 text-right">{Math.round(resume.scoreBreakdown.training)}%</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <Building className="w-3.5 h-3.5 text-yellow-400 flex-shrink-0" />
+                                      <span className="text-xs w-20 text-gray-300">Contexte</span>
+                                      <div className="flex-1 h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                                        <div className="h-full bg-yellow-500 rounded-full transition-all duration-500" style={{width: `${resume.scoreBreakdown.context}%`}} />
+                                      </div>
+                                      <span className="text-xs font-bold text-yellow-400 w-10 text-right">{Math.round(resume.scoreBreakdown.context)}%</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+
+                              <div className="space-y-3">
                                 {resume.reasoning && (
-                                  <div className="mb-4 p-4 bg-gradient-to-r from-blue-900/40 to-purple-900/40 border-2 border-blue-500/50 rounded-lg">
-                                    <Label className="text-base font-bold text-white mb-2 block">Analyse IA</Label>
-                                    <p className="text-sm text-gray-100 leading-relaxed font-medium">{resume.reasoning}</p>
+                                  <div className="mb-3">
+                                    <button
+                                      onClick={() => {
+                                        const newExpanded = new Set(expandedAnalysis)
+                                        if (expandedAnalysis.has(resume.id)) {
+                                          newExpanded.delete(resume.id)
+                                        } else {
+                                          newExpanded.add(resume.id)
+                                        }
+                                        setExpandedAnalysis(newExpanded)
+                                      }}
+                                      className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-500/30 rounded-lg hover:border-blue-500/60 transition-all"
+                                    >
+                                      <div className="flex items-center gap-2">
+                                        <Sparkles className="w-4 h-4 text-blue-400" />
+                                        <Label className="text-sm font-semibold text-white cursor-pointer">Analyse IA</Label>
+                                        <Badge className="bg-blue-500/20 text-blue-300 text-xs border-blue-500/40">
+                                          {resume.reasoning.length > 200 ? 'Détaillée' : 'Concise'}
+                                        </Badge>
+                                      </div>
+                                      <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${expandedAnalysis.has(resume.id) ? 'rotate-180' : ''}`} />
+                                    </button>
+                                    {expandedAnalysis.has(resume.id) && (
+                                      <div className="mt-2 p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-500/30 rounded-lg animate-in fade-in slide-in-from-top-2 duration-300">
+                                        <p className="text-sm text-gray-100 leading-relaxed">{resume.reasoning}</p>
+                                      </div>
+                                    )}
                                   </div>
                                 )}
 
-                                <div>
-                                  <Label className="text-sm font-medium text-white">Compétences Principales</Label>
-                                  <div className="flex flex-wrap gap-1 mt-1">
-                                    {resume.matchingSkills && resume.matchingSkills.length > 0 ? (
-                                      resume.matchingSkills.map((skill) => (
-                                        <Badge key={skill} variant="outline" className="text-xs text-white bg-green-900 border-green-600">
-                                          ✓ {skill}
+                                {/* Compétences - Format compact */}
+                                <div className="space-y-2">
+                                  <div>
+                                    <div className="flex items-center gap-2 mb-1.5">
+                                      <CheckCircle className="w-3.5 h-3.5 text-green-400" />
+                                      <Label className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                                        Compétences ({resume.matchingSkills?.length || resume.skills.length})
+                                      </Label>
+                                    </div>
+                                    <div className="flex flex-wrap gap-1.5">
+                                      {resume.matchingSkills && resume.matchingSkills.length > 0 ? (
+                                        resume.matchingSkills.slice(0, 8).map((skill) => (
+                                          <Badge key={skill} variant="outline" className="text-xs text-white bg-green-900/50 border-green-600/50">
+                                            {skill}
+                                          </Badge>
+                                        ))
+                                      ) : (
+                                        resume.skills.slice(0, 8).map((skill) => (
+                                          <Badge key={skill} variant="outline" className="text-xs text-gray-300 bg-gray-800 border-gray-600">
+                                            {skill}
+                                          </Badge>
+                                        ))
+                                      )}
+                                      {((resume.matchingSkills?.length || 0) > 8 || resume.skills.length > 8) && (
+                                        <Badge variant="outline" className="text-xs text-gray-400 border-gray-600">
+                                          +{Math.max((resume.matchingSkills?.length || resume.skills.length) - 8, 0)}
                                         </Badge>
-                                      ))
-                                    ) : (
-                                      resume.skills.slice(0, 6).map((skill) => (
-                                        <Badge key={skill} variant="outline" className="text-xs text-white">
-                                          {skill}
-                                        </Badge>
-                                      ))
-                                    )}
-                                    {resume.skills.length > 6 && !resume.matchingSkills && (
-                                      <Badge variant="outline" className="text-xs text-white">
-                                        +{resume.skills.length - 6} autres
-                                      </Badge>
-                                    )}
+                                      )}
+                                    </div>
                                   </div>
+
+                                  {resume.missingSkills && resume.missingSkills.length > 0 && (
+                                    <div>
+                                      <div className="flex items-center gap-2 mb-1.5">
+                                        <XCircle className="w-3.5 h-3.5 text-red-400" />
+                                        <Label className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                                          Gaps ({resume.missingSkills.length})
+                                        </Label>
+                                      </div>
+                                      <div className="flex flex-wrap gap-1.5">
+                                        {resume.missingSkills.slice(0, 6).map((skill) => (
+                                          <Badge key={skill} variant="outline" className="text-xs text-white bg-red-900/50 border-red-600/50">
+                                            {skill}
+                                          </Badge>
+                                        ))}
+                                        {resume.missingSkills.length > 6 && (
+                                          <Badge variant="outline" className="text-xs text-gray-400 border-gray-600">
+                                            +{resume.missingSkills.length - 6}
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
 
-                                {resume.missingSkills && resume.missingSkills.length > 0 && (
-                                  <div>
-                                    <Label className="text-sm font-medium text-white">
-                                      Compétences Manquantes ({resume.missingSkills.length})
-                                    </Label>
-                                    <div className="flex flex-wrap gap-1 mt-1">
-                                      {resume.missingSkills.map((skill) => (
-                                        <Badge key={skill} variant="outline" className="text-xs text-white bg-red-900 border-red-600">
-                                          ✗ {skill}
-                                        </Badge>
-                                      ))}
+                                {/* Secteurs + Certifications - Inline compact */}
+                                <div className="flex items-center gap-4 flex-wrap text-xs">
+                                  {resume.sectors && resume.sectors.length > 0 && (
+                                    <div className="flex items-center gap-1.5">
+                                      <Building className="w-3.5 h-3.5 text-purple-400" />
+                                      <span className="text-gray-400 font-medium">Secteurs:</span>
+                                      <div className="flex gap-1">
+                                        {resume.sectors.slice(0, 3).map((sector) => (
+                                          <Badge key={sector} variant="outline" className="text-xs text-purple-300 bg-purple-900/30 border-purple-500/40">
+                                            {sector}
+                                          </Badge>
+                                        ))}
+                                        {resume.sectors.length > 3 && (
+                                          <Badge variant="outline" className="text-xs text-gray-400 border-gray-600">
+                                            +{resume.sectors.length - 3}
+                                          </Badge>
+                                        )}
+                                      </div>
                                     </div>
-                                  </div>
-                                )}
+                                  )}
 
-                                {resume.sectors && resume.sectors.length > 0 && (
-                                  <div>
-                                    <Label className="text-sm font-medium text-white">
-                                      Secteurs d'Activité ({resume.sectors.length})
-                                    </Label>
-                                    <div className="flex flex-wrap gap-1 mt-1">
-                                      {resume.sectors.map((sector) => (
-                                        <Badge key={sector} variant="outline" className="text-xs text-white bg-purple-900 border-purple-500">
-                                          🏢 {sector}
-                                        </Badge>
-                                      ))}
+                                  {resume.certifications && resume.certifications.length > 0 && (
+                                    <div className="flex items-center gap-1.5">
+                                      <Award className="w-3.5 h-3.5 text-yellow-400" />
+                                      <span className="text-gray-400 font-medium">Certifications:</span>
+                                      <div className="flex gap-1">
+                                        {resume.certifications.slice(0, 2).map((cert) => (
+                                          <Badge key={cert} variant="outline" className="text-xs text-yellow-300 bg-yellow-900/30 border-yellow-500/40">
+                                            {cert}
+                                          </Badge>
+                                        ))}
+                                        {resume.certifications.length > 2 && (
+                                          <Badge variant="outline" className="text-xs text-gray-400 border-gray-600">
+                                            +{resume.certifications.length - 2}
+                                          </Badge>
+                                        )}
+                                      </div>
                                     </div>
-                                  </div>
-                                )}
-
-                                <div>
-                                  <Label className="text-sm font-medium text-white">Certifications</Label>
-                                  <div className="flex flex-wrap gap-1 mt-1">
-                                    {resume.certifications.slice(0, 2).map((cert) => (
-                                      <Badge key={cert} variant="secondary" className="text-xs">
-                                        <Award className="w-3 h-3 mr-1" />
-                                        {cert}
-                                      </Badge>
-                                    ))}
-                                    {resume.certifications.length > 2 && (
-                                      <Badge variant="secondary" className="text-xs">
-                                        +{resume.certifications.length - 2} autres
-                                      </Badge>
-                                    )}
-                                  </div>
+                                  )}
                                 </div>
                               </div>
                             </div>
 
                             {/* Action Buttons Column */}
                             <div className="flex flex-col space-y-2 ml-4">
-                              <Badge className={`text-xs ${getMatchCategoryStyle(resume.matchScore)} border`}>
-                                {getMatchCategory(resume.matchScore)}
+                              <Badge className={`text-xs ${getMatchCategoryStyle(dynamicScore)} border`}>
+                                {getMatchCategory(dynamicScore)}
                               </Badge>
 
                               <Dialog>
@@ -4458,8 +4683,23 @@ Pour les graphiques, consultez l'interface web.
                                   resume={resume}
                                   getMatchBadgeStyle={getMatchBadgeStyle}
                                   shareProfile={shareProfile}
+                                  dynamicScore={dynamicScore}
                                 />
                               </Dialog>
+
+                              <Button 
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedResumeForSimulation(resume)
+                                  setOriginalWeights(matchingWeights)
+                                  setSimulatedWeights(matchingWeights)
+                                  setShowSimulationDialog(true)
+                                }}
+                                className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                              >
+                                <TrendingUp className="w-4 h-4 mr-2" />
+                                Simuler Score
+                              </Button>
 
                               <Button 
                                 size="sm"
@@ -4481,7 +4721,7 @@ Pour les graphiques, consultez l'interface web.
                           </div>
                         </CardContent>
                       </Card>
-                    ))}
+                    )})}
                   </div>
                 </div>
               )}
@@ -5002,9 +5242,13 @@ Pour les graphiques, consultez l'interface web.
                   const endIndex = startIndex + itemsPerPage
                   const paginatedResults = allResults.slice(startIndex, endIndex)
                   
-                  return paginatedResults.map((resume) => (
+                  return paginatedResults.map((resume) => {
+                    // Calculer le score dynamique une seule fois par carte
+                    const dynamicScore = calculateDynamicScore(resume)
+                    
+                    return (
                   <Card key={resume.id} className={`hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-in-out bg-gray-900 border-gray-700 ${compareMode && selectedForCompare.has(resume.id) ? 'ring-2 ring-yellow-400 shadow-yellow-400/50' : ''}`}>
-                    <CardContent className="p-6">
+                    <CardContent className="p-5">
                       <div className="flex items-start justify-between">
                         {compareMode && (
                           <div className="mr-4 pt-1">
@@ -5018,25 +5262,26 @@ Pour les graphiques, consultez l'interface web.
                           </div>
                         )}
                         <div className="flex-1">
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center space-x-3">
+                          {/* HEADER COMPACT */}
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-3">
                               <h3 className="text-lg font-semibold text-white">{resume.name}</h3>
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <Badge className={getMatchBadgeStyle(resume.matchScore)}>
-                                      {resume.matchScore}% correspondance
+                                    <Badge className={getMatchBadgeStyle(dynamicScore)}>
+                                      {dynamicScore}% correspondance
                                     </Badge>
                                   </TooltipTrigger>
                                   <TooltipContent className="bg-gray-800 text-white border-gray-600">
                                     <div className="space-y-1">
-                                      <p className="font-semibold">{getMatchCategory(resume.matchScore)}</p>
+                                      <p className="font-semibold">{getMatchCategory(dynamicScore)}</p>
                                       <p className="text-xs text-gray-300">
-                                        {resume.matchScore >= 90 && "Candidat idéal pour le poste"}
-                                        {resume.matchScore >= 80 && resume.matchScore < 90 && "Excellent candidat, quelques compétences mineures manquantes"}
-                                        {resume.matchScore >= 70 && resume.matchScore < 80 && "Bon candidat avec une formation nécessaire"}
-                                        {resume.matchScore >= 60 && resume.matchScore < 70 && "Candidat partiel, gaps importants à combler"}
-                                        {resume.matchScore < 60 && "Candidat ne correspondant pas aux critères principaux"}
+                                        {dynamicScore >= 90 && "Consultant idéal pour la mission"}
+                                        {dynamicScore >= 80 && dynamicScore < 90 && "Excellent consultant, quelques compétences mineures manquantes"}
+                                        {dynamicScore >= 70 && dynamicScore < 80 && "Bon consultant avec montée en compétence nécessaire"}
+                                        {dynamicScore >= 60 && dynamicScore < 70 && "Consultant partiel, gaps importants à combler"}
+                                        {dynamicScore < 60 && "Consultant ne correspondant pas aux critères principaux"}
                                       </p>
                                     </div>
                                   </TooltipContent>
@@ -5044,7 +5289,6 @@ Pour les graphiques, consultez l'interface web.
                               </TooltipProvider>
                             </div>
 
-                            {/* Favorite Button with Animation */}
                             <button
                               onClick={() => toggleFavorite(resume.id)}
                               data-favorite-id={resume.id}
@@ -5058,116 +5302,208 @@ Pour les graphiques, consultez l'interface web.
                             </button>
                           </div>
 
-                          <div className="flex items-center space-x-2 mb-3">
-                            <p className="text-white">{resume.title}</p>
+                          {/* INFO LIGNE */}
+                          <div className="flex items-center gap-3 mb-3 text-sm">
+                            <p className="text-white font-medium">{resume.title}</p>
+                            <span className="text-gray-500">•</span>
                             <Badge className={`text-xs ${getGradeBadgeStyle(resume.grade)} border`}>
                               {resume.grade}
                             </Badge>
-                          </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div className="flex items-center space-x-2 text-sm text-white">
-                              <CheckCircle className="w-4 h-4" />
+                            <span className="text-gray-500">•</span>
+                            <div className="flex items-center gap-1.5 text-green-400">
+                              <CheckCircle className="w-3.5 h-3.5" />
                               <span>{resume.availability}</span>
                             </div>
                             {resume.tace !== undefined && (
-                              <div className="flex items-center space-x-2 text-sm">
-                                <Activity className="w-4 h-4 text-gray-400" />
-                                <span className={`font-semibold ${
-                                  resume.tace >= 90 ? 'text-green-400' :
-                                  resume.tace >= 1 ? 'text-yellow-400' :
-                                  'text-red-400'
+                              <>
+                                <span className="text-gray-500">•</span>
+                                <span className={`text-xs font-medium ${
+                                  resume.tace === 0 ? 'text-green-400' :
+                                  resume.tace < 50 ? 'text-yellow-400' :
+                                  'text-orange-400'
                                 }`}>
                                   TACE: {resume.tace}%
                                 </span>
-                              </div>
+                              </>
                             )}
                           </div>
 
-                          <div className="space-y-2">
-                            {resume.reasoning && (
-                              <div className="mb-4 p-4 bg-gradient-to-r from-blue-900/40 to-purple-900/40 border-2 border-blue-500/50 rounded-lg">
-                                <Label className="text-base font-bold text-white mb-2 block">Analyse IA</Label>
-                                <p className="text-sm text-gray-100 leading-relaxed font-medium">{resume.reasoning}</p>
+                          {/* BREAKDOWN BARRES HORIZONTALES */}
+                          {resume.scoreBreakdown && (
+                            <div className="space-y-2 mb-4 p-3 bg-gray-800/50 rounded-lg border border-gray-700">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Breakdown du Match</span>
                               </div>
-                            )}
-
-                            <div>
-                              <Label className="text-sm font-medium text-white">Compétences Principales</Label>
-                              <div className="flex flex-wrap gap-1 mt-1">
-                                {resume.matchingSkills && resume.matchingSkills.length > 0 ? (
-                                  resume.matchingSkills.map((skill) => (
-                                    <Badge key={skill} variant="outline" className="text-xs text-white bg-green-900 border-green-600">
-                                      ✓ {skill}
-                                    </Badge>
-                                  ))
-                                ) : (
-                                  resume.skills.slice(0, 6).map((skill) => (
-                                    <Badge key={skill} variant="outline" className="text-xs text-white">
-                                      {skill}
-                                    </Badge>
-                                  ))
-                                )}
-                                {resume.skills.length > 6 && !resume.matchingSkills && (
-                                  <Badge variant="outline" className="text-xs text-white">
-                                    +{resume.skills.length - 6} autres
-                                  </Badge>
-                                )}
+                              <div className="space-y-1.5">
+                                <div className="flex items-center gap-2">
+                                  <Code className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
+                                  <span className="text-xs w-20 text-gray-300">Tech</span>
+                                  <div className="flex-1 h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                                    <div className="h-full bg-blue-500 rounded-full transition-all duration-500" style={{width: `${resume.scoreBreakdown.technicalSkills}%`}} />
+                                  </div>
+                                  <span className="text-xs font-bold text-blue-400 w-10 text-right">{Math.round(resume.scoreBreakdown.technicalSkills)}%</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Briefcase className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
+                                  <span className="text-xs w-20 text-gray-300">Expérience</span>
+                                  <div className="flex-1 h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                                    <div className="h-full bg-purple-500 rounded-full transition-all duration-500" style={{width: `${resume.scoreBreakdown.experience}%`}} />
+                                  </div>
+                                  <span className="text-xs font-bold text-purple-400 w-10 text-right">{Math.round(resume.scoreBreakdown.experience)}%</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <GraduationCap className="w-3.5 h-3.5 text-green-400 flex-shrink-0" />
+                                  <span className="text-xs w-20 text-gray-300">Formations</span>
+                                  <div className="flex-1 h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                                    <div className="h-full bg-green-500 rounded-full transition-all duration-500" style={{width: `${resume.scoreBreakdown.training}%`}} />
+                                  </div>
+                                  <span className="text-xs font-bold text-green-400 w-10 text-right">{Math.round(resume.scoreBreakdown.training)}%</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Building className="w-3.5 h-3.5 text-yellow-400 flex-shrink-0" />
+                                  <span className="text-xs w-20 text-gray-300">Contexte</span>
+                                  <div className="flex-1 h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                                    <div className="h-full bg-yellow-500 rounded-full transition-all duration-500" style={{width: `${resume.scoreBreakdown.context}%`}} />
+                                  </div>
+                                  <span className="text-xs font-bold text-yellow-400 w-10 text-right">{Math.round(resume.scoreBreakdown.context)}%</span>
+                                </div>
                               </div>
                             </div>
+                          )}
 
-                            {resume.missingSkills && resume.missingSkills.length > 0 && (
-                              <div>
-                                <Label className="text-sm font-medium text-white">
-                                  Compétences Manquantes ({resume.missingSkills.length})
-                                </Label>
-                                <div className="flex flex-wrap gap-1 mt-1">
-                                  {resume.missingSkills.map((skill) => (
-                                    <Badge key={skill} variant="outline" className="text-xs text-white bg-red-900 border-red-600">
-                                      ✗ {skill}
+                          <div className="space-y-3">
+                            {resume.reasoning && (
+                              <div className="mb-3">
+                                <button
+                                  onClick={() => {
+                                    const newExpanded = new Set(expandedAnalysis)
+                                    if (expandedAnalysis.has(resume.id)) {
+                                      newExpanded.delete(resume.id)
+                                    } else {
+                                      newExpanded.add(resume.id)
+                                    }
+                                    setExpandedAnalysis(newExpanded)
+                                  }}
+                                  className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-500/30 rounded-lg hover:border-blue-500/60 transition-all"
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <Sparkles className="w-4 h-4 text-blue-400" />
+                                    <Label className="text-sm font-semibold text-white cursor-pointer">Analyse IA</Label>
+                                    <Badge className="bg-blue-500/20 text-blue-300 text-xs border-blue-500/40">
+                                      {resume.reasoning.length > 200 ? 'Détaillée' : 'Concise'}
                                     </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-
-                            {resume.sectors && resume.sectors.length > 0 && (
-                              <div>
-                                <Label className="text-sm font-medium text-white">
-                                  Secteurs d'Activité ({resume.sectors.length})
-                                </Label>
-                                <div className="flex flex-wrap gap-1 mt-1">
-                                  {resume.sectors.map((sector) => (
-                                    <Badge key={sector} variant="outline" className="text-xs text-white bg-purple-900 border-purple-500">
-                                      🏢 {sector}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-
-                            <div>
-                              <Label className="text-sm font-medium text-white">Certifications</Label>
-                              <div className="flex flex-wrap gap-1 mt-1">
-                                {resume.certifications.slice(0, 2).map((cert) => (
-                                  <Badge key={cert} variant="secondary" className="text-xs">
-                                    <Award className="w-3 h-3 mr-1" />
-                                    {cert}
-                                  </Badge>
-                                ))}
-                                {resume.certifications.length > 2 && (
-                                  <Badge variant="secondary" className="text-xs">
-                                    +{resume.certifications.length - 2} autres
-                                  </Badge>
+                                  </div>
+                                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${expandedAnalysis.has(resume.id) ? 'rotate-180' : ''}`} />
+                                </button>
+                                {expandedAnalysis.has(resume.id) && (
+                                  <div className="mt-2 p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-500/30 rounded-lg animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <p className="text-sm text-gray-100 leading-relaxed">{resume.reasoning}</p>
+                                  </div>
                                 )}
                               </div>
+                            )}
+
+                            {/* Compétences - Format compact */}
+                            <div className="space-y-2">
+                              <div>
+                                <div className="flex items-center gap-2 mb-1.5">
+                                  <CheckCircle className="w-3.5 h-3.5 text-green-400" />
+                                  <Label className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                                    Compétences ({resume.matchingSkills?.length || resume.skills.length})
+                                  </Label>
+                                </div>
+                                <div className="flex flex-wrap gap-1.5">
+                                  {resume.matchingSkills && resume.matchingSkills.length > 0 ? (
+                                    resume.matchingSkills.slice(0, 8).map((skill) => (
+                                      <Badge key={skill} variant="outline" className="text-xs text-white bg-green-900/50 border-green-600/50">
+                                        {skill}
+                                      </Badge>
+                                    ))
+                                  ) : (
+                                    resume.skills.slice(0, 8).map((skill) => (
+                                      <Badge key={skill} variant="outline" className="text-xs text-gray-300 bg-gray-800 border-gray-600">
+                                        {skill}
+                                      </Badge>
+                                    ))
+                                  )}
+                                  {((resume.matchingSkills?.length || 0) > 8 || resume.skills.length > 8) && (
+                                    <Badge variant="outline" className="text-xs text-gray-400 border-gray-600">
+                                      +{Math.max((resume.matchingSkills?.length || resume.skills.length) - 8, 0)}
+                                    </Badge>
+                                  )}
+                                </div>
+                              </div>
+
+                              {resume.missingSkills && resume.missingSkills.length > 0 && (
+                                <div>
+                                  <div className="flex items-center gap-2 mb-1.5">
+                                    <XCircle className="w-3.5 h-3.5 text-red-400" />
+                                    <Label className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                                      Gaps ({resume.missingSkills.length})
+                                    </Label>
+                                  </div>
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {resume.missingSkills.slice(0, 6).map((skill) => (
+                                      <Badge key={skill} variant="outline" className="text-xs text-white bg-red-900/50 border-red-600/50">
+                                        {skill}
+                                      </Badge>
+                                    ))}
+                                    {resume.missingSkills.length > 6 && (
+                                      <Badge variant="outline" className="text-xs text-gray-400 border-gray-600">
+                                        +{resume.missingSkills.length - 6}
+                                      </Badge>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Secteurs + Certifications - Inline compact */}
+                            <div className="flex items-center gap-4 flex-wrap text-xs">
+                              {resume.sectors && resume.sectors.length > 0 && (
+                                <div className="flex items-center gap-1.5">
+                                  <Building className="w-3.5 h-3.5 text-purple-400" />
+                                  <span className="text-gray-400 font-medium">Secteurs:</span>
+                                  <div className="flex gap-1">
+                                    {resume.sectors.slice(0, 3).map((sector) => (
+                                      <Badge key={sector} variant="outline" className="text-xs text-purple-300 bg-purple-900/30 border-purple-500/40">
+                                        {sector}
+                                      </Badge>
+                                    ))}
+                                    {resume.sectors.length > 3 && (
+                                      <Badge variant="outline" className="text-xs text-gray-400 border-gray-600">
+                                        +{resume.sectors.length - 3}
+                                      </Badge>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+
+                              {resume.certifications && resume.certifications.length > 0 && (
+                                <div className="flex items-center gap-1.5">
+                                  <Award className="w-3.5 h-3.5 text-yellow-400" />
+                                  <span className="text-gray-400 font-medium">Certifications:</span>
+                                  <div className="flex gap-1">
+                                    {resume.certifications.slice(0, 2).map((cert) => (
+                                      <Badge key={cert} variant="outline" className="text-xs text-yellow-300 bg-yellow-900/30 border-yellow-500/40">
+                                        {cert}
+                                      </Badge>
+                                    ))}
+                                    {resume.certifications.length > 2 && (
+                                      <Badge variant="outline" className="text-xs text-gray-400 border-gray-600">
+                                        +{resume.certifications.length - 2}
+                                      </Badge>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
 
                         <div className="flex flex-col space-y-2 ml-4">
-                          <Badge className={`text-xs ${getMatchCategoryStyle(resume.matchScore)} border`}>
-                            {getMatchCategory(resume.matchScore)}
+                          <Badge className={`text-xs ${getMatchCategoryStyle(dynamicScore)} border`}>
+                            {getMatchCategory(dynamicScore)}
                           </Badge>
 
                           <Dialog>
@@ -5185,8 +5521,23 @@ Pour les graphiques, consultez l'interface web.
                               resume={resume}
                               getMatchBadgeStyle={getMatchBadgeStyle}
                               shareProfile={shareProfile}
+                              dynamicScore={dynamicScore}
                             />
                           </Dialog>
+
+                          <Button 
+                            size="sm"
+                            onClick={() => {
+                              setSelectedResumeForSimulation(resume)
+                              setOriginalWeights(matchingWeights)
+                              setSimulatedWeights(matchingWeights)
+                              setShowSimulationDialog(true)
+                            }}
+                            className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                          >
+                            <TrendingUp className="w-4 h-4 mr-2" />
+                            Simuler Score
+                          </Button>
 
                           <Button 
                             size="sm"
@@ -5208,7 +5559,8 @@ Pour les graphiques, consultez l'interface web.
                       </div>
                     </CardContent>
                   </Card>
-                ))
+                  )
+                })
                 })()}
               </div>
 
@@ -5349,6 +5701,7 @@ Pour les graphiques, consultez l'interface web.
           getMatchBadgeStyle={getMatchBadgeStyle}
           getMatchCategory={getMatchCategory}
           prepareRadarData={prepareRadarData}
+          calculateDynamicScore={calculateDynamicScore}
         />
       </Dialog>
 
@@ -6086,7 +6439,7 @@ Pour les graphiques, consultez l'interface web.
                   <div className="p-4 bg-gray-900/50 rounded-lg border border-green-500/30">
                     <h4 className="font-semibold text-green-400 mb-2 flex items-center gap-2">
                       <Code className="w-4 h-4" />
-                      Compétences Techniques (40%)
+                      Compétences Techniques ({matchingWeights.technicalSkills}%)
                     </h4>
                     <p className="text-sm text-gray-400">
                       Correspondance exacte et sémantique des technologies, frameworks et outils. 
@@ -6097,7 +6450,7 @@ Pour les graphiques, consultez l'interface web.
                   <div className="p-4 bg-gray-900/50 rounded-lg border border-blue-500/30">
                     <h4 className="font-semibold text-blue-400 mb-2 flex items-center gap-2">
                       <Briefcase className="w-4 h-4" />
-                      Expérience (25%)
+                      Expérience ({matchingWeights.experience}%)
                     </h4>
                     <p className="text-sm text-gray-400">
                       Années d'expérience, niveau de séniorité et pertinence des postes précédents 
@@ -6108,7 +6461,7 @@ Pour les graphiques, consultez l'interface web.
                   <div className="p-4 bg-gray-900/50 rounded-lg border border-purple-500/30">
                     <h4 className="font-semibold text-purple-400 mb-2 flex items-center gap-2">
                       <GraduationCap className="w-4 h-4" />
-                      Formations & Certifications (20%)
+                      Formations & Certifications ({matchingWeights.training}%)
                     </h4>
                     <p className="text-sm text-gray-400">
                       Diplômes, certifications professionnelles et formations continues alignées 
@@ -6119,7 +6472,7 @@ Pour les graphiques, consultez l'interface web.
                   <div className="p-4 bg-gray-900/50 rounded-lg border border-yellow-500/30">
                     <h4 className="font-semibold text-yellow-400 mb-2 flex items-center gap-2">
                       <Building className="w-4 h-4" />
-                      Contexte & Secteur (15%)
+                      Contexte & Secteur ({matchingWeights.context}%)
                     </h4>
                     <p className="text-sm text-gray-400">
                       Expérience dans des secteurs similaires, taille d'entreprise et contexte 
@@ -6414,39 +6767,43 @@ Pour les graphiques, consultez l'interface web.
             {/* Presets rapides */}
             <div className="pt-4 border-t border-gray-700">
               <p className="text-sm font-semibold text-gray-300 mb-3">Presets rapides :</p>
-              <div className="grid grid-cols-2 gap-3">
-                <Button
-                  onClick={() => setMatchingWeights({ technicalSkills: 40, experience: 30, training: 20, context: 10 })}
-                  variant="outline"
-                  size="sm"
-                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:border-yellow-500"
-                >
-                  ⚖️ Équilibré (défaut)
-                </Button>
-                <Button
-                  onClick={() => setMatchingWeights({ technicalSkills: 60, experience: 20, training: 15, context: 5 })}
-                  variant="outline"
-                  size="sm"
-                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:border-blue-500"
-                >
-                  💻 Focus Technique
-                </Button>
-                <Button
-                  onClick={() => setMatchingWeights({ technicalSkills: 25, experience: 50, training: 15, context: 10 })}
-                  variant="outline"
-                  size="sm"
-                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:border-purple-500"
-                >
-                  📊 Focus Expérience
-                </Button>
-                <Button
-                  onClick={() => setMatchingWeights({ technicalSkills: 30, experience: 25, training: 35, context: 10 })}
-                  variant="outline"
-                  size="sm"
-                  className="bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:border-green-500"
-                >
-                  🎓 Focus Formation
-                </Button>
+              <div className="grid grid-cols-3 gap-3">
+                {/* Helper function to check if preset is active */}
+                {(() => {
+                  const isPresetActive = (preset: typeof matchingWeights) => 
+                    preset.technicalSkills === matchingWeights.technicalSkills &&
+                    preset.experience === matchingWeights.experience &&
+                    preset.training === matchingWeights.training &&
+                    preset.context === matchingWeights.context
+                  
+                  const presets = [
+                    { name: "✨ Standard", weights: { technicalSkills: 40, experience: 30, training: 20, context: 10 }, hoverColor: "yellow" },
+                    { name: "⚖️ Équilibré", weights: { technicalSkills: 25, experience: 25, training: 25, context: 25 }, hoverColor: "gray" },
+                    { name: "💻 Compétences", weights: { technicalSkills: 60, experience: 20, training: 15, context: 5 }, hoverColor: "blue" },
+                    { name: "📊 Expérience", weights: { technicalSkills: 20, experience: 60, training: 10, context: 10 }, hoverColor: "purple" },
+                    { name: "🎓 Formations", weights: { technicalSkills: 20, experience: 20, training: 50, context: 10 }, hoverColor: "green" },
+                    { name: "🏢 Sectorielle", weights: { technicalSkills: 20, experience: 20, training: 10, context: 50 }, hoverColor: "orange" }
+                  ]
+                  
+                  return presets.map((preset) => {
+                    const isActive = isPresetActive(preset.weights)
+                    return (
+                      <Button
+                        key={preset.name}
+                        onClick={() => setMatchingWeights(preset.weights)}
+                        variant="outline"
+                        size="sm"
+                        className={`${
+                          isActive 
+                            ? `bg-${preset.hoverColor}-500/20 border-${preset.hoverColor}-500 text-white ring-2 ring-${preset.hoverColor}-500/50` 
+                            : `bg-gray-800 border-gray-600 text-gray-300 hover:border-${preset.hoverColor}-500`
+                        } hover:bg-gray-700 hover:text-white transition-all`}
+                      >
+                        {preset.name}
+                      </Button>
+                    )
+                  })
+                })()}
               </div>
             </div>
           </div>
@@ -6566,6 +6923,68 @@ Pour les graphiques, consultez l'interface web.
           </div>
         </div>
       </footer>
+
+      {/* Score Simulator Dialog */}
+      <Dialog open={showSimulationDialog} onOpenChange={setShowSimulationDialog}>
+        <DialogContent className="max-w-6xl max-h-[95vh] overflow-y-auto bg-gray-900 border-gray-700">
+          {selectedResumeForSimulation && (
+            <ScoreSimulator
+              isOpen={showSimulationDialog}
+              onClose={() => setShowSimulationDialog(false)}
+              resume={selectedResumeForSimulation}
+              originalWeights={originalWeights}
+              simulatedWeights={simulatedWeights}
+              onWeightsChange={(newWeights) => {
+                // Mettre à jour les pondérations simulées
+                setSimulatedWeights(newWeights)
+                // Mettre à jour les pondérations globales pour recalculer TOUS les scores
+                setMatchingWeights(newWeights)
+                // Mettre à jour les pondérations originales pour la prochaine simulation
+                setOriginalWeights(newWeights)
+              }}
+              calculateDynamicScore={calculateDynamicScore}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* ChatBot V2 - Premium AI Assistant */}
+      <ChatBotV2 
+        context={{
+          candidatesCount: matchedResumes.length > 0 ? matchedResumes.length : resumes.length,
+          jobTitle: tenderText ? extractJobTitle(tenderText) : undefined,
+          jobDescription: tenderText,
+          searchMode: isMultiProfile ? 'multi' : 'simple',
+          weights: matchingWeights,
+          activePreset: (
+            matchingWeights.technicalSkills === 40 && matchingWeights.experience === 30 && matchingWeights.training === 20 && matchingWeights.context === 10 ? "Standard" :
+            matchingWeights.technicalSkills === 25 && matchingWeights.experience === 25 && matchingWeights.training === 25 && matchingWeights.context === 25 ? "Équilibré" :
+            matchingWeights.technicalSkills === 60 && matchingWeights.experience === 20 && matchingWeights.training === 15 && matchingWeights.context === 5 ? "Compétences" :
+            matchingWeights.technicalSkills === 20 && matchingWeights.experience === 60 && matchingWeights.training === 10 && matchingWeights.context === 10 ? "Expérience" :
+            matchingWeights.technicalSkills === 20 && matchingWeights.experience === 20 && matchingWeights.training === 50 && matchingWeights.context === 10 ? "Formations" :
+            matchingWeights.technicalSkills === 20 && matchingWeights.experience === 20 && matchingWeights.training === 10 && matchingWeights.context === 50 ? "Sectorielle" :
+            "Personnalisé"
+          ),
+          candidates: (matchedResumes.length > 0 ? matchedResumes : resumes).map((resume) => {
+            const dynamicScore = calculateDynamicScore(resume)
+            return {
+              id: resume.id,
+              name: resume.name,
+              title: resume.title,
+              matchScore: dynamicScore,
+              breakdown: resume.scoreBreakdown,
+              skills: resume.matchingSkills || resume.skills.slice(0, 6),
+              missingSkills: resume.missingSkills || [],
+              yearsOfExperience: parseInt(resume.experience) || 0,
+              certifications: resume.certifications,
+              sectors: resume.sectors || [],
+              reasoning: resume.reasoning,
+              availability: resume.availability,
+              tace: resume.tace
+            }
+          }).slice(0, 20) // Limiter à 20 pour ne pas surcharger le contexte
+        }}
+      />
     </div>
   )
 }

@@ -79,15 +79,15 @@ export async function POST(request: NextRequest) {
       
       if (excellentCandidates.length > 0) {
         const topNames = excellentCandidates.slice(0, 3).map(c => c.candidate_name).join(', ')
-        globalSummary += `🌟 Excellentes correspondances : ${excellentCandidates.length} candidat(s) avec un score supérieur à 80%. Les profils les plus pertinents sont ${topNames}. `
+        globalSummary += `🌟 Excellentes correspondances : ${excellentCandidates.length} candidat(s) avec un score supérieur à 80%. Les profils les plus pertinents sont ${topNames}.\n\n`
       }
       
       if (goodCandidates.length > 0) {
-        globalSummary += `✅ Bonnes correspondances : ${goodCandidates.length} candidat(s) avec un score entre 60% et 80%, présentant des compétences solides avec quelques formations à prévoir. `
+        globalSummary += `✅ Bonnes correspondances : ${goodCandidates.length} candidat(s) avec un score entre 60% et 80%, présentant des compétences solides avec quelques formations à prévoir.\n\n`
       }
       
       if (moderateCandidates.length > 0) {
-        globalSummary += `⚠️ Correspondances modérées : ${moderateCandidates.length} candidat(s) avec un score entre 40% et 60%, nécessitant un accompagnement plus important. `
+        globalSummary += `⚠️ Correspondances modérées : ${moderateCandidates.length} candidat(s) avec un score entre 40% et 60%, nécessitant un accompagnement plus important.\n\n`
       }
       
       // Ajouter une analyse des compétences les plus demandées vs trouvées
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
         .map(([skill]) => skill)
       
       if (topSkills.length > 0) {
-        globalSummary += `\n\n🔑 Compétences les plus représentées dans le pool : ${topSkills.join(', ')}.`
+        globalSummary += `🔑 Compétences les plus représentées dans le pool : ${topSkills.join(', ')}.`
       }
       
       matchingResult = {
@@ -159,7 +159,7 @@ async function matchWithGroq(body: MatchingRequest): Promise<MatchingResponse> {
       { role: "user", content: `${userPrompt}\n\nRappel : Retourne UNIQUEMENT du JSON valide dans le format exact spécifié, sans autre texte. Toutes les explications en français.` }
     ],
     max_tokens: 4000, // Augmenté pour traiter jusqu'à 10 CVs par batch
-    temperature: 0.3,
+    temperature: 0, // Température à 0 pour résultats 100% déterministes et stables
   })
   
   // Extract the response text

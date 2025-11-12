@@ -29,6 +29,7 @@ interface ComparisonModalProps {
   getMatchBadgeStyle: (score: number) => string
   getMatchCategory: (score: number) => string
   prepareRadarData: () => any[]
+  calculateDynamicScore: (resume: any) => number
 }
 
 export function ComparisonModal({
@@ -41,6 +42,7 @@ export function ComparisonModal({
   getMatchBadgeStyle,
   getMatchCategory,
   prepareRadarData,
+  calculateDynamicScore,
 }: ComparisonModalProps) {
   const radarData = prepareRadarData()
 
@@ -135,8 +137,8 @@ export function ComparisonModal({
                 <th key={resume.id} className="text-center p-4 bg-gray-800 min-w-[250px]">
                   <div>
                     <p className="font-bold text-white">{resume.name}</p>
-                    <Badge className={`mt-2 ${getMatchBadgeStyle(resume.matchScore)}`}>
-                      {resume.matchScore}% match
+                    <Badge className={`mt-2 ${getMatchBadgeStyle(calculateDynamicScore(resume))}`}>
+                      {calculateDynamicScore(resume)}% match
                     </Badge>
                   </div>
                 </th>
